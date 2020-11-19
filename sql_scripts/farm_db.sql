@@ -351,7 +351,7 @@ CREATE PROCEDURE [dbo].[sp_create_address]
 	)
 AS
 BEGIN
-	INSERT INTO [dbo].[Addres]
+	INSERT INTO [dbo].[Address]
 			([ZipCode], [AddressState])
 		VALUES
 			(@ZipCode, @AddressState)
@@ -361,7 +361,7 @@ GO
 
 print '' print '*** creating sp_select_address_by_zipcode ***'
 GO
-CREATE PROCEDURE [dbo].[sp_create_address]
+CREATE PROCEDURE [dbo].[sp_select_address_by_zipcode]
 	(
 		@ZipCode				[int]
 	)
@@ -370,5 +370,65 @@ BEGIN
 	SELECT ZipCode, AddressState
 	FROM Address
 	WHERE ZipCode = @ZipCode
+END
+GO
+
+print '' print '*** creating sp_create_farmoperation ***'
+GO
+CREATE PROCEDURE [dbo].[sp_create_farmoperation]
+	(
+		@UserID_Operator		[int],
+		@ZIP					[int]
+	)
+AS
+BEGIN
+	INSERT INTO [dbo].[Address]
+			(UserID_Operator,ZIP)
+		VALUES
+			(@ZipCode, @AddressState)
+	RETURN @@ROWCOUNT
+END
+GO
+
+print '' print '*** creating sp_select_farmoperation_by_operator ***'
+GO
+CREATE PROCEDURE [dbo].[sp_select_farmoperation_by_operator]
+	(
+		@UserID_Operator		[int]
+	)
+AS
+BEGIN
+	SELECT OperationID
+	FROM FarmOperation
+	WHERE UserID_Operator = @UserID_Operator
+END
+GO
+
+print '' print '*** creating sp_select_farmoperation_by_zip ***'
+GO
+CREATE PROCEDURE [dbo].[sp_select_farmoperation_by_operator]
+	(
+		@ZIP					[int]
+	)
+AS
+BEGIN
+	SELECT OperationID
+	FROM FarmOperation
+	WHERE ZIP = @ZIP
+END
+GO
+
+print '' print '*** creating sp_select_farmoperation_by_state ***'
+GO
+CREATE PROCEDURE [dbo].[sp_select_farmoperation_by_state]
+	(
+		@AddressState				[int]
+	)
+AS
+BEGIN
+	SELECT OperationID
+	FROM FarmOperation
+		JOIN Address ON Address.ZIP = FarmOperation.ZIP
+	WHERE Address.AddressState = @AddressState
 END
 GO
