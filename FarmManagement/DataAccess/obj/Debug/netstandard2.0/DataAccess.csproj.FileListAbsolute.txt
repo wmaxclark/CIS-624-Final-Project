@@ -1,0 +1,12 @@
+C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataAccess\bin\Debug\netstandard2.0\DataAccess.deps.json
+C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataAccess\bin\Debug\netstandard2.0\DataAccess.dll
+C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataAccess\bin\Debug\netstandard2.0\DataAccess.pdb
+C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataAccess\obj\Debug\netstandard2.0\DataAccess.csprojAssemblyReference.cache
+C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataAccess\obj\Debug\netstandard2.0\DataAccess.csproj.CoreCompileInputs.cache
+C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataAccess\obj\Debug\netstandard2.0\DataAccess.AssemblyInfoInputs.cache
+C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataAccess\obj\Debug\netstandard2.0\DataAccess.AssemblyInfo.cs
+C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataAccess\obj\Debug\netstandard2.0\DataAccess.dll
+C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataAccess\obj\Debug\netstandard2.0\DataAccess.pdb
+C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataAccess\bin\Debug\netstandard2.0\DataObjects.dll
+C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataAccess\bin\Debug\netstandard2.0\DataObjects.pdb
+C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataAccess\obj\Debug\netstandard2.0\DataAccess.csproj.CopyComplete
