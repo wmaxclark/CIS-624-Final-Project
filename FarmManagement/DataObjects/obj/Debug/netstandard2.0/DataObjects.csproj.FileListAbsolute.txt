@@ -1,9 +1,0 @@
-C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataObjects\bin\Debug\netstandard2.0\DataObjects.deps.json
-C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataObjects\bin\Debug\netstandard2.0\DataObjects.dll
-C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataObjects\bin\Debug\netstandard2.0\DataObjects.pdb
-C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataObjects\obj\Debug\netstandard2.0\DataObjects.csprojAssemblyReference.cache
-C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataObjects\obj\Debug\netstandard2.0\DataObjects.csproj.CoreCompileInputs.cache
-C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataObjects\obj\Debug\netstandard2.0\DataObjects.AssemblyInfoInputs.cache
-C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataObjects\obj\Debug\netstandard2.0\DataObjects.AssemblyInfo.cs
-C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataObjects\obj\Debug\netstandard2.0\DataObjects.dll
-C:\Users\Home\Desktop\.NET2 Final Project\FarmManagement\DataObjects\obj\Debug\netstandard2.0\DataObjects.pdb
