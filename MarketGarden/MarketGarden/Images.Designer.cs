@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MarketGarden {
+namespace PresentationLayer {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace MarketGarden {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MarketGarden.Images", typeof(Images).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PresentationLayer.Images", typeof(Images).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
