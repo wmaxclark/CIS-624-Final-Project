@@ -41,7 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IUserManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringHelpers.cs" />
+    <Compile Include="UserManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj">
@@ -52,6 +55,9 @@
       <Project>{7c0fc814-fd7c-4c31-873b-099a72cf6d7d}</Project>
       <Name>DataObjects</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

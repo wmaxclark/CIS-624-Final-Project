@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataObjects;
+using LogicLayer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,21 @@ namespace PresentationLayer
     /// </summary>
     public partial class frmCreateUpdateAccount : Window
     {
+        private IUserManager _userManager;
+        private User _user;
+        private bool _isNewUserAccount;
+
         public frmCreateUpdateAccount()
         {
             InitializeComponent();
+        }
+
+        public frmCreateUpdateAccount(IUserManager userManager, User user, bool isNewUserAccount)
+        {
+
+            this._userManager = userManager;
+            this._user = user;
+            this._isNewUserAccount = isNewUserAccount;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

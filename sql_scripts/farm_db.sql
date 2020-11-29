@@ -80,6 +80,16 @@ CREATE TABLE [dbo].[UserRole] (
 )
 GO
 
+print '' print '***  creating userrole test records ***'
+GO
+INSERT INTO [dbo].[UserRole]
+	([UserID],[RoleName])
+	VALUES
+		(100002, 'Farmer')
+		, (100003, 'Helper')
+		, (100004, 'Customer')
+GO
+
 print '' print '*** creating farmoperation table ***'
 GO
 
@@ -860,7 +870,7 @@ CREATE PROCEDURE [dbo].[sp_delete_restaraunt]
 AS
 	BEGIN
 		DELETE FROM Restaraunt
-		WHERE UserID_Customer = @UserID_Customer,
+		WHERE UserID_Customer = @UserID_Customer
 			AND ZipCode = @ZipCode
 		RETURN @@ROWCOUNT
 	END
@@ -916,15 +926,15 @@ GO
 
 print '' print '*** creating sp_delete_directsale ***'
 GO
-CREATE PROCEDURE [dbo].[sp_delete_restaraunt]
+CREATE PROCEDURE [dbo].[sp_delete_directsale]
 	(
 		@UserID_Customer			[int],
 		@ZipCode					[int]
 	)
 AS
 	BEGIN
-		DELETE FROM Restaraunt
-		WHERE UserID_Customer = @UserID_Customer,
+		DELETE FROM DirectSale
+		WHERE UserID_Customer = @UserID_Customer
 			AND ZipCode = @ZipCode
 		RETURN @@ROWCOUNT
 	END
@@ -967,7 +977,7 @@ GO
 
 print '' print '*** creating sp_delete_marketstall ***'
 GO
-CREATE PROCEDURE [dbo].[sp_delete_restaraunt]
+CREATE PROCEDURE [dbo].[sp_delete_marketstall]
 	(
 		@OperationID					[int],
 		@ZipCode						[int],
