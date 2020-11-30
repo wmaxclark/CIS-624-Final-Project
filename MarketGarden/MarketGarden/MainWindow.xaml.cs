@@ -33,12 +33,7 @@ namespace PresentationLayer
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            resetLogin();
-        }
-
-        private void tabItemOperationManagement_GotFocus(object sender, RoutedEventArgs e)
-        {
-
+            resetWindow();
         }
 
         private void txtEmail_GotFocus(object sender, RoutedEventArgs e)
@@ -54,13 +49,6 @@ namespace PresentationLayer
             lblPassword.Visibility = Visibility.Hidden;
         }
 
-        private void resetLogin()
-        {
-            txtEmail.Text = "Email";
-            lblPassword.Visibility = Visibility.Visible;
-            pwdPassword.Password = "";
-        }
-
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
             if ((string)btnLogin.Content == "Login")
@@ -74,7 +62,7 @@ namespace PresentationLayer
                     if (pwdPassword.Password == newUserPassword)
                     {
                         // Instantiate form to update user account
-                        var updatePassword = new frmCreateUpdateAccount(_userManager, _user, true);
+                        var updatePassword = new frmCreateUpdateAccount(_userManager, _user, true, newUserPassword);
 
                         // 
                         if (!updatePassword.ShowDialog() == true)
@@ -94,8 +82,11 @@ namespace PresentationLayer
                     pwdPassword.Visibility = Visibility.Hidden;
                     lblPassword.Visibility = Visibility.Hidden;
                     txtEmail.Visibility = Visibility.Hidden;
-
-
+                    if (_user.Roles.Count == 0)
+                    {
+                        MessageBox.Show("You have not chosen a role, please update your account.");
+                    }
+                    showUserTabs();
                 }
                 catch (Exception ex)
                 {
@@ -112,6 +103,11 @@ namespace PresentationLayer
         private void resetWindow()
         {
             hideAllTabs();
+            // Switch to an empty tab to resolve an issue with 
+            // child elements of hidden tabitems still displaying
+            tabMain.SelectedItem = tabItemEmpty;
+
+            // Update the interface to the default state
             mnuMain.IsEnabled = true;
             pwdPassword.Password = "";
             btnLogin.Content = "Login";
@@ -119,21 +115,22 @@ namespace PresentationLayer
             txtEmail.Text = "Email";
             pwdPassword.Visibility = Visibility.Visible;
             lblPassword.Visibility = Visibility.Visible;
-            txtEmail.Focus();
         }
 
         private void hideAllTabs()
         {
+            // Iterate through tabs in tabmain and hide
             foreach (TabItem t in tabMain.Items)
             {
-                t.Visibility = Visibility.Collapsed;
-
+                t.Visibility = Visibility.Hidden;
             }
         }
         private void showUserTabs()
         {
+            // Iterate through the users roles
             foreach (var r in _user.Roles)
             {
+                // Determine the role, three currently available
                 switch (r)
                 {
                     case "Farmer":
@@ -152,6 +149,37 @@ namespace PresentationLayer
             }
         }
 
+        private void tabItemOperationManagement_GotFocus(object sender, RoutedEventArgs e)
+        {
+            try
+            {
 
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private void tabItemCSA_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tabItemRestaraunt_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tabMarketStall_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tabDirectSale_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
