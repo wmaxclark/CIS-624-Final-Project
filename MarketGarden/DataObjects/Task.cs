@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataObjects
 {
-    public class Task
+    public class UserTask
     {
         public User Sender { get; private set; }
         public User Assignee { get; private set; }
@@ -16,7 +16,7 @@ namespace DataObjects
         public string TaskDescription { get; private set; }
         public bool Finished { get; private set; }
 
-        public Task(User sender, User assignee, 
+        public UserTask(User sender, User assignee, 
             DateTime assignDate, DateTime dueDate, 
             string taskName, string taskDescription)
         {

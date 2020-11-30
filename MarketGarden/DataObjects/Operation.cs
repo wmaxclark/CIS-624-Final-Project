@@ -16,10 +16,12 @@ namespace DataObjects
         public List<User> Helpers { get; private set; }
 
         public List<Product> Products { get; private set;}
+        public List<UserTask> Tasks { get; private set; }
 
         public Operation(int operationID, User operatorUser, 
             string operationName, int zipcode, 
-            bool active, List<User> helpers, List<Product> products)
+            bool active, List<User> helpers, 
+            List<Product> products, List<UserTask> userTasks)
         {
             this.OperationID = operationID;
             this.Operator = operatorUser;
@@ -28,6 +30,7 @@ namespace DataObjects
             this.Active = active;
             this.Helpers = helpers;
             this.Products = products;
+            this.Tasks = userTasks;
         }
     }
 }
