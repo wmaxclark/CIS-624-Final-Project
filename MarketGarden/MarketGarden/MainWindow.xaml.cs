@@ -24,6 +24,7 @@ namespace PresentationLayer
     {
         private IUserManager _userManager = new UserManager();
         private User _user = null;
+        private Operation _operation = null;
         private const string newUserPassword = "newuser";
 
         public MainWindow()
@@ -153,7 +154,9 @@ namespace PresentationLayer
         {
             try
             {
-
+                IOperationManager operationManager = new OperationManager();
+                _operation = operationManager.getOperationByOperator(_user);
+                dgProductsList.ItemsSource = operationManager.RetrieveProductsByOperation(_operation);
             }
             catch (Exception)
             {

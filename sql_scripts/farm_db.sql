@@ -52,6 +52,14 @@ CREATE TABLE [dbo].[Address] (
 )
 GO
 
+print '' print '***  creating address test records ***'
+GO
+INSERT INTO [dbo].[Address]
+	([ZipCode],[AddressState])
+	VALUES
+		(11111, 'NY')
+GO
+
 print '' print '*** creating role table ***'
 GO
 CREATE TABLE [dbo].[Role] (
@@ -70,9 +78,36 @@ INSERT INTO [dbo].[Role]
 		, ('Customer')
 GO
 
+
+
+print '' print '*** creating farmoperation table ***'
+GO
+
+CREATE TABLE [dbo].[FarmOperation] (
+	[OperationName]	[nvarchar](64)	NOT NULL,
+	[OperationID]		[int]		IDENTITY(100000, 1) NOT NULL,
+	[UserID_Operator]	[int]		NOT NULL,
+	[ZipCode]			[int]		NOT NULL,
+	[MaxShares]		[int]		NULL,
+	[Active]			[bit]		NOT NULL DEFAULT 1
+	CONSTRAINT [pk_farmOperation_operationID] PRIMARY KEY([OperationID] ASC),
+	CONSTRAINT [fk_farmOperation_ZipCode] FOREIGN KEY([ZipCode])
+		REFERENCES [dbo].[Address]([ZipCode])
+)
+GO
+
+print '' print '***  creating farmoperation test records ***'
+GO
+INSERT INTO [dbo].[FarmOperation]
+	([OperationName],[UserID_Operator],[ZipCode],[Active])
+	VALUES
+		('Tebows Farm', 100002, 11111, 1)
+GO
+
 print '' print '***  creating userrole table ***'
 GO
 CREATE TABLE [dbo].[UserRole] (
+	[OperationID]	[int]		NOT NULL,
 	[UserID]		[int]		NOT NULL,
 	[RoleName]	[nvarchar](64)	NOT NULL,
 	CONSTRAINT [fk_userRole_userID] FOREIGN KEY([UserID])
@@ -83,26 +118,9 @@ GO
 print '' print '***  creating userrole test records ***'
 GO
 INSERT INTO [dbo].[UserRole]
-	([UserID],[RoleName])
+	([OperationID],[UserID],[RoleName])
 	VALUES
-		(100002, 'Farmer')
-		, (100003, 'Helper')
-		, (100004, 'Customer')
-GO
-
-print '' print '*** creating farmoperation table ***'
-GO
-
-CREATE TABLE [dbo].[FarmOperation] (
-	[OperationName]	[nvarchar](64)	NOT NULL,
-	[OperationID]		[int]		IDENTITY(100000, 1) NOT NULL,
-	[UserID_Operator]	[int]		NOT NULL,
-	[ZipCode]			[int]		NOT NULL,
-	[Active]			[bit]		NOT NULL DEFAULT 1
-	CONSTRAINT [pk_farmOperation_operationID] PRIMARY KEY([OperationID] ASC),
-	CONSTRAINT [fk_farmOperation_ZipCode] FOREIGN KEY([ZipCode])
-		REFERENCES [dbo].[Address]([ZipCode])
-)
+		(100000, 100002, 'Farmer')
 GO
 
 print '' print '***  creating task table ***'
@@ -111,7 +129,7 @@ CREATE TABLE [dbo].[Task] (
 	[UserID_Sender]		[int]		NOT NULL,
 	[UserID_Assignee]		[int]		NOT NULL,
 	[AssignDate]			[DateTime]	NOT NULL,
-	[DueDate]				[DateTime]	NOT NULL,
+	[DueDate]				[DateTime]	NULL,
 	[TaskName]			[nvarchar](64) NOT NULL,
 	[TaskDescription]		[nvarchar](1024) NULL,
 	[Finished]			[bit]		NOT NULL DEFAULT 0
@@ -385,6 +403,21 @@ AS
 	END
 GO
 
+print '' print '*** creating sp_select_user_role_by_operation ***'
+GO
+CREATE PROCEDURE [dbo].[sp_select_user_role_by_operation]
+	(
+		@OperationID				[int]
+	)
+AS
+	BEGIN
+		SELECT UserAccount.UserID, FirstName, LastName, Email, RoleName
+		FROM UserRole
+			JOIN UserAccount ON UserRole.UserID = UserAccount.UserID
+		WHERE UserRole.OperationID = @OperationID
+	END
+GO
+
 print '' print '*** creating sp_update_user_role_by_email ***'
 GO
 CREATE PROCEDURE [dbo].[sp_update_user_role_by_email]
@@ -467,7 +500,7 @@ CREATE PROCEDURE [dbo].[sp_select_farmoperation_by_operator]
 	)
 AS
 BEGIN
-	SELECT OperationID, OperationName
+	SELECT OperationID, OperationName, ZipCode, MaxShares, Active
 	FROM FarmOperation
 	WHERE UserID_Operator = @UserID_Operator
 END
@@ -481,7 +514,7 @@ CREATE PROCEDURE [dbo].[sp_select_farmoperation_by_ZipCode]
 	)
 AS
 BEGIN
-	SELECT OperationID, OperationName
+	SELECT OperationID, OperationName, ZipCode, MaxShares, Active
 	FROM FarmOperation
 	WHERE ZipCode = @ZipCode
 END
@@ -495,7 +528,7 @@ CREATE PROCEDURE [dbo].[sp_select_farmoperation_by_state]
 	)
 AS
 BEGIN
-	SELECT OperationID, OperationName
+	SELECT OperationID, OperationName, FarmOperation.ZipCode, MaxShares, Active
 	FROM FarmOperation
 		JOIN Address ON Address.ZipCode = FarmOperation.ZipCode
 	WHERE Address.AddressState = @AddressState
@@ -508,12 +541,18 @@ CREATE PROCEDURE [dbo].[sp_update_farmoperation]
 	(
 		@OperationID				[int],
 		@UserID_Operator			[int],
+		@MaxShares				[int],
+		@ZipCode					[int],
+		@Active					[bit],
 		@OperationName				[nvarchar](64)
 	)
 AS
 	BEGIN
 		UPDATE FarmOperation
 			SET UserID_Operator = @UserID_Operator,
+				MaxShares = @MaxShares,
+				ZipCode = @ZipCode,
+				Active = @Active,
 				OperationName = @OperationName
 			WHERE OperationID = @OperationID
 		RETURN @@ROWCOUNT

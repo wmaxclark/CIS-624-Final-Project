@@ -9,10 +9,11 @@ namespace LogicLayer
 {
     public interface IOperationManager
     {
-        Operation getOperationByOperator(User operatorUser);
-        bool addProduct(Product product);
-        bool deleteProduct(Product product);
-        bool addTask(UserTask userTask);
-        bool finishTask(UserTask userTask);
+        Operation GetOperationByOperator(User operatorUser);
+        bool AddProduct(Product product);
+        List<Product> RetrieveProductsByOperation(Operation operation);
+        bool DeleteProduct(Product product);
+        bool AddTask(UserTask userTask);
+        bool FinishTask(UserTask userTask);
     }
 }

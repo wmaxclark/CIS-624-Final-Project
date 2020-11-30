@@ -4,34 +4,61 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataAccessLayer;
 
 namespace LogicLayer
 {
     public class OperationManager : IOperationManager
     {
-        public bool addProduct(Product product)
-        {
-            throw new NotImplementedException();
-        }
+        private IOperationAccessor _operationAccessor;
 
-        public bool addTask(UserTask userTask)
+        public OperationManager()
         {
-            throw new NotImplementedException();
+            _operationAccessor = new OperationAccessor();
         }
+        public Operation GetOperationByOperator(User operatorUser)
+        {
+            Operation operation = null;
 
-        public bool deleteProduct(Product product)
+            try
+            {
+                operation = _operationAccessor.RetrieveOperationByOperator(operatorUser);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Operation not available", ex);
+            }
+            return operation;
+        }
+        public bool AddProduct(Product product)
         {
             throw new NotImplementedException();
         }
-
-        public bool finishTask(UserTask userTask)
+        public List<Product> RetrieveProductsByOperation(Operation operation)
+        {
+            List<Product> products = null;
+            try
+            {
+                products = _operationAccessor.RetrieveProductsByOperation(operation);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Product list not available", ex);
+            }
+            return products;
+        }
+        public bool DeleteProduct(Product product)
         {
             throw new NotImplementedException();
         }
-
-        public Operation getOperationByOperator(User operatorUser)
+        public bool AddTask(UserTask userTask)
         {
             throw new NotImplementedException();
         }
+        public bool FinishTask(UserTask userTask)
+        {
+            throw new NotImplementedException();
+        }
+        
     }
 }

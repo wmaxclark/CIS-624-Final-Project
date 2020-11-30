@@ -42,7 +42,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DBConnection.cs" />
+    <Compile Include="IOperationAccessor.cs" />
     <Compile Include="IUserAccessor.cs" />
+    <Compile Include="OperationAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserAccessor.cs" />
   </ItemGroup>
