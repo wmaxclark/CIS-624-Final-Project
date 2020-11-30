@@ -603,25 +603,24 @@ AS
 	END
 GO
 
-print '' print '*** creating sp_get_task_by_sender ***'
+print '' print '*** creating sp_select_task_by_sender ***'
 GO
-CREATE PROCEDURE [dbo].[sp_get_task_by_sender]
+CREATE PROCEDURE [dbo].[sp_select_task_by_sender]
 	(
-		@UserID_Sender			[int],
-		@Finished				[bit]
+		@UserID_Sender			[int]
 	)
 AS
 	BEGIN
-		SELECT UserID_Assignee,AssignDate,DueDate,TaskName,TaskDescription
+		SELECT UserID_Assignee,AssignDate,DueDate,
+		TaskName,TaskDescription,Finished
 		FROM Task
 		WHERE UserID_Sender = @UserID_Sender
-			AND Finished = @Finished
 	END
 GO
 
-print '' print '*** creating sp_get_task_by_assignee ***'
+print '' print '*** creating sp_select_task_by_assignee ***'
 GO
-CREATE PROCEDURE [dbo].[sp_get_task_by_assignee]
+CREATE PROCEDURE [dbo].[sp_select_task_by_assignee]
 	(
 		@UserID_Assignee		[int],
 		@Finished				[bit]
@@ -697,13 +696,13 @@ GO
 
 print '' print '*** creating sp_select_product_by_operation ***'
 GO
-CREATE PROCEDURE [dbo].[sp_get_product_by_operation]
+CREATE PROCEDURE [dbo].[sp_select_product_by_operation]
 	(
 		@OperationID					[int]
 	)
 AS
 	BEGIN
-		SELECT ProductName, ProductDescription, InputCost,
+		SELECT ProductID, ProductName, ProductDescription, InputCost,
 			Unit, UnitPrice, GerminationDate,
 			DaysAfterGerminationToPlant,
 			DaysAfterGerminationToTransplant,
