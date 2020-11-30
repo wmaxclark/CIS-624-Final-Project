@@ -13,5 +13,6 @@ namespace DataAccessLayer
         List<Product> RetrieveProductsByOperation(int operationID);
 
         List<User> RetrieveHelpersByOperation(int operationID);
+        List<UserTask> RetrieveTasksByOperation(int operationID);
     }
 }

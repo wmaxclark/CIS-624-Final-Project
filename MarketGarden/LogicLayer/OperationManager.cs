@@ -39,7 +39,7 @@ namespace LogicLayer
             List<Product> products = null;
             try
             {
-                products = _operationAccessor.RetrieveProductsByOperation(operation);
+                products = _operationAccessor.RetrieveProductsByOperation(operation.OperationID);
             }
             catch (Exception ex)
             {

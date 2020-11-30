@@ -11,6 +11,8 @@ namespace DataAccessLayer
 {
     public class OperationAccessor : IOperationAccessor
     {
+        
+
         public Operation RetrieveOperationByOperator(User operatorUser)
         {
             Operation operation = null;
@@ -50,11 +52,17 @@ namespace DataAccessLayer
                     var active = reader.GetBoolean(5);
                     reader.Close();
 
-                    // Get roles from another stored procedure
-                    List<string> helpers = RetrieveHelpersByOperation();
+                    // Get helpers from another stored procedure
+                    List<User> helpers = RetrieveHelpersByOperation(operationID);
 
-                    // Construct new user with captured values
-                    user = new User(userID, firstName, lastName, email, roles);
+                    // Get products from another stored procedure
+                    List<Product> products = RetrieveProductsByOperation(operationID);
+
+                    // Get tasks from another stored procedure
+                    List<UserTask> tasks = RetrieveTasksByOperation(operationID);
+
+                    // Construct new operation with captured values
+                    operation = new Operation(operationID, operatorUser, operationName, zipCode, maxShares, active, helpers, products, tasks);
                 }
                 else
                 {
@@ -74,6 +82,16 @@ namespace DataAccessLayer
         }
 
         public List<Product> RetrieveProductsByOperation(int operationID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<User> RetrieveHelpersByOperation(int operationID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<UserTask> RetrieveTasksByOperation(int operationID)
         {
             throw new NotImplementedException();
         }

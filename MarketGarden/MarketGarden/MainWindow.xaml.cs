@@ -155,7 +155,7 @@ namespace PresentationLayer
             try
             {
                 IOperationManager operationManager = new OperationManager();
-                _operation = operationManager.getOperationByOperator(_user);
+                _operation = operationManager.GetOperationByOperator(_user);
                 dgProductsList.ItemsSource = operationManager.RetrieveProductsByOperation(_operation);
             }
             catch (Exception)
