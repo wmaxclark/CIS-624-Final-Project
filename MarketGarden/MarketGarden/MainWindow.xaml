@@ -63,7 +63,7 @@
                         <Label Style="{StaticResource NormalLabel}" x:Name="lblProducts" Content="Products" 
                                Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"></Label>
                         <Button x:Name="addProduct" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" Margin="80px,0px"
-                                Width="40px" Height="40px" VerticalContentAlignment="Center">
+                                Width="40px" Height="40px" VerticalContentAlignment="Center" Click="addProduct_Click">
                             <TextBlock FontSize="40" Margin="0px,-32.5px">+</TextBlock>
                         </Button>
                         <Label Style="{StaticResource NormalLabel}" x:Name="lblDistribution" Content="Distribution" 
@@ -71,7 +71,7 @@
                         <Label Style="{StaticResource NormalLabel}" x:Name="lblTasks" Content="Tasks" 
                                Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left"></Label>
                         
-                        <DataGrid x:Name="dgProductsList" Grid.Row="1" Grid.Column="0" Margin="10">
+                        <DataGrid x:Name="dgProductsList" Grid.Row="1" Grid.Column="0" Margin="10" MouseDoubleClick="dgProductsList_MouseDoubleClick">
                             
                         </DataGrid>
                         

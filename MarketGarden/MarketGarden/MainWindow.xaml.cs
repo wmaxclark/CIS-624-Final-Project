@@ -64,7 +64,7 @@ namespace PresentationLayer
                     if (pwdPassword.Password == newUserPassword)
                     {
                         // Instantiate form to update user account
-                        var updatePassword = new frmCreateUpdateAccount(_userManager, _user, true, newUserPassword);
+                        var updatePassword = new frmCreateUpdateAccount(_userManager, _user, true, false, newUserPassword);
 
                         // 
                         if (!updatePassword.ShowDialog() == true)
@@ -189,7 +189,26 @@ namespace PresentationLayer
             dgProductsList.Columns[7].Header = "Days after Germination to transplant";
             dgProductsList.Columns[8].Header = "Days after Germination to harvest";
         }
+        private void dgProductsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var selectedProduct = (Product)dgProductsList.SelectedItem;
+            if (selectedProduct == null)
+            {
+                MessageBox.Show("You need to select a product in order to edit.", 
+                    "Edit Operation Not Available", MessageBoxButton.OK, 
+                    MessageBoxImage.Information);
 
+                var detailWindow = new frmProductAddEditDetail(selectedProduct);
+                if (detailWindow.ShowDialog() == true)
+                {
+                    refreshProductsList();
+                }
+            }
+        }
+        private void addProduct_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
         private void tabItemCSA_GotFocus(object sender, RoutedEventArgs e)
         {
 
@@ -214,5 +233,7 @@ namespace PresentationLayer
         {
 
         }
+
+        
     }
 }

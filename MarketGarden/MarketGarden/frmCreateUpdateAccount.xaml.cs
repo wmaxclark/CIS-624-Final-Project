@@ -24,19 +24,22 @@ namespace PresentationLayer
         private IUserManager _userManager;
         private User _user;
         private bool _isNewUserAccount;
+        private bool _isExistingAccount;
         private string newUserPassword;
 
         public frmCreateUpdateAccount()
         {
+            _userManager = new UserManager();
             InitializeComponent();
         }
 
-        public frmCreateUpdateAccount(IUserManager userManager, User user, bool isNewUserAccount, string newUserPassword)
+        public frmCreateUpdateAccount(IUserManager userManager, User user, bool isNewUserAccount, bool isExistingAccount, string newUserPassword)
         {
 
             this._userManager = userManager;
             this._user = user;
             this._isNewUserAccount = isNewUserAccount;
+            this._isExistingAccount = isExistingAccount;
             this.newUserPassword = newUserPassword;
             InitializeComponent();
         }
@@ -47,11 +50,24 @@ namespace PresentationLayer
             {
                 changePasswordHandler();
             }
+            if (_isExistingAccount)
+            {
+                updateAccountHandler();
+            }
             else
             {
-                txtEmail.IsEnabled = true;
-                txtFirstName.Focus();
+                createAccountHandler();
             }
+        }
+
+        private void createAccountHandler()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void updateAccountHandler()
+        {
+            throw new NotImplementedException();
         }
 
         private void changePasswordHandler()
@@ -72,40 +88,50 @@ namespace PresentationLayer
             string oldPassword = pwdPassword.Password;
             string newPassword = pwdNewPassword.Password;
             string retypePassword = pwdRetypePassword.Password;
-
-            if (!email.isValidEmail() || email != _user.Email)
+            if (_isNewUserAccount)
             {
-                MessageBox.Show("Invalid Email");
-                txtEmail.Clear();
-                txtEmail.Focus();
-                return;
-            }
-            if (!newPassword.isValidPassword() || newPassword == newUserPassword)
-            {
-                MessageBox.Show("Invalid Password");
-                pwdNewPassword.Clear();
-                pwdNewPassword.Focus();
-                return;
-            }
-            if (retypePassword != newPassword)
-            {
-                MessageBox.Show("Passwords must match");
-                pwdRetypePassword.Clear();
-                pwdRetypePassword.Focus();
-                return;
-            }
-            try
-            {
-                if (_userManager.UpdatePassword(_user.Email, pwdPassword.Password, pwdNewPassword.Password))
+                if (!email.isValidEmail() || email != _user.Email)
                 {
-                    // If all checks have succeeded
-                    MessageBox.Show("Password Updated.");
-                    this.DialogResult = true;
+                    MessageBox.Show("Invalid Email");
+                    txtEmail.Clear();
+                    txtEmail.Focus();
+                    return;
+                }
+                if (!newPassword.isValidPassword() || newPassword == newUserPassword)
+                {
+                    MessageBox.Show("Invalid Password");
+                    pwdNewPassword.Clear();
+                    pwdNewPassword.Focus();
+                    return;
+                }
+                if (retypePassword != newPassword)
+                {
+                    MessageBox.Show("Passwords must match");
+                    pwdRetypePassword.Clear();
+                    pwdRetypePassword.Focus();
+                    return;
+                }
+                try
+                {
+                    if (_userManager.UpdatePassword(_user.Email, pwdPassword.Password, pwdNewPassword.Password))
+                    {
+                        // If all checks have succeeded
+                        MessageBox.Show("Password Updated.");
+                        this.DialogResult = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
                 }
             }
-            catch (Exception ex)
+            else if (_isExistingAccount)
             {
-                MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
+
+            }
+            else
+            {
+
             }
         }
     }

@@ -1,17 +1,16 @@
-﻿<Window x:Class="PresentationLayer.frmCreateUpdateAccount"
+﻿<Window x:Class="PresentationLayer.frmProductAddEditDetail"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PresentationLayer"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
-        Title="Account" Height="440" Width="450" Loaded="Window_Loaded">
-
+        Title="frmProductAddEditDetail" Height="600" Width="600">
     <Grid Style="{StaticResource Background1}">
         <Grid.RowDefinitions>
             <RowDefinition Height="10"></RowDefinition>
             <RowDefinition></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="40"></RowDefinition>
@@ -28,7 +27,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition Width="100"></ColumnDefinition>
+            <ColumnDefinition Width="300"></ColumnDefinition>
             <ColumnDefinition Width="200"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="10"></ColumnDefinition>
@@ -38,41 +37,51 @@
                    FontSize="16" Margin="5" Grid.Column="2"
                    Grid.Row="2" Grid.ColumnSpan="2">Create</TextBlock>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="3" Grid.Column="2">First Name</Label>
+               Grid.Row="3" Grid.Column="2">Product Name</Label>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="4" Grid.Column="2">Last Name</Label>
+               Grid.Row="4" Grid.Column="2">Product Description</Label>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="5" Grid.Column="2">Email</Label>
+               Grid.Row="5" Grid.Column="2">Unit</Label>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="6" Grid.Column="2">Password</Label>
+               Grid.Row="6" Grid.Column="2">Input Cost</Label>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="7" Grid.Column="2">New Password</Label>
+               Grid.Row="7" Grid.Column="2">Unit Price</Label>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="8" Grid.Column="2">Retype</Label>
+               Grid.Row="8" Grid.Column="2">Germination Date</Label>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="9" Grid.Column="2">Role</Label>
-        <TextBox x:Name="txtFirstName" 
+               Grid.Row="9" Grid.Column="2">Days after germination to plant</Label>
+        <Label Style="{StaticResource NormalLabel}"
+               Grid.Row="10" Grid.Column="2">Days after germination to transplant</Label>
+        <Label Style="{StaticResource NormalLabel}"
+               Grid.Row="11" Grid.Column="2">Days after germination to harvest</Label>
+        <TextBox x:Name="txtProductName" 
                  Style="{StaticResource NormalTextBox}"
                  Grid.Row="3" Grid.Column="3"></TextBox>
-        <TextBox x:Name="txtLastName" 
+        <TextBox x:Name="txtProductDescription" 
                  Style="{StaticResource NormalTextBox}"
                  Grid.Row="4" Grid.Column="3"></TextBox>
-        <TextBox x:Name="txtEmail" 
+        <TextBox x:Name="txtUnit" 
                  Style="{StaticResource NormalTextBox}"
                  Grid.Row="5" Grid.Column="3"></TextBox>
-        <PasswordBox x:Name="pwdPassword" 
-                     Style="{StaticResource NormalPasswordBox}"
-                     Grid.Row="6" Grid.Column="3"></PasswordBox>
-        <PasswordBox x:Name="pwdNewPassword" 
-                     Style="{StaticResource NormalPasswordBox}"
-                     Grid.Row="7" Grid.Column="3"></PasswordBox>
-        <PasswordBox x:Name="pwdRetypePassword" 
-                     Style="{StaticResource NormalPasswordBox}"
-                     Grid.Row="8" Grid.Column="3"></PasswordBox>
-        <ComboBox x:Name="cmbUserRoles"
-                  Style="{StaticResource NormalDropDown}"
-                  Grid.Row="9" Grid.Column="3"></ComboBox>
-        <Button Grid.Row="10" Grid.Column="2" Grid.ColumnSpan="2"
+        <TextBox x:Name="txtInputCost" 
+                 Style="{StaticResource NormalTextBox}"
+                 Grid.Row="6" Grid.Column="3"></TextBox>
+        <TextBox x:Name="txtUnitPrice" 
+                 Style="{StaticResource NormalTextBox}"
+                 Grid.Row="7" Grid.Column="3"></TextBox>
+        <DatePicker x:Name="dptGerminationDate" Grid.Row="8" Grid.Column="3"
+                    Width="190" Style="{StaticResource NormalDatePicker}">
+        </DatePicker>
+        <TextBox x:Name="txtDaysAfterToPlant" 
+                 Style="{StaticResource NormalTextBox}"
+                 Grid.Row="9" Grid.Column="3"></TextBox>
+        <TextBox x:Name="txtDaysAfterToTransPlant" 
+                 Style="{StaticResource NormalTextBox}"
+                 Grid.Row="10" Grid.Column="3"></TextBox>
+        <TextBox x:Name="txtDaysAfterToHarvest" 
+                 Style="{StaticResource NormalTextBox}"
+                 Grid.Row="11" Grid.Column="3"></TextBox>
+        <Button Grid.Row="12" Grid.Column="2" Grid.ColumnSpan="2"
                      Style="{StaticResource NormalButton}" 
                 Width="300px" Height="34"          
                 Content="Submit" Click="Button_Click"/>

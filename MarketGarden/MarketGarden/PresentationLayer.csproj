@@ -55,8 +55,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="frmProductAddEditDetail.xaml.cs">
+      <DependentUpon>frmProductAddEditDetail.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ValidationHelpers.cs" />
     <Page Include="frmCreateUpdateAccount.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="frmProductAddEditDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
