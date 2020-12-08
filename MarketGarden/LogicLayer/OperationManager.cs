@@ -34,19 +34,6 @@ namespace LogicLayer
         {
             throw new NotImplementedException();
         }
-        public List<Product> RetrieveProductsByOperation(Operation operation)
-        {
-            List<Product> products = null;
-            try
-            {
-                products = _operationAccessor.RetrieveProductsByOperation(operation.OperationID);
-            }
-            catch (Exception ex)
-            {
-                throw new ApplicationException("Product list not available", ex);
-            }
-            return products;
-        }
         public bool DeleteProduct(Product product)
         {
             throw new NotImplementedException();

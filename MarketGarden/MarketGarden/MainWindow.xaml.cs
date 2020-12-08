@@ -23,6 +23,7 @@ namespace PresentationLayer
     public partial class MainWindow : Window
     {
         private IUserManager _userManager = new UserManager();
+        private IOperationManager _operationManager = new OperationManager();
         private User _user = null;
         private Operation _operation = null;
         private const string newUserPassword = "newuser";
@@ -116,6 +117,8 @@ namespace PresentationLayer
             txtEmail.Text = "Email";
             pwdPassword.Visibility = Visibility.Visible;
             lblPassword.Visibility = Visibility.Visible;
+
+            dgProductsList.ItemsSource = null;
         }
 
         private void hideAllTabs()
@@ -137,6 +140,7 @@ namespace PresentationLayer
                     case "Farmer":
                         tabItemOperationManagement.Visibility = Visibility.Visible;
                         tabItemOperationManagement.IsSelected = true;
+                        tabItemOperationManagement.Focus();
                         break;
                     case "Customer":
                         tabItemCustomer.Visibility = Visibility.Visible;
@@ -154,15 +158,36 @@ namespace PresentationLayer
         {
             try
             {
-                IOperationManager operationManager = new OperationManager();
-                _operation = operationManager.GetOperationByOperator(_user);
-                dgProductsList.ItemsSource = operationManager.RetrieveProductsByOperation(_operation);
+                _operation = _operationManager.GetOperationByOperator(_user);
+                if (dgProductsList.ItemsSource == null)
+                {
+                    refreshProductsList();
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
             }
+        }
+
+        private void refreshProductsList()
+        {
+            dgProductsList.Visibility = Visibility.Visible;
+            dgProductsList.ItemsSource = _operation.Products;
+
+            // Remove the header for the unique ID, not meaningful to user
+            dgProductsList.Columns.Remove(dgProductsList.Columns[0]);
+            dgProductsList.Columns.Remove(dgProductsList.Columns[0]);
+
+            dgProductsList.Columns[0].Header = "Product Name";
+            dgProductsList.Columns[1].Header = "Product Description";
+            dgProductsList.Columns[2].Header = "Unit";
+            dgProductsList.Columns[3].Header = "Input Cost";
+            dgProductsList.Columns[4].Header = "Unit Price";
+            dgProductsList.Columns[5].Header = "Germination Date";
+            dgProductsList.Columns[6].Header = "Days after Germination to plant";
+            dgProductsList.Columns[7].Header = "Days after Germination to transplant";
+            dgProductsList.Columns[8].Header = "Days after Germination to harvest";
         }
 
         private void tabItemCSA_GotFocus(object sender, RoutedEventArgs e)
@@ -181,6 +206,11 @@ namespace PresentationLayer
         }
 
         private void tabDirectSale_GotFocus(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void tabItemOperationManagement_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
 
         }

@@ -11,7 +11,7 @@ namespace LogicLayer
     {
         Operation GetOperationByOperator(User operatorUser);
         bool AddProduct(Product product);
-        List<Product> RetrieveProductsByOperation(Operation operation);
+        //List<Product> RetrieveProductsByOperation(Operation operation);
         bool DeleteProduct(Product product);
         bool AddTask(UserTask userTask);
         bool FinishTask(UserTask userTask);

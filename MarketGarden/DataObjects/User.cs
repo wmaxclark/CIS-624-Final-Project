@@ -23,5 +23,13 @@ namespace DataObjects
             this.Email = email;
             this.Roles = roles;
         }
+        public User(int userID, string firstName, string lastName,
+            string email)
+        {
+            this.UserID = userID;
+            this.FirstName = firstName;
+            this.LastName = lastName;
+            this.Email = email;
+        }
     }
 }

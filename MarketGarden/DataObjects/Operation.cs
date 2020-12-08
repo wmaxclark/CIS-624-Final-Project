@@ -20,7 +20,7 @@ namespace DataObjects
         public List<UserTask> Tasks { get; private set; }
 
         public Operation(int operationID, User operatorUser, 
-            string operationName, int zipcode, int maxShares,
+            string operationName, int zipcode,
             bool active, List<User> helpers, 
             List<Product> products, List<UserTask> userTasks)
         {
@@ -28,7 +28,6 @@ namespace DataObjects
             this.Operator = operatorUser;
             this.OperationName = operationName;
             this.Zipcode = zipcode;
-            this.MaxShares = maxShares;
             this.Active = active;
             this.Helpers = helpers;
             this.Products = products;

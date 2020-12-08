@@ -11,11 +11,6 @@ namespace DataAccessLayer
 {
     public class OperationAccessor : IOperationAccessor
     {
-        private enum UserRoles
-        {
-            Helper
-        };
-
         public Operation RetrieveOperationByOperator(User operatorUser)
         {
             Operation operation = null;
@@ -49,10 +44,9 @@ namespace DataAccessLayer
                 {
                     reader.Read();
                     var operationID = reader.GetInt32(0);
-                    var operationName = reader.GetString(2);
-                    var zipCode = reader.GetInt32(3);
-                    var maxShares = reader.GetInt32(4);
-                    var active = reader.GetBoolean(5);
+                    var operationName = reader.GetString(1);
+                    var zipCode = reader.GetInt32(2);
+                    var active = reader.GetBoolean(4);
                     reader.Close();
 
                     // Get helpers from another stored procedure
@@ -65,7 +59,7 @@ namespace DataAccessLayer
                     List<UserTask> tasks = RetrieveTasksBySender(operatorUser);
 
                     // Construct new operation with captured values
-                    operation = new Operation(operationID, operatorUser, operationName, zipCode, maxShares, active, helpers, products, tasks);
+                    operation = new Operation(operationID, operatorUser, operationName, zipCode, active, helpers, products, tasks);
                 }
                 else
                 {
@@ -86,7 +80,7 @@ namespace DataAccessLayer
 
         public List<Product> RetrieveProductsByOperation(int operationID)
         {
-            List<Product> productList = null;
+            List<Product> productList = new List<Product>();
 
             // Retrieve a connection from factory
             var conn = DBConnection.GetDBConnection();
@@ -127,18 +121,19 @@ namespace DataAccessLayer
                         var daysAfterGerminationToPlant = reader.GetInt32(7);
                         var daysAfterGerminationToTransplant = reader.GetInt32(8);
                         var daysAfterGerminationToHarvest = reader.GetInt32(9);
-                        reader.Close();
+                        
 
                         // Construct new operation with captured values
                         var product = new Product(productID, operationID, productName, productDescription,
-                            unit, inputCost, unitPrice, (DateTime)germinationDate, 
-                            daysAfterGerminationToPlant, 
-                            daysAfterGerminationToTransplant, 
+                            unit, inputCost, unitPrice, (DateTime)germinationDate,
+                            daysAfterGerminationToPlant,
+                            daysAfterGerminationToTransplant,
                             daysAfterGerminationToHarvest);
-                        
+
                         // Add the resulting product to the list
                         productList.Add(product);
                     }
+                    reader.Close();
                 }
                 else
                 {
@@ -159,7 +154,7 @@ namespace DataAccessLayer
 
         public List<User> RetrieveHelpersByOperation(int operationID)
         {
-            List<User> helperList = null;
+            List<User> helperList = new List<User>();
 
             // Retrieve a connection from factory
             var conn = DBConnection.GetDBConnection();
@@ -194,20 +189,21 @@ namespace DataAccessLayer
                         var firstName = reader.GetString(1);
                         var lastName = reader.GetString(2);
                         var email = reader.GetString(3);
-                        reader.Close();
-
+                        var role = reader.GetString(4);
                         // Instantiate a list of roles the user has by calling the stored procedure
-                        List<string> roles = RetrieveRolesByEmail(email);
+                        //List<string> roles = RetrieveRolesByEmail(email);
 
                         // Validate that the user has the role of a helper
-                        if (roles.Contains(UserRoles.Helper.ToString()))
+                        if (role.Equals("Helper"))
                         {
                             // Construct new user with captured values
-                            User helper = new User(userID, firstName, lastName, email, roles);
+                            User helper = new User(userID, firstName, lastName, email);
                             // Add the resulting user to the list
                             helperList.Add(helper);
                         }
+                        
                     }
+                    reader.Close();
                 }
                 else
                 {
@@ -228,7 +224,7 @@ namespace DataAccessLayer
 
         public List<UserTask> RetrieveTasksBySender(User operatorUser)
         {
-            List<UserTask> taskList = null;
+            List<UserTask> taskList = new List<UserTask>();
 
             // Retrieve a connection from factory
             var conn = DBConnection.GetDBConnection();
@@ -240,10 +236,10 @@ namespace DataAccessLayer
             cmd.CommandType = CommandType.StoredProcedure;
 
             // Add parameter to command
-            cmd.Parameters.Add("@OperationID", SqlDbType.Int);
+            cmd.Parameters.Add("@UserID_Sender", SqlDbType.Int);
 
             // Set parameter to value
-            cmd.Parameters["@OperationID"].Value = operatorUser.UserID;
+            cmd.Parameters["@UserID_Sender"].Value = operatorUser.UserID;
 
             // Execute command
             try
@@ -270,17 +266,13 @@ namespace DataAccessLayer
                         User assignee = RetrieveUserByID(userID_assignee);
 
                         // Construct new task with captured values
-                        UserTask task = new UserTask(operatorUser, assignee, (DateTime)assignDate, 
+                        UserTask task = new UserTask(operatorUser, assignee, (DateTime)assignDate,
                             (DateTime)dueDate, taskName, taskDescription);
-                        
+
                         // Add the resulting task to the list
                         taskList.Add(task);
-                        
+
                     }
-                }
-                else
-                {
-                    throw new ApplicationException("No products found.");
                 }
             }
             catch (Exception ex)
@@ -297,7 +289,59 @@ namespace DataAccessLayer
 
         public List<string> RetrieveRolesByEmail(string email)
         {
-            throw new NotImplementedException();
+            List<string> roleList = new List<string>();
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_select_user_role_by_email", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Add parameter to command
+            cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 100);
+
+            // Set parameter to value
+            cmd.Parameters["@Email"].Value = email;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                var reader = cmd.ExecuteReader();
+
+                // Capture results
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var role = reader.GetString(0);
+
+                        // Add the resulting task to the list
+                        roleList.Add(role);
+                    }
+                    reader.Close();
+                }
+                else
+                {
+                    throw new ApplicationException("No products found.");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return roleList;
         }
 
         public User RetrieveUserByID(int userID_assignee)
