@@ -46,6 +46,21 @@ namespace LogicLayer
             return user;
         }
 
+        public List<string> getAllRoles()
+        {
+            
+            List<string> roleList = new List<string>();
+            try
+            {
+                roleList = userAccessor.selectAllRoles();
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("No roles found.", ex);
+            }
+            return roleList;
+        }
+
         public bool UpdatePassword(string email, string oldPassword, string newPassword)
         {
             bool result = false;
@@ -69,6 +84,54 @@ namespace LogicLayer
             {
 
                 throw new ApplicationException("Password not changed.", ex);
+            }
+            return result;
+        }
+
+        public bool UpdateUserRole(string email, string role)
+        {
+            bool result = false;
+
+            try
+            {
+                result = (1 == userAccessor.UpdateUserRole(email, role));
+            }
+            catch (Exception ex)
+            {
+
+                throw new ApplicationException("Role not changed.", ex);
+            }
+            return result;
+        }
+        
+        public int CreateUserAccount(string email, string firstName, string lastName, string passwordHash)
+        {
+            int result = 0;
+            passwordHash = passwordHash.hashSHA256();
+            try
+            {
+                result = userAccessor.CreateUserAccount(email, firstName, lastName, passwordHash);
+            }
+            catch (Exception ex)
+            {
+
+                throw new ApplicationException("Account not created.", ex);
+            }
+            return result;
+        }
+
+        public bool CreateUserRole(int userID, string role)
+        {
+            bool result = false;
+
+            try
+            {
+                result = (1 == userAccessor.CreateUserRole(userID, role));
+            }
+            catch (Exception ex)
+            {
+
+                throw new ApplicationException("Role not changed.", ex);
             }
             return result;
         }

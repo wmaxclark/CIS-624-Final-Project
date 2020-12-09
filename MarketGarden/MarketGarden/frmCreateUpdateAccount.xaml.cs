@@ -26,6 +26,7 @@ namespace PresentationLayer
         private bool _isNewUserAccount;
         private bool _isExistingAccount;
         private string newUserPassword;
+        private List<string> roleList;
 
         public frmCreateUpdateAccount()
         {
@@ -46,11 +47,13 @@ namespace PresentationLayer
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            roleList = _userManager.getAllRoles();
+            cmbUserRoles.ItemsSource = roleList;
             if (_isNewUserAccount)
             {
                 changePasswordHandler();
             }
-            if (_isExistingAccount)
+            else if (_isExistingAccount)
             {
                 updateAccountHandler();
             }
@@ -62,12 +65,22 @@ namespace PresentationLayer
 
         private void createAccountHandler()
         {
-            throw new NotImplementedException();
+            tbkMessage.Text = "Create your account";
+            lblNewPassword.Visibility = Visibility.Collapsed;
+            pwdNewPassword.Visibility = Visibility.Collapsed;
         }
 
         private void updateAccountHandler()
         {
-            throw new NotImplementedException();
+            tbkMessage.Text = "Update your account";
+            lblPassword.Visibility = Visibility.Collapsed;
+            pwdPassword.Visibility = Visibility.Collapsed;
+
+            txtFirstName.Text = _user.FirstName;
+            txtLastName.Text = _user.LastName;
+            txtEmail.Text = _user.Email;
+            txtEmail.IsEnabled = false;
+            cmbUserRoles.SelectedItem = _user.Roles[0];
         }
 
         private void changePasswordHandler()
@@ -79,6 +92,8 @@ namespace PresentationLayer
             txtLastName.IsEnabled = false;
             txtEmail.Text = _user.Email;
             txtEmail.IsEnabled = false;
+            cmbUserRoles.IsEnabled = false;
+            cmbUserRoles.SelectedItem = _user.Roles[0];
             pwdPassword.Focus();
         }
 
@@ -90,13 +105,6 @@ namespace PresentationLayer
             string retypePassword = pwdRetypePassword.Password;
             if (_isNewUserAccount)
             {
-                if (!email.isValidEmail() || email != _user.Email)
-                {
-                    MessageBox.Show("Invalid Email");
-                    txtEmail.Clear();
-                    txtEmail.Focus();
-                    return;
-                }
                 if (!newPassword.isValidPassword() || newPassword == newUserPassword)
                 {
                     MessageBox.Show("Invalid Password");
@@ -127,11 +135,80 @@ namespace PresentationLayer
             }
             else if (_isExistingAccount)
             {
-
+                if (!email.isValidEmail() || email != txtEmail.Text)
+                {
+                    MessageBox.Show("Invalid Email");
+                    txtEmail.Clear();
+                    txtEmail.Focus();
+                    return;
+                }
+                if (!newPassword.isValidPassword() || newPassword == newUserPassword)
+                {
+                    MessageBox.Show("Invalid Password");
+                    pwdNewPassword.Clear();
+                    pwdNewPassword.Focus();
+                    return;
+                }
+                if (retypePassword != newPassword)
+                {
+                    MessageBox.Show("Passwords must match");
+                    pwdRetypePassword.Clear();
+                    pwdRetypePassword.Focus();
+                    return;
+                }
+                try
+                {
+                    if (_userManager.UpdateUserRole(email, cmbUserRoles.SelectedItem.ToString()) 
+                        && _userManager.UpdatePassword(_user.Email, pwdPassword.Password, pwdNewPassword.Password))
+                    {
+                        // If all checks have succeeded
+                        MessageBox.Show("Account Updated.");
+                        this.DialogResult = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
+                }
             }
-            else
+            else // An account is being created.
             {
-
+                if (!email.isValidEmail() || email != txtEmail.Text)
+                {
+                    MessageBox.Show("Invalid Email");
+                    txtEmail.Clear();
+                    txtEmail.Focus();
+                    return;
+                }
+                if (!newPassword.isValidPassword() || newPassword == newUserPassword)
+                {
+                    MessageBox.Show("Invalid Password");
+                    pwdNewPassword.Clear();
+                    pwdNewPassword.Focus();
+                    return;
+                }
+                if (retypePassword != newPassword)
+                {
+                    MessageBox.Show("Passwords must match");
+                    pwdRetypePassword.Clear();
+                    pwdRetypePassword.Focus();
+                    return;
+                }
+                try
+                {
+                    var id = _userManager.CreateUserAccount(email, txtFirstName.Text, txtLastName.Text, pwdPassword.Password);
+                    if (id != 0)
+                    {
+                        _userManager.CreateUserRole(id, cmbUserRoles.SelectedItem.ToString());
+                        // If all checks have succeeded
+                        MessageBox.Show("Account Created.");
+                        this.DialogResult = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
+                }
             }
         }
     }

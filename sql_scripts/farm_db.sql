@@ -299,7 +299,7 @@ AS
 		UPDATE UserAccount
 			SET PasswordHash = @NewPasswordHash
 			WHERE Email = @Email
-			  AND PasswordHash = @OldPasswordHash
+			AND PasswordHash = @OldPasswordHash
 		RETURN @@ROWCOUNT
 	END
 GO
@@ -339,9 +339,6 @@ GO
 print '' print '*** creating sp_select_all_role ***'
 GO
 CREATE PROCEDURE [dbo].[sp_select_all_role]
-	(
-		@RoleName				[nvarchar](64)
-	)
 AS
 	BEGIN
 		SELECT RoleName
@@ -373,7 +370,7 @@ print '' print '*** creating sp_create_user_role ***'
 GO
 CREATE PROCEDURE [dbo].[sp_create_user_role]
 	(
-		@UserID				[int],
+		@Email				[nvarchar](100),
 		@RoleName				[nvarchar](64)
 	)
 AS

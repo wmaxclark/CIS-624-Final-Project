@@ -43,9 +43,9 @@
                Grid.Row="4" Grid.Column="2">Last Name</Label>
         <Label Style="{StaticResource NormalLabel}"
                Grid.Row="5" Grid.Column="2">Email</Label>
-        <Label Style="{StaticResource NormalLabel}"
+        <Label x:Name="lblPassword" Style="{StaticResource NormalLabel}"
                Grid.Row="6" Grid.Column="2">Password</Label>
-        <Label Style="{StaticResource NormalLabel}"
+        <Label x:Name="lblNewPassword" Style="{StaticResource NormalLabel}"
                Grid.Row="7" Grid.Column="2">New Password</Label>
         <Label Style="{StaticResource NormalLabel}"
                Grid.Row="8" Grid.Column="2">Retype</Label>
@@ -71,7 +71,8 @@
                      Grid.Row="8" Grid.Column="3"></PasswordBox>
         <ComboBox x:Name="cmbUserRoles"
                   Style="{StaticResource NormalDropDown}"
-                  Grid.Row="9" Grid.Column="3"></ComboBox>
+                  Grid.Row="9" Grid.Column="3">
+        </ComboBox>
         <Button Grid.Row="10" Grid.Column="2" Grid.ColumnSpan="2"
                      Style="{StaticResource NormalButton}" 
                 Width="300px" Height="34"          
