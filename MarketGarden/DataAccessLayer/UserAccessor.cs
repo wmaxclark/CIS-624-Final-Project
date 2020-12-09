@@ -272,6 +272,9 @@ namespace DataAccessLayer
             // Result of verification representing rows matched, success will mean a result of 1
             int result = 0;
 
+            // Get the user for the email
+            User user = SelectUserByEmail(email);
+
             // Retrieve a connection from factory
             var conn = DBConnection.GetDBConnection();
 
@@ -282,13 +285,13 @@ namespace DataAccessLayer
             cmd.CommandType = CommandType.StoredProcedure;
 
             // Add parameter to command
-            cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 100);
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
 
             // Add parameter to command
             cmd.Parameters.Add("@RoleName", SqlDbType.NVarChar, 100);
 
             // Set parameter to value
-            cmd.Parameters["@Email"].Value = email;
+            cmd.Parameters["@UserID"].Value = user.UserID;
 
             // Set parameter to value
             cmd.Parameters["@RoleName"].Value = role;
@@ -323,7 +326,7 @@ namespace DataAccessLayer
             var conn = DBConnection.GetDBConnection();
 
             // Retrieve a command
-            var cmd = new SqlCommand("sp_update_user_role_by_email", conn);
+            var cmd = new SqlCommand("sp_create_user_account", conn);
 
             // Set command type to stored procedure
             cmd.CommandType = CommandType.StoredProcedure;
@@ -382,7 +385,7 @@ namespace DataAccessLayer
             var conn = DBConnection.GetDBConnection();
 
             // Retrieve a command
-            var cmd = new SqlCommand("sp_update_user_role_by_email", conn);
+            var cmd = new SqlCommand("sp_create_user_role", conn);
 
             // Set command type to stored procedure
             cmd.CommandType = CommandType.StoredProcedure;

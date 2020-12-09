@@ -9,6 +9,7 @@
                 <Setter Property="Background" Value="White"></Setter>
             </Style>
             <Style x:Key="Header1" TargetType="TextBlock">
+                <Setter Property="Height" Value="40"></Setter>
                 <Setter Property="FontSize" Value="18"></Setter>
                 <Setter Property="FontWeight" Value="Bold"></Setter>
                 <Setter Property="Foreground" Value="#0f3f43"></Setter>
@@ -16,12 +17,14 @@
                 <Setter Property="VerticalAlignment" Value="Center"></Setter>
             </Style>
             <Style x:Key="NormalLabel" TargetType="Label">
+                <Setter Property="Height" Value="40"></Setter>
                 <Setter Property="FontSize" Value="14"></Setter>
                 <Setter Property="Foreground" Value="#0f3f43"></Setter>
                 <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
                 <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
             </Style>
             <Style x:Key="NormalTextBox" TargetType="TextBox">
+                <Setter Property="Height" Value="40"></Setter>
                 <Setter Property="FontSize" Value="14"></Setter>
                 <Setter Property="Background" Value="#0f3f43"></Setter>
                 <Setter Property="Foreground" Value="#bfd7f1"></Setter>
@@ -30,6 +33,7 @@
                 <Setter Property="Margin" Value="3"></Setter>
             </Style>
             <Style x:Key="NormalPasswordBox" TargetType="PasswordBox">
+                <Setter Property="Height" Value="40"></Setter>
                 <Setter Property="FontSize" Value="14"></Setter>
                 <Setter Property="Background" Value="#0f3f43"></Setter>
                 <Setter Property="Foreground" Value="#bfd7f1"></Setter>
@@ -38,12 +42,14 @@
                 <Setter Property="Margin" Value="3"></Setter>
             </Style>
             <Style x:Key="NormalButton" TargetType="Button">
+                <Setter Property="Height" Value="40"></Setter>
                 <Setter Property="FontSize" Value="16"></Setter>
                 <Setter Property="FontWeight" Value="Bold"></Setter>
                 <Setter Property="Margin" Value="3"></Setter>
                 <Setter Property="HorizontalAlignment" Value="Center"></Setter>
             </Style>
             <Style x:Key="NormalDropDown" TargetType="ComboBox">
+                <Setter Property="Height" Value="40"></Setter>
                 <Setter Property="FontSize" Value="14"></Setter>
                 <Setter Property="Background" Value="#bfd7f1"></Setter>
                 <Setter Property="Foreground" Value="#0f3f43"></Setter>
@@ -52,6 +58,7 @@
                 <Setter Property="Margin" Value="3"></Setter>
             </Style>
             <Style x:Key="NormalDatePicker" TargetType="DatePicker">
+                <Setter Property="Height" Value="40"></Setter>
                 <Setter Property="FontSize" Value="14"></Setter>
                 <Setter Property="Background" Value="#0f3f43"></Setter>
                 <Setter Property="Foreground" Value="#bfd7f1"></Setter>

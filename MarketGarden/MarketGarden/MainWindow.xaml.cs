@@ -205,6 +205,47 @@ namespace PresentationLayer
                 }
             }
         }
+        private void mnuUpdateProfile_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                //Instantiate form to update user account
+                var updatePassword = new frmCreateUpdateAccount(_userManager, _user, false, true, newUserPassword);
+
+                if (!updatePassword.ShowDialog() == true)
+                {
+                    _user = null;
+                    resetWindow();
+                    MessageBox.Show("Account not updated.");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
+            }
+        }
+
+        private void mnuCreateProfile_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                //Instantiate form to update user account
+                var accountCreated = new frmCreateUpdateAccount(_userManager, false, false, newUserPassword);
+
+                if (!accountCreated.ShowDialog() == true)
+                {
+                    _user = null;
+                    resetWindow();
+                    MessageBox.Show("Account not created.");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
+            }
+        }
         private void addProduct_Click(object sender, RoutedEventArgs e)
         {
 

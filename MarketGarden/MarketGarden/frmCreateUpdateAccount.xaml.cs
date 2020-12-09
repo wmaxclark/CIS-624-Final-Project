@@ -25,7 +25,7 @@ namespace PresentationLayer
         private User _user;
         private bool _isNewUserAccount;
         private bool _isExistingAccount;
-        private string newUserPassword;
+        private string _newUserPassword;
         private List<string> roleList;
 
         public frmCreateUpdateAccount()
@@ -41,7 +41,17 @@ namespace PresentationLayer
             this._user = user;
             this._isNewUserAccount = isNewUserAccount;
             this._isExistingAccount = isExistingAccount;
-            this.newUserPassword = newUserPassword;
+            this._newUserPassword = newUserPassword;
+            InitializeComponent();
+        }
+
+        public frmCreateUpdateAccount(IUserManager userManager, bool isNewUserAccount, bool isExistingAccount, string newUserPassword)
+        {
+            this._userManager = userManager;
+            this._newUserPassword = newUserPassword;
+            this._isNewUserAccount = isNewUserAccount;
+            this._isExistingAccount = isExistingAccount;
+            this._newUserPassword = newUserPassword;
             InitializeComponent();
         }
 
@@ -68,6 +78,10 @@ namespace PresentationLayer
             tbkMessage.Text = "Create your account";
             lblNewPassword.Visibility = Visibility.Collapsed;
             pwdNewPassword.Visibility = Visibility.Collapsed;
+            lblOperation.Visibility = Visibility.Collapsed;
+
+            cmbOperations.Visibility = Visibility.Collapsed;
+            txtFirstName.Focus();
         }
 
         private void updateAccountHandler()
@@ -75,6 +89,12 @@ namespace PresentationLayer
             tbkMessage.Text = "Update your account";
             lblPassword.Visibility = Visibility.Collapsed;
             pwdPassword.Visibility = Visibility.Collapsed;
+            lblZip.Visibility = Visibility.Collapsed;
+            txtZip.Visibility = Visibility.Collapsed;
+            lblOperation.Visibility = Visibility.Collapsed;
+            cmbOperations.Visibility = Visibility.Collapsed;
+            lblRole.Visibility = Visibility.Collapsed;
+            cmbUserRoles.Visibility = Visibility.Collapsed;
 
             txtFirstName.Text = _user.FirstName;
             txtLastName.Text = _user.LastName;
@@ -92,6 +112,13 @@ namespace PresentationLayer
             txtLastName.IsEnabled = false;
             txtEmail.Text = _user.Email;
             txtEmail.IsEnabled = false;
+            lblZip.Visibility = Visibility.Collapsed;
+            txtZip.Visibility = Visibility.Collapsed;
+            lblOperation.Visibility = Visibility.Collapsed;
+            cmbOperations.Visibility = Visibility.Collapsed;
+            lblRole.Visibility = Visibility.Collapsed;
+            cmbUserRoles.Visibility = Visibility.Collapsed;
+
             cmbUserRoles.IsEnabled = false;
             cmbUserRoles.SelectedItem = _user.Roles[0];
             pwdPassword.Focus();
@@ -105,7 +132,7 @@ namespace PresentationLayer
             string retypePassword = pwdRetypePassword.Password;
             if (_isNewUserAccount)
             {
-                if (!newPassword.isValidPassword() || newPassword == newUserPassword)
+                if (!newPassword.isValidPassword() || newPassword == _newUserPassword)
                 {
                     MessageBox.Show("Invalid Password");
                     pwdNewPassword.Clear();
@@ -142,7 +169,7 @@ namespace PresentationLayer
                     txtEmail.Focus();
                     return;
                 }
-                if (!newPassword.isValidPassword() || newPassword == newUserPassword)
+                if (!newPassword.isValidPassword() || newPassword == _newUserPassword)
                 {
                     MessageBox.Show("Invalid Password");
                     pwdNewPassword.Clear();
@@ -162,7 +189,7 @@ namespace PresentationLayer
                         && _userManager.UpdatePassword(_user.Email, pwdPassword.Password, pwdNewPassword.Password))
                     {
                         // If all checks have succeeded
-                        MessageBox.Show("Account Updated.");
+                        MessageBox.Show("Account Updated, please log in to continue.");
                         this.DialogResult = true;
                     }
                 }
@@ -180,14 +207,14 @@ namespace PresentationLayer
                     txtEmail.Focus();
                     return;
                 }
-                if (!newPassword.isValidPassword() || newPassword == newUserPassword)
+                if (!oldPassword.isValidPassword() || oldPassword == _newUserPassword)
                 {
                     MessageBox.Show("Invalid Password");
                     pwdNewPassword.Clear();
                     pwdNewPassword.Focus();
                     return;
                 }
-                if (retypePassword != newPassword)
+                if (retypePassword != oldPassword)
                 {
                     MessageBox.Show("Passwords must match");
                     pwdRetypePassword.Clear();
@@ -201,12 +228,30 @@ namespace PresentationLayer
                     {
                         _userManager.CreateUserRole(id, cmbUserRoles.SelectedItem.ToString());
                         // If all checks have succeeded
-                        MessageBox.Show("Account Created.");
+                        MessageBox.Show("Account created, please log in to continue.");
                         this.DialogResult = true;
                     }
                 }
                 catch (Exception ex)
                 {
+                    MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
+                }
+            }
+        }
+
+        private void cmbUserRoles_DropDownClosed(object sender, EventArgs e)
+        {
+            if (cmbUserRoles.SelectedItem.ToString() == roleList[2])
+            {
+                lblOperation.Visibility = Visibility.Visible;
+                cmbOperations.Visibility = Visibility.Visible;
+                try
+                {
+                    //cmbOperations.ItemsSource
+                }
+                catch (Exception ex)
+                {
+
                     MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
                 }
             }
