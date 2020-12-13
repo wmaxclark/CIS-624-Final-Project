@@ -43,20 +43,20 @@ INSERT INTO [dbo].[UserAccount]
 		, ('ed@company.com', 'Ed', 'Sheeran')
 GO
 
-print '' print '*** creating address table ***'
+print '' print '*** creating addressstate table ***'
 GO
-CREATE TABLE [dbo].[Address] (
+CREATE TABLE [dbo].[AddressState] (
 	[AddressState]	[char](2)	NOT NULL
+	CONSTRAINT [pk_addressState_addressState] PRIMARY KEY([AddressState] ASC)
 )
 GO
 
-print '' print '***  creating address records ***'
+print '' print '***  creating addressstate records ***'
 GO
-INSERT INTO [dbo].[Address]
+INSERT INTO [dbo].[AddressState]
 	([AddressState])
 	VALUES
-		('NY')
-		,("AR")
+		("AR")
 		,("AZ")
 		,("CA")
 		,("CO")
@@ -139,7 +139,7 @@ CREATE TABLE [dbo].[FarmOperation] (
 	[Active]			[bit]		NOT NULL DEFAULT 1
 	CONSTRAINT [pk_farmOperation_operationID] PRIMARY KEY([OperationID] ASC),
 	CONSTRAINT [fk_farmOperation_AddressState] FOREIGN KEY([AddressState])
-		REFERENCES [dbo].[Address]([AddressState])
+		REFERENCES [dbo].[AddressState]([AddressState])
 )
 GO
 
@@ -233,7 +233,7 @@ CREATE TABLE [dbo].[Restaraunt] (
 	[UserID_Customer]	[int]		NOT NULL,
 	[AddressState]		[char](2)		NOT NULL,
 	CONSTRAINT [fk_restaraunt_AddressState] FOREIGN KEY([AddressState])
-		REFERENCES [dbo].[Address]([AddressState])
+		REFERENCES [dbo].[AddressState]([AddressState])
 )
 GO
 
@@ -245,7 +245,7 @@ CREATE TABLE [dbo].[DirectSale] (
 	CONSTRAINT [fk_directSale_userID_customer] FOREIGN KEY([UserID_Customer])
 		REFERENCES [dbo].[UserAccount](UserID),
 	CONSTRAINT [fk_directSale_AddressState] FOREIGN KEY([AddressState])
-			REFERENCES [dbo].[Address]([AddressState])
+			REFERENCES [dbo].[AddressState]([AddressState])
 )
 GO
 
@@ -256,7 +256,7 @@ CREATE TABLE [dbo].[MarketStall] (
 	[Frequency]				[int]		NOT NULL,
 	[AddressState]			[char](2)		NOT NULL,
 	CONSTRAINT [fk_marketStall_AddressState] FOREIGN KEY([AddressState])
-			REFERENCES [dbo].[Address]([AddressState])
+			REFERENCES [dbo].[AddressState]([AddressState]),
 	CONSTRAINT [fk_marketStall_operationID] FOREIGN KEY([OperationID])
 		REFERENCES [dbo].[FarmOperation](OperationID)
 )
@@ -424,9 +424,6 @@ CREATE PROCEDURE [dbo].[sp_create_user_role]
 	)
 AS
 	BEGIN
-		IF EXISTS (SELECT RoleName
-					FROM UserRole
-					WHERE RoleName = @RoleName)
 		INSERT INTO [dbo].[UserRole]
 				([UserID], [RoleName])
 			VALUES
@@ -444,9 +441,6 @@ CREATE PROCEDURE [dbo].[sp_create_user_role_with_operation]
 	)
 AS
 	BEGIN
-		IF EXISTS (SELECT RoleName
-					FROM UserRole
-					WHERE RoleName = @RoleName)
 		INSERT INTO [dbo].[UserRole]
 				([UserID], [OperationID], [RoleName])
 			VALUES
@@ -454,9 +448,9 @@ AS
 	END
 GO
 
-print '' print '*** creating sp_select_user_role_by_email ***'
+print '' print '*** creating sp_select_user_role_by_id ***'
 GO
-CREATE PROCEDURE [dbo].[sp_select_user_role_by_email]
+CREATE PROCEDURE [dbo].[sp_select_user_role_by_id]
 	(
 		@UserID				[int]
 	)
@@ -502,7 +496,7 @@ AS
 	END
 GO
 
-print '' print '*** stored procedures for address ***'
+print '' print '*** stored procedures for addressstate ***'
 GO
 
 print '' print '*** creating sp_select_all_address ***'
@@ -511,7 +505,7 @@ CREATE PROCEDURE [dbo].[sp_select_all_address]
 AS
 BEGIN
 	SELECT AddressState
-	FROM Address
+	FROM addressstate
 	ORDER BY AddressState ASC
 END
 GO
@@ -537,6 +531,17 @@ BEGIN
 END
 GO
 
+print '' print '*** creating sp_select_all_farmoperation ***'
+GO
+CREATE PROCEDURE [dbo].[sp_select_all_farmoperation]
+AS
+BEGIN
+	SELECT OperationID, OperationName, UserID_Operator, AddressState, MaxShares, Active
+	FROM FarmOperation
+	ORDER BY OperationName ASC
+END
+GO
+
 print '' print '*** creating sp_select_farmoperation_by_operator ***'
 GO
 CREATE PROCEDURE [dbo].[sp_select_farmoperation_by_operator]
@@ -555,30 +560,13 @@ print '' print '*** creating sp_select_farmoperation_by_state ***'
 GO
 CREATE PROCEDURE [dbo].[sp_select_farmoperation_by_addressstate]
 	(
-		@AddressState			[char](2),
+		@AddressState			[char](2)
 	)
 AS
 BEGIN
 	SELECT OperationID, OperationName, MaxShares, Active
 	FROM FarmOperation
 	WHERE AddressState = @AddressState
-END
-GO
-
-print '' print '*** creating sp_select_farmoperation_by_state ***'
-GO
-CREATE PROCEDURE [dbo].[sp_select_farmoperation_by_state]
-	(
-		@AddressState				[char](2)
-	)
-AS
-BEGIN
-	IF EXISTS(SELECT AddressState
-			FROM Address
-			WHERE @AddressState = AddressState)
-	SELECT OperationID, OperationName, FarmOperation.AddressState, MaxShares, Active
-	FROM FarmOperation
-	WHERE Address.AddressState = @AddressState
 END
 GO
 

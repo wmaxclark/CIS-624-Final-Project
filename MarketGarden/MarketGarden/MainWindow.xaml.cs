@@ -25,7 +25,7 @@ namespace PresentationLayer
         private IUserManager _userManager = new UserManager();
         private IOperationManager _operationManager = new OperationManager();
         private User _user = null;
-        private Operation _operation = null;
+        private OperationVM _operation = null;
         private const string newUserPassword = "newuser";
 
         public MainWindow()
@@ -84,6 +84,7 @@ namespace PresentationLayer
                     pwdPassword.Visibility = Visibility.Hidden;
                     lblPassword.Visibility = Visibility.Hidden;
                     txtEmail.Visibility = Visibility.Hidden;
+                    mnuUpdateProfile.Visibility = Visibility.Visible;
                     if (_user.Roles.Count == 0)
                     {
                         MessageBox.Show("You have not chosen a role, please update your account.");
@@ -111,6 +112,7 @@ namespace PresentationLayer
 
             // Update the interface to the default state
             mnuMain.IsEnabled = true;
+            mnuUpdateProfile.Visibility = Visibility.Collapsed;
             pwdPassword.Password = "";
             btnLogin.Content = "Login";
             txtEmail.Visibility = Visibility.Visible;
@@ -158,7 +160,7 @@ namespace PresentationLayer
         {
             try
             {
-                _operation = _operationManager.GetOperationByOperator(_user);
+                _operation = _operationManager.GetOperationVMByOperator(_user);
                 if (dgProductsList.ItemsSource == null)
                 {
                     refreshProductsList();
@@ -214,9 +216,14 @@ namespace PresentationLayer
 
                 if (!updatePassword.ShowDialog() == true)
                 {
+                    
+                    MessageBox.Show("Account not updated.");
+                    return;
+                }
+                else
+                {
                     _user = null;
                     resetWindow();
-                    MessageBox.Show("Account not updated.");
                     return;
                 }
             }
@@ -238,6 +245,12 @@ namespace PresentationLayer
                     _user = null;
                     resetWindow();
                     MessageBox.Show("Account not created.");
+                    return;
+                }
+                else
+                {
+                    _user = null;
+                    resetWindow();
                     return;
                 }
             }

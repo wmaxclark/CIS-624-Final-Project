@@ -49,8 +49,8 @@
                Grid.Row="7" Grid.Column="2">New Password</Label>
         <Label Style="{StaticResource NormalLabel}"
                Grid.Row="8" Grid.Column="2">Retype</Label>
-        <Label x:Name="lblZip" Style="{StaticResource NormalLabel}"
-               Grid.Row="9" Grid.Column="2">Zip</Label>
+        <Label x:Name="lblStates" Style="{StaticResource NormalLabel}"
+               Grid.Row="9" Grid.Column="2">State</Label>
         <Label x:Name="lblRole" Style="{StaticResource NormalLabel}"
                Grid.Row="10" Grid.Column="2">Role</Label>
         <Label x:Name="lblOperation" Style="{StaticResource NormalLabel}"
@@ -76,9 +76,10 @@
         <PasswordBox x:Name="pwdRetypePassword" 
                      Style="{StaticResource NormalPasswordBox}"
                      Grid.Row="8" Grid.Column="3"></PasswordBox>
-        <TextBox x:Name="txtZip" 
-                 Style="{StaticResource NormalTextBox}"
-                 Grid.Row="9" Grid.Column="3"></TextBox>
+        <ComboBox x:Name="cmbStates"
+                  Style="{StaticResource NormalDropDown}"
+                  Grid.Row="9" Grid.Column="3">
+        </ComboBox>
         
         <ComboBox x:Name="cmbUserRoles"
                   Style="{StaticResource NormalDropDown}"

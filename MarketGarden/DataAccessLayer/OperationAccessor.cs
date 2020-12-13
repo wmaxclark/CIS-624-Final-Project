@@ -45,21 +45,18 @@ namespace DataAccessLayer
                     reader.Read();
                     var operationID = reader.GetInt32(0);
                     var operationName = reader.GetString(1);
-                    var zipCode = reader.GetInt32(2);
+                    var addressState = reader.GetString(2);
+
+                    /**
+                     * Solution credited to user Stefan Hoffman, found at:
+                     * https://social.msdn.microsoft.com/Forums/en-US/69a113aa-fadf-44bb-a090-5156a33e85d7/how-to-read-null-values-in-sql-table-column-readergetint32-c?forum=adodotnetdataproviders
+                     */
+                    int? maxShares = reader.IsDBNull(3) ? (int?)null : reader.GetInt32(3);
                     var active = reader.GetBoolean(4);
                     reader.Close();
 
-                    // Get helpers from another stored procedure
-                    List<User> helpers = RetrieveHelpersByOperation(operationID);
-
-                    // Get products from another stored procedure
-                    List<Product> products = RetrieveProductsByOperation(operationID);
-
-                    // Get tasks from another stored procedure
-                    List<UserTask> tasks = RetrieveTasksBySender(operatorUser);
-
                     // Construct new operation with captured values
-                    operation = new Operation(operationID, operatorUser, operationName, zipCode, active, helpers, products, tasks);
+                    operation = new Operation(operationID, operatorUser.UserID, operationName, addressState, maxShares, active);
                 }
                 else
                 {
@@ -135,10 +132,7 @@ namespace DataAccessLayer
                     }
                     reader.Close();
                 }
-                else
-                {
-                    throw new ApplicationException("No products found.");
-                }
+                
             }
             catch (Exception ex)
             {
@@ -201,14 +195,10 @@ namespace DataAccessLayer
                             // Add the resulting user to the list
                             helperList.Add(helper);
                         }
-                        
                     }
                     reader.Close();
                 }
-                else
-                {
-                    throw new ApplicationException("No products found.");
-                }
+                
             }
             catch (Exception ex)
             {
@@ -261,7 +251,6 @@ namespace DataAccessLayer
                         var taskName = reader.GetString(3);
                         var taskDescription = reader.GetString(3);
                         var finished = reader.GetBoolean(4);
-                        reader.Close();
 
                         // Construct new task with captured values
                         UserTask task = new UserTask(operatorUser, userID_assignee, (DateTime)assignDate,
@@ -271,7 +260,9 @@ namespace DataAccessLayer
                         taskList.Add(task);
 
                     }
+                    reader.Close();
                 }
+                
             }
             catch (Exception ex)
             {
@@ -342,7 +333,7 @@ namespace DataAccessLayer
             return roleList;
         }
 
-        public int CreateOperation(int userID_operator, int zipCode, string operationName)
+        public int CreateOperation(int userID_operator, string state, string operationName)
         {
             int result = 0;
 
@@ -359,7 +350,7 @@ namespace DataAccessLayer
             cmd.Parameters.Add("@UserID_Operator", SqlDbType.Int);
 
             // Add parameter to command
-            cmd.Parameters.Add("@ZipCode", SqlDbType.Int);
+            cmd.Parameters.Add("@AddressState", SqlDbType.Char, 2);
 
             // Add parameter to command
             cmd.Parameters.Add("@OperationName", SqlDbType.NVarChar, 64);
@@ -368,7 +359,7 @@ namespace DataAccessLayer
             cmd.Parameters["@UserID_Operator"].Value = userID_operator;
 
             // Set parameter to value
-            cmd.Parameters["@ZipCode"].Value = zipCode;
+            cmd.Parameters["@AddressState"].Value = state;
 
             // Set parameter to value
             cmd.Parameters["@OperationName"].Value = operationName;
@@ -393,6 +384,113 @@ namespace DataAccessLayer
                 conn.Close();
             }
             return result;
+        }
+
+        public List<string> RetrieveAllStates()
+        {
+            List<string> states = new List<string>();
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_select_all_address", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                var reader = cmd.ExecuteReader();
+
+                // Capture results
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var role = reader.GetString(0);
+
+                        // Add the resulting task to the list
+                        states.Add(role);
+                    }
+                    reader.Close();
+                }
+                else
+                {
+                    throw new ApplicationException("No products found.");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return states;
+        }
+
+        public List<Operation> RetrieveAllOperations()
+        {
+            List<Operation> operationList = new List<Operation>();
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_select_all_farmoperation", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                var reader = cmd.ExecuteReader();
+
+                // Capture results
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    var operationID = reader.GetInt32(0);
+                    var operationName = reader.GetString(1);
+                    var userID_Operator = reader.GetInt32(2);
+                    var addressState = reader.GetString(3);
+                    /**
+                     * Solution credited to user Stefan Hoffman, found at:
+                     * https://social.msdn.microsoft.com/Forums/en-US/69a113aa-fadf-44bb-a090-5156a33e85d7/how-to-read-null-values-in-sql-table-column-readergetint32-c?forum=adodotnetdataproviders
+                     */
+                    int? maxShares = reader.IsDBNull(4) ? (int?)null : reader.GetInt32(4);
+                    var active = reader.GetBoolean(5);
+                    reader.Close();
+
+                    // Construct new operation with captured values
+                    var operation = new Operation(operationID, userID_Operator, operationName, addressState, maxShares, active);
+
+                    operationList.Add(operation);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return operationList;
         }
     }
 }

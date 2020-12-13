@@ -50,8 +50,7 @@ namespace DataAccessLayer
                     var active = reader.GetBoolean(4);
                     reader.Close();
 
-                    // Get roles from another stored procedure
-                    List<string> roles = selectRolesByEmail(email);
+                    var roles = selectRolesByID(userID);
 
                     // Construct new user with captured values
                     user = new User(userID, firstName, lastName, email, roles);
@@ -73,7 +72,7 @@ namespace DataAccessLayer
             return user;
         }
 
-        public List<string> selectRolesByEmail(string email)
+        public List<string> selectRolesByID(int userID)
         {
             List<string> roles = new List<string>();
 
@@ -81,16 +80,16 @@ namespace DataAccessLayer
             var conn = DBConnection.GetDBConnection();
 
             // Retrieve a command
-            var cmd = new SqlCommand("sp_select_user_role_by_email", conn);
+            var cmd = new SqlCommand("sp_select_user_role_by_id", conn);
 
             // Set command type to stored procedure
             cmd.CommandType = CommandType.StoredProcedure;
 
             // Add parameter to command
-            cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 100);
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
 
             // Set parameter to value
-            cmd.Parameters["@Email"].Value = email;
+            cmd.Parameters["@UserID"].Value = userID;
 
             // Execute command
             try
@@ -385,7 +384,7 @@ namespace DataAccessLayer
             var conn = DBConnection.GetDBConnection();
 
             // Retrieve a command
-            var cmd = new SqlCommand("sp_create_user_role", conn);
+            var cmd = new SqlCommand("sp_create_user_role_with_operation", conn);
 
             // Set command type to stored procedure
             cmd.CommandType = CommandType.StoredProcedure;

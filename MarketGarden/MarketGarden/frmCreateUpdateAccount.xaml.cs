@@ -27,7 +27,9 @@ namespace PresentationLayer
         private bool _isNewUserAccount;
         private bool _isExistingAccount;
         private string _newUserPassword;
-        private List<string> roleList;
+        private List<string> _roleList;
+        private List<string> _states;
+        private List<Operation> _operations;
 
         public frmCreateUpdateAccount()
         {
@@ -40,6 +42,7 @@ namespace PresentationLayer
         {
 
             this._userManager = userManager;
+            _operationManager = new OperationManager();
             this._user = user;
             this._isNewUserAccount = isNewUserAccount;
             this._isExistingAccount = isExistingAccount;
@@ -50,6 +53,7 @@ namespace PresentationLayer
         public frmCreateUpdateAccount(IUserManager userManager, bool isNewUserAccount, bool isExistingAccount, string newUserPassword)
         {
             this._userManager = userManager;
+            _operationManager = new OperationManager();
             this._newUserPassword = newUserPassword;
             this._isNewUserAccount = isNewUserAccount;
             this._isExistingAccount = isExistingAccount;
@@ -59,8 +63,12 @@ namespace PresentationLayer
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            roleList = _userManager.getAllRoles();
-            cmbUserRoles.ItemsSource = roleList;
+            _roleList = _userManager.getAllRoles();
+            cmbUserRoles.ItemsSource = _roleList;
+            _states = _operationManager.getAllStates();
+            cmbStates.ItemsSource = _states;
+            _operations = _operationManager.getAllOperations();
+            cmbOperations.ItemsSource = _operations;
             if (_isNewUserAccount)
             {
                 changePasswordHandler();
@@ -91,10 +99,8 @@ namespace PresentationLayer
         private void updateAccountHandler()
         {
             tbkMessage.Text = "Update your account";
-            lblPassword.Visibility = Visibility.Collapsed;
-            pwdPassword.Visibility = Visibility.Collapsed;
-            lblZip.Visibility = Visibility.Collapsed;
-            txtZip.Visibility = Visibility.Collapsed;
+            lblStates.Visibility = Visibility.Collapsed;
+            cmbStates.Visibility = Visibility.Collapsed;
             lblOperation.Visibility = Visibility.Collapsed;
             cmbOperations.Visibility = Visibility.Collapsed;
             lblOperationName.Visibility = Visibility.Collapsed;
@@ -109,7 +115,7 @@ namespace PresentationLayer
             cmbUserRoles.SelectedItem = _user.Roles[0];
         }
 
-        private void changePasswordHandler()
+        private void changePasswordHandler() // An existing user updating their account
         {
             tbkMessage.Text = "Update your password";
             txtFirstName.Text = _user.FirstName;
@@ -118,14 +124,12 @@ namespace PresentationLayer
             txtLastName.IsEnabled = false;
             txtEmail.Text = _user.Email;
             txtEmail.IsEnabled = false;
-            lblZip.Visibility = Visibility.Collapsed;
-            txtZip.Visibility = Visibility.Collapsed;
+            lblStates.Visibility = Visibility.Collapsed;
+            cmbStates.Visibility = Visibility.Collapsed;
             lblOperation.Visibility = Visibility.Collapsed;
             cmbOperations.Visibility = Visibility.Collapsed;
             lblOperationName.Visibility = Visibility.Collapsed;
             txtOperationName.Visibility = Visibility.Collapsed;
-            lblRole.Visibility = Visibility.Collapsed;
-            cmbUserRoles.Visibility = Visibility.Collapsed;
 
             cmbUserRoles.IsEnabled = false;
             cmbUserRoles.SelectedItem = _user.Roles[0];
@@ -133,7 +137,7 @@ namespace PresentationLayer
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
-        {
+            {
             string email = txtEmail.Text;
             string oldPassword = pwdPassword.Password;
             string newPassword = pwdNewPassword.Password;
@@ -168,7 +172,7 @@ namespace PresentationLayer
                     MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
                 }
             }
-            else if (_isExistingAccount)
+            else if (_isExistingAccount) // An existing user updating their account
             {
                 if (!email.isValidEmail() || email != txtEmail.Text)
                 {
@@ -193,8 +197,7 @@ namespace PresentationLayer
                 }
                 try
                 {
-                    if (_userManager.UpdateUserRole(email, cmbUserRoles.SelectedItem.ToString()) 
-                        && _userManager.UpdatePassword(_user.Email, pwdPassword.Password, pwdNewPassword.Password))
+                    if (_userManager.UpdatePassword(_user.Email, pwdPassword.Password, pwdNewPassword.Password))
                     {
                         // If all checks have succeeded
                         MessageBox.Show("Account Updated, please log in to continue.");
@@ -234,23 +237,24 @@ namespace PresentationLayer
                     // Create the user account and capture the id for later operations
                     var id = _userManager.CreateUserAccount(email, txtFirstName.Text, txtLastName.Text, pwdPassword.Password);
 
+                    _user = _userManager.AuthenticateUser(email, pwdPassword.Password);
                     // If the account was created, create the role selected
                     if (id != 0)
                     {
-                        if (cmbUserRoles.SelectedItem.ToString() == roleList[0]) // User is a customer
+                        if (cmbUserRoles.SelectedItem.ToString() == _roleList[0]) // User is a customer
                         {
-                            _userManager.CreateUserRole(id, cmbUserRoles.SelectedItem.ToString());
+                            _userManager.CreateUserRole(_user.UserID, cmbUserRoles.SelectedItem.ToString());
                         }
-                        else if (cmbUserRoles.SelectedItem.ToString() == roleList[1]) // User is a Farmer
+                        else if (cmbUserRoles.SelectedItem.ToString() == _roleList[1]) // User is a Farmer
                         {
                             try
                             {
-                                _operationManager = new OperationManager();
                                 // Create the farm
-                                var operationID = _operationManager.CreateOperation(id, int.Parse(txtZip.Text), txtOperationName.Text);
+                                _operationManager.CreateOperation(_user.UserID, cmbStates.SelectedItem.ToString(), txtOperationName.Text);
                                 try
                                 {
-                                    _userManager.CreateUserRole(id, operationID, roleList[1]);
+                                    var operation = _operationManager.GetOperationByOperator(_user);
+                                    _userManager.CreateUserRole(_user.UserID, operation.OperationID, _roleList[1]);
                                 }
                                 catch (Exception ex)
                                 {
@@ -260,13 +264,14 @@ namespace PresentationLayer
                             }
                             catch (Exception ex)
                             {
+                                // TODO make this presentable to user
                                 MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
                             }
                             
                         }
                         else // User is a helper
                         {
-                            //_userManager.CreateUserRole(id, cmbOperations.SelectedItem.OperationID, cmbUserRoles.SelectedItem.ToString());
+                            //_userManager.CreateUserRole(id, cmbOperations.SelectedItem.ToString(), cmbUserRoles.SelectedItem.ToString());
                         }
                         // If all checks have succeeded
                         MessageBox.Show("Account created, please log in to continue.");
@@ -275,6 +280,7 @@ namespace PresentationLayer
                 }
                 catch (Exception ex)
                 {
+                    // TODO make this presentable to the user
                     MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
                 }
             }
@@ -285,7 +291,7 @@ namespace PresentationLayer
             if (cmbUserRoles.SelectedItem != null)
             {
                 // Handle interface for customers
-                if (cmbUserRoles.SelectedItem.ToString() == roleList[0])
+                if (cmbUserRoles.SelectedItem.ToString() == _roleList[0])
                 {
                     lblOperationName.Visibility = Visibility.Hidden;
                     txtOperationName.Visibility = Visibility.Hidden;
@@ -293,13 +299,13 @@ namespace PresentationLayer
                     cmbOperations.Visibility = Visibility.Hidden;
                 }
                 // Handle interface for farmers
-                if (cmbUserRoles.SelectedItem.ToString() == roleList[1])
+                if (cmbUserRoles.SelectedItem.ToString() == _roleList[1])
                 {
                     lblOperationName.Visibility = Visibility.Visible;
                     txtOperationName.Visibility = Visibility.Visible;
                 }
                 // Handle interface for helpers
-                if (cmbUserRoles.SelectedItem.ToString() == roleList[2])
+                if (cmbUserRoles.SelectedItem.ToString() == _roleList[2])
                 {
                     lblOperationName.Visibility = Visibility.Hidden;
                     txtOperationName.Visibility = Visibility.Hidden;
@@ -320,8 +326,8 @@ namespace PresentationLayer
 
         private void cmbUserRoles_DropDownOpened(object sender, EventArgs e)
         {
-            roleList = _userManager.getAllRoles();
-            cmbUserRoles.ItemsSource = roleList;
+            _roleList = _userManager.getAllRoles();
+            cmbUserRoles.ItemsSource = _roleList;
         }
     }
 }
