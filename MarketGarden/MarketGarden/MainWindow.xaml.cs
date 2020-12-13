@@ -172,41 +172,7 @@ namespace PresentationLayer
             }
         }
 
-        private void refreshProductsList()
-        {
-            dgProductsList.Visibility = Visibility.Visible;
-            dgProductsList.ItemsSource = _operation.Products;
 
-            // Remove the header for the unique ID, not meaningful to user
-            dgProductsList.Columns.Remove(dgProductsList.Columns[0]);
-            dgProductsList.Columns.Remove(dgProductsList.Columns[0]);
-
-            dgProductsList.Columns[0].Header = "Product Name";
-            dgProductsList.Columns[1].Header = "Product Description";
-            dgProductsList.Columns[2].Header = "Unit";
-            dgProductsList.Columns[3].Header = "Input Cost";
-            dgProductsList.Columns[4].Header = "Unit Price";
-            dgProductsList.Columns[5].Header = "Germination Date";
-            dgProductsList.Columns[6].Header = "Days after Germination to plant";
-            dgProductsList.Columns[7].Header = "Days after Germination to transplant";
-            dgProductsList.Columns[8].Header = "Days after Germination to harvest";
-        }
-        private void dgProductsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            var selectedProduct = (Product)dgProductsList.SelectedItem;
-            if (selectedProduct == null)
-            {
-                MessageBox.Show("You need to select a product in order to edit.", 
-                    "Edit Operation Not Available", MessageBoxButton.OK, 
-                    MessageBoxImage.Information);
-
-                var detailWindow = new frmProductAddEditDetail(selectedProduct);
-                if (detailWindow.ShowDialog() == true)
-                {
-                    refreshProductsList();
-                }
-            }
-        }
         private void mnuUpdateProfile_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -259,9 +225,49 @@ namespace PresentationLayer
                 MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
             }
         }
+
+        private void refreshProductsList()
+        {
+            dgProductsList.Visibility = Visibility.Visible;
+            dgProductsList.ItemsSource = _operation.Products;
+
+            // Remove the header for the unique ID, not meaningful to user
+            dgProductsList.Columns.Remove(dgProductsList.Columns[0]);
+            dgProductsList.Columns.Remove(dgProductsList.Columns[0]);
+
+            dgProductsList.Columns[0].Header = "Product Name";
+            dgProductsList.Columns[1].Header = "Product Description";
+            dgProductsList.Columns[2].Header = "Unit";
+            dgProductsList.Columns[3].Header = "Input Cost";
+            dgProductsList.Columns[4].Header = "Unit Price";
+            dgProductsList.Columns[5].Header = "Germination Date";
+            dgProductsList.Columns[6].Header = "Days after Germination to plant";
+            dgProductsList.Columns[7].Header = "Days after Germination to transplant";
+            dgProductsList.Columns[8].Header = "Days after Germination to harvest";
+        }
+        private void dgProductsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var selectedProduct = (Product)dgProductsList.SelectedItem;
+            if (selectedProduct == null)
+            {
+                MessageBox.Show("You need to select a product in order to edit.",
+                    "Edit Operation Not Available", MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+
+                var detailWindow = new frmProductAddEditDetail(selectedProduct);
+                if (detailWindow.ShowDialog() == true)
+                {
+                    refreshProductsList();
+                }
+            }
+        }
         private void addProduct_Click(object sender, RoutedEventArgs e)
         {
-
+            var detailWindow = new frmProductAddEditDetail(_user, _operation, true);
+            if (detailWindow.ShowDialog() == true)
+            {
+                refreshProductsList();
+            }
         }
         private void tabItemCSA_GotFocus(object sender, RoutedEventArgs e)
         {

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PresentationLayer"
         mc:Ignorable="d"
-        Title="frmProductAddEditDetail" Height="600" Width="600">
+        Title="frmProductAddEditDetail" Height="600" Width="600" Loaded="Window_Loaded">
     <Grid Style="{StaticResource Background1}">
         <Grid.RowDefinitions>
             <RowDefinition Height="10"></RowDefinition>
@@ -81,9 +81,9 @@
         <TextBox x:Name="txtDaysAfterToHarvest" 
                  Style="{StaticResource NormalTextBox}"
                  Grid.Row="11" Grid.Column="3"></TextBox>
-        <Button Grid.Row="12" Grid.Column="2" Grid.ColumnSpan="2"
+        <Button x:Name="btnSubmit" Grid.Row="12" Grid.Column="2" Grid.ColumnSpan="2"
                      Style="{StaticResource NormalButton}" 
                 Width="300px" Height="34"          
-                Content="Submit" Click="Button_Click"/>
+                Content="Submit" Click="btnSubmit_Button_Click"/>
     </Grid>
 </Window>

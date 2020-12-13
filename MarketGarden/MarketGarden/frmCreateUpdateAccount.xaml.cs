@@ -30,6 +30,7 @@ namespace PresentationLayer
         private List<string> _roleList;
         private List<string> _states;
         private List<Operation> _operations;
+        private List<string> _operationNames;
 
         public frmCreateUpdateAccount()
         {
@@ -68,7 +69,12 @@ namespace PresentationLayer
             _states = _operationManager.getAllStates();
             cmbStates.ItemsSource = _states;
             _operations = _operationManager.getAllOperations();
-            cmbOperations.ItemsSource = _operations;
+            _operationNames = new List<string>();
+            foreach (var operation in _operations)
+            {
+                _operationNames.Add(operation.OperationName);
+            }
+            cmbOperations.ItemsSource = _operationNames;
             if (_isNewUserAccount)
             {
                 changePasswordHandler();

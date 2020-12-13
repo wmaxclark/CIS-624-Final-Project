@@ -24,6 +24,8 @@ namespace PresentationLayer
         private Product _selectedProduct;
         private bool _addProduct = false;
         private IOperationManager _operationManager = new OperationManager();
+        private User user;
+        private OperationVM operation;
 
         public frmProductAddEditDetail()
         {
@@ -31,12 +33,38 @@ namespace PresentationLayer
             InitializeComponent();
         }
 
-        public frmProductAddEditDetail(Product selectedProduct)
+        public frmProductAddEditDetail(Product selectedProduct) // A product has been selected from the product list
         {
             this._selectedProduct = selectedProduct;
+            txtProductName.Text = _selectedProduct.ProductName;
+            txtProductDescription.Text = _selectedProduct.ProductDescription;
+            txtUnit.Text = _selectedProduct.Unit;
+            txtInputCost.Text = _selectedProduct.InputCost.ToString();
+            txtUnitPrice.Text = _selectedProduct.UnitPrice.ToString();
+            dptGerminationDate.SelectedDate = _selectedProduct.GerminationDate;
+            txtDaysAfterToPlant.Text = _selectedProduct.DaysAfterGerminationToPlant.ToString();
+            txtDaysAfterToHarvest.Text = _selectedProduct.DaysAfterGerminationToHarvest.ToString();
+            txtDaysAfterToTransPlant.Text = _selectedProduct.DaysAfterGerminationToTransplant.ToString();
+
+
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        public frmProductAddEditDetail(User user, OperationVM operation, bool addProduct) // A new product is being created
+        {
+            this.user = user;
+            this.operation = operation;
+            this._addProduct = addProduct;
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+        private void btnSubmit_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnSubmitButton_Click(object sender, RoutedEventArgs e)
         {
 
         }
