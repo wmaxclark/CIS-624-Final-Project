@@ -120,13 +120,13 @@ namespace LogicLayer
             return result;
         }
 
-        public bool CreateUserRole(int userID, int operationID, string role)
+        public bool CreateUserRole(int userID, Operation operation, string role)
         {
             bool result = false;
 
             try
             {
-                result = (1 == userAccessor.CreateUserRole(userID, operationID, role));
+                result = (1 == userAccessor.CreateUserRole(userID, operation.OperationID, role));
             }
             catch (Exception ex)
             {

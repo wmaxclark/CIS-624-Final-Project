@@ -69,12 +69,7 @@ namespace PresentationLayer
             _states = _operationManager.getAllStates();
             cmbStates.ItemsSource = _states;
             _operations = _operationManager.getAllOperations();
-            _operationNames = new List<string>();
-            foreach (var operation in _operations)
-            {
-                _operationNames.Add(operation.OperationName);
-            }
-            cmbOperations.ItemsSource = _operationNames;
+            cmbOperations.ItemsSource = _operations;
             if (_isNewUserAccount)
             {
                 changePasswordHandler();
@@ -259,8 +254,7 @@ namespace PresentationLayer
                                 _operationManager.CreateOperation(_user.UserID, cmbStates.SelectedItem.ToString(), txtOperationName.Text);
                                 try
                                 {
-                                    var operation = _operationManager.GetOperationByOperator(_user);
-                                    _userManager.CreateUserRole(_user.UserID, operation.OperationID, _roleList[1]);
+                                    _userManager.CreateUserRole(_user.UserID, _operationManager.GetOperationByOperator(_user), _roleList[1]);
                                 }
                                 catch (Exception ex)
                                 {
@@ -277,7 +271,8 @@ namespace PresentationLayer
                         }
                         else // User is a helper
                         {
-                            //_userManager.CreateUserRole(id, cmbOperations.SelectedItem.ToString(), cmbUserRoles.SelectedItem.ToString());
+                            
+                            _userManager.CreateUserRole(id, (Operation)cmbOperations.SelectedItem, cmbUserRoles.SelectedItem.ToString());
                         }
                         // If all checks have succeeded
                         MessageBox.Show("Account created, please log in to continue.");

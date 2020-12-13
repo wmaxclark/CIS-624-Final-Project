@@ -27,5 +27,10 @@ namespace DataObjects
             this.MaxShares = maxShares;
             this.Active = active;
         }
+
+        public override string ToString()
+        {
+            return OperationName;
+        }
     }
 }
