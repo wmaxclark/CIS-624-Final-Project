@@ -28,7 +28,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition Width="100"></ColumnDefinition>
+            <ColumnDefinition Width="120"></ColumnDefinition>
             <ColumnDefinition Width="200"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="10"></ColumnDefinition>
@@ -55,6 +55,8 @@
                Grid.Row="10" Grid.Column="2">Role</Label>
         <Label x:Name="lblOperation" Style="{StaticResource NormalLabel}"
                Grid.Row="11" Grid.Column="2">Operation</Label>
+        <Label x:Name="lblOperationName" Style="{StaticResource NormalLabel}"
+               Grid.Row="11" Grid.Column="2">Operation Name</Label>
         
         <TextBox x:Name="txtFirstName" 
                  Style="{StaticResource NormalTextBox}"
@@ -81,12 +83,15 @@
         <ComboBox x:Name="cmbUserRoles"
                   Style="{StaticResource NormalDropDown}"
                   Grid.Row="10" Grid.Column="3"
-                  DropDownClosed="cmbUserRoles_DropDownClosed">
+                  DropDownClosed="cmbUserRoles_DropDownClosed" DropDownOpened="cmbUserRoles_DropDownOpened">
         </ComboBox>
         <ComboBox x:Name="cmbOperations"
                   Style="{StaticResource NormalDropDown}"
                   Grid.Row="11" Grid.Column="3">
         </ComboBox>
+        <TextBox x:Name="txtOperationName" 
+                 Style="{StaticResource NormalTextBox}"
+                 Grid.Row="11" Grid.Column="3"></TextBox>
         <Button Grid.Row="12" Grid.Column="2" Grid.ColumnSpan="2"
                      Style="{StaticResource NormalButton}" 
                 Width="300px" Height="34"          

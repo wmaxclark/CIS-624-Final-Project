@@ -263,10 +263,8 @@ namespace DataAccessLayer
                         var finished = reader.GetBoolean(4);
                         reader.Close();
 
-                        User assignee = RetrieveUserByID(userID_assignee);
-
                         // Construct new task with captured values
-                        UserTask task = new UserTask(operatorUser, assignee, (DateTime)assignDate,
+                        UserTask task = new UserTask(operatorUser, userID_assignee, (DateTime)assignDate,
                             (DateTime)dueDate, taskName, taskDescription);
 
                         // Add the resulting task to the list
@@ -344,9 +342,57 @@ namespace DataAccessLayer
             return roleList;
         }
 
-        public User RetrieveUserByID(int userID_assignee)
+        public int CreateOperation(int userID_operator, int zipCode, string operationName)
         {
-            throw new NotImplementedException();
+            int result = 0;
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_create_farmoperation", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Add parameter to command
+            cmd.Parameters.Add("@UserID_Operator", SqlDbType.Int);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@ZipCode", SqlDbType.Int);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@OperationName", SqlDbType.NVarChar, 64);
+
+            // Set parameter to value
+            cmd.Parameters["@UserID_Operator"].Value = userID_operator;
+
+            // Set parameter to value
+            cmd.Parameters["@ZipCode"].Value = zipCode;
+
+            // Set parameter to value
+            cmd.Parameters["@OperationName"].Value = operationName;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                result = cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return result;
         }
     }
 }

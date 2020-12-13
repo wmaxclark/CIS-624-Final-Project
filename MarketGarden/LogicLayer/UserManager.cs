@@ -120,6 +120,22 @@ namespace LogicLayer
             return result;
         }
 
+        public bool CreateUserRole(int userID, int operationID, string role)
+        {
+            bool result = false;
+
+            try
+            {
+                result = (1 == userAccessor.CreateUserRole(userID, operationID, role));
+            }
+            catch (Exception ex)
+            {
+
+                throw new ApplicationException("Role not created.", ex);
+            }
+            return result;
+        }
+
         public bool CreateUserRole(int userID, string role)
         {
             bool result = false;
@@ -131,7 +147,7 @@ namespace LogicLayer
             catch (Exception ex)
             {
 
-                throw new ApplicationException("Role not changed.", ex);
+                throw new ApplicationException("Role not created.", ex);
             }
             return result;
         }

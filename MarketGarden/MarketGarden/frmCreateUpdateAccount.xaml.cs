@@ -22,6 +22,7 @@ namespace PresentationLayer
     public partial class frmCreateUpdateAccount : Window
     {
         private IUserManager _userManager;
+        private IOperationManager _operationManager;
         private User _user;
         private bool _isNewUserAccount;
         private bool _isExistingAccount;
@@ -31,6 +32,7 @@ namespace PresentationLayer
         public frmCreateUpdateAccount()
         {
             _userManager = new UserManager();
+            _operationManager = new OperationManager();
             InitializeComponent();
         }
 
@@ -79,6 +81,8 @@ namespace PresentationLayer
             lblNewPassword.Visibility = Visibility.Collapsed;
             pwdNewPassword.Visibility = Visibility.Collapsed;
             lblOperation.Visibility = Visibility.Collapsed;
+            lblOperationName.Visibility = Visibility.Collapsed;
+            txtOperationName.Visibility = Visibility.Collapsed;
 
             cmbOperations.Visibility = Visibility.Collapsed;
             txtFirstName.Focus();
@@ -93,6 +97,8 @@ namespace PresentationLayer
             txtZip.Visibility = Visibility.Collapsed;
             lblOperation.Visibility = Visibility.Collapsed;
             cmbOperations.Visibility = Visibility.Collapsed;
+            lblOperationName.Visibility = Visibility.Collapsed;
+            txtOperationName.Visibility = Visibility.Collapsed;
             lblRole.Visibility = Visibility.Collapsed;
             cmbUserRoles.Visibility = Visibility.Collapsed;
 
@@ -116,6 +122,8 @@ namespace PresentationLayer
             txtZip.Visibility = Visibility.Collapsed;
             lblOperation.Visibility = Visibility.Collapsed;
             cmbOperations.Visibility = Visibility.Collapsed;
+            lblOperationName.Visibility = Visibility.Collapsed;
+            txtOperationName.Visibility = Visibility.Collapsed;
             lblRole.Visibility = Visibility.Collapsed;
             cmbUserRoles.Visibility = Visibility.Collapsed;
 
@@ -223,10 +231,43 @@ namespace PresentationLayer
                 }
                 try
                 {
+                    // Create the user account and capture the id for later operations
                     var id = _userManager.CreateUserAccount(email, txtFirstName.Text, txtLastName.Text, pwdPassword.Password);
+
+                    // If the account was created, create the role selected
                     if (id != 0)
                     {
-                        _userManager.CreateUserRole(id, cmbUserRoles.SelectedItem.ToString());
+                        if (cmbUserRoles.SelectedItem.ToString() == roleList[0]) // User is a customer
+                        {
+                            _userManager.CreateUserRole(id, cmbUserRoles.SelectedItem.ToString());
+                        }
+                        else if (cmbUserRoles.SelectedItem.ToString() == roleList[1]) // User is a Farmer
+                        {
+                            try
+                            {
+                                _operationManager = new OperationManager();
+                                // Create the farm
+                                var operationID = _operationManager.CreateOperation(id, int.Parse(txtZip.Text), txtOperationName.Text);
+                                try
+                                {
+                                    _userManager.CreateUserRole(id, operationID, roleList[1]);
+                                }
+                                catch (Exception ex)
+                                {
+
+                                    throw ex;
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
+                            }
+                            
+                        }
+                        else // User is a helper
+                        {
+                            //_userManager.CreateUserRole(id, cmbOperations.SelectedItem.OperationID, cmbUserRoles.SelectedItem.ToString());
+                        }
                         // If all checks have succeeded
                         MessageBox.Show("Account created, please log in to continue.");
                         this.DialogResult = true;
@@ -241,20 +282,46 @@ namespace PresentationLayer
 
         private void cmbUserRoles_DropDownClosed(object sender, EventArgs e)
         {
-            if (cmbUserRoles.SelectedItem.ToString() == roleList[2])
+            if (cmbUserRoles.SelectedItem != null)
             {
-                lblOperation.Visibility = Visibility.Visible;
-                cmbOperations.Visibility = Visibility.Visible;
-                try
+                // Handle interface for customers
+                if (cmbUserRoles.SelectedItem.ToString() == roleList[0])
                 {
-                    //cmbOperations.ItemsSource
+                    lblOperationName.Visibility = Visibility.Hidden;
+                    txtOperationName.Visibility = Visibility.Hidden;
+                    lblOperation.Visibility = Visibility.Hidden;
+                    cmbOperations.Visibility = Visibility.Hidden;
                 }
-                catch (Exception ex)
+                // Handle interface for farmers
+                if (cmbUserRoles.SelectedItem.ToString() == roleList[1])
                 {
+                    lblOperationName.Visibility = Visibility.Visible;
+                    txtOperationName.Visibility = Visibility.Visible;
+                }
+                // Handle interface for helpers
+                if (cmbUserRoles.SelectedItem.ToString() == roleList[2])
+                {
+                    lblOperationName.Visibility = Visibility.Hidden;
+                    txtOperationName.Visibility = Visibility.Hidden;
+                    lblOperation.Visibility = Visibility.Visible;
+                    cmbOperations.Visibility = Visibility.Visible;
+                    try
+                    {
+                        //TODO get the items source cmbOperations.ItemsSource
+                    }
+                    catch (Exception ex)
+                    {
 
-                    MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
+                        MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
+                    }
                 }
             }
+        }
+
+        private void cmbUserRoles_DropDownOpened(object sender, EventArgs e)
+        {
+            roleList = _userManager.getAllRoles();
+            cmbUserRoles.ItemsSource = roleList;
         }
     }
 }

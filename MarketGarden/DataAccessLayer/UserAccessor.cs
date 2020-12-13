@@ -376,6 +376,59 @@ namespace DataAccessLayer
             return result;
         }
 
+        public int CreateUserRole(int userID, int operationID, string role)
+        {
+            // Result of verification representing rows matched, success will mean a result of 1
+            int result = 0;
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_create_user_role", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Add parameter to command
+            cmd.Parameters.Add("@UserID", SqlDbType.Int, userID);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@OperationID", SqlDbType.Int, operationID);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@RoleName", SqlDbType.NVarChar, 100);
+
+            // Set parameter to value
+            cmd.Parameters["@UserID"].Value = userID;
+
+            // Set parameter to value
+            cmd.Parameters["@RoleName"].Value = role;
+
+            // Set parameter to value
+            cmd.Parameters["@OperationID"].Value = operationID;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Capture result of the execution
+                result = Convert.ToInt32(cmd.ExecuteNonQuery());
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return result;
+        }
+
         public int CreateUserRole(int userID, string role)
         {
             // Result of verification representing rows matched, success will mean a result of 1
@@ -391,7 +444,7 @@ namespace DataAccessLayer
             cmd.CommandType = CommandType.StoredProcedure;
 
             // Add parameter to command
-            cmd.Parameters.Add("@UserID", SqlDbType.NVarChar, 100);
+            cmd.Parameters.Add("@UserID", SqlDbType.Int, userID);
 
             // Add parameter to command
             cmd.Parameters.Add("@RoleName", SqlDbType.NVarChar, 100);

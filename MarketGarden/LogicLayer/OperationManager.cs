@@ -16,6 +16,21 @@ namespace LogicLayer
         {
             _operationAccessor = new OperationAccessor();
         }
+        public int CreateOperation(int userID_operator, int zipCode, string operationName)
+        {
+            int result = 0;
+
+            try
+            {
+                result =  _operationAccessor.CreateOperation(userID_operator, zipCode, operationName);
+            }
+            catch (Exception ex)
+            {
+
+                throw new ApplicationException("Operation not created.", ex);
+            }
+            return result;
+        }
         public Operation GetOperationByOperator(User operatorUser)
         {
             Operation operation = null;

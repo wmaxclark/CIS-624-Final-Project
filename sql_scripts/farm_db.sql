@@ -46,18 +46,65 @@ GO
 print '' print '*** creating address table ***'
 GO
 CREATE TABLE [dbo].[Address] (
-	[ZipCode]		[int]		NOT NULL,
-	[AddressState]	[char](2)	NOT NULL,
-	CONSTRAINT [pk_ZipCode] PRIMARY KEY([ZipCode] ASC)
+	[AddressState]	[char](2)	NOT NULL
 )
 GO
 
-print '' print '***  creating address test records ***'
+print '' print '***  creating address records ***'
 GO
 INSERT INTO [dbo].[Address]
-	([ZipCode],[AddressState])
+	([AddressState])
 	VALUES
-		(11111, 'NY')
+		('NY')
+		,("AR")
+		,("AZ")
+		,("CA")
+		,("CO")
+		,("CT")
+		,("DC")
+		,("DE")
+		,("FL")
+		,("GA")
+		,("HI")
+		,("IA")
+		,("ID")
+		,("IL")
+		,("IN")
+		,("KS")
+		,("KY")
+		,("LA")
+		,("MA")
+		,("MD")
+		,("ME")
+		,("MI")
+		,("MN")
+		,("MO")
+		,("MS")
+		,("MT")
+		,("NC")
+		,("NE")
+		,("NH")
+		,("NJ")
+		,("NM")
+		,("NV")
+		,("NY")
+		,("ND")
+		,("OH")
+		,("OK")
+		,("OR")
+		,("PA")
+		,("RI")
+		,("SC")
+		,("SD")
+		,("TN")
+		,("TX")
+		,("UT")
+		,("VT")
+		,("VA")
+		,("WA")
+		,("WI")
+		,("WV")
+		,("WY")
 GO
 
 print '' print '*** creating role table ***'
@@ -87,27 +134,27 @@ CREATE TABLE [dbo].[FarmOperation] (
 	[OperationName]	[nvarchar](64)	NOT NULL,
 	[OperationID]		[int]		IDENTITY(100000, 1) NOT NULL,
 	[UserID_Operator]	[int]		NOT NULL,
-	[ZipCode]			[int]		NOT NULL,
+	[AddressState]		[char](2)		NOT NULL,
 	[MaxShares]		[int]		NULL,
 	[Active]			[bit]		NOT NULL DEFAULT 1
 	CONSTRAINT [pk_farmOperation_operationID] PRIMARY KEY([OperationID] ASC),
-	CONSTRAINT [fk_farmOperation_ZipCode] FOREIGN KEY([ZipCode])
-		REFERENCES [dbo].[Address]([ZipCode])
+	CONSTRAINT [fk_farmOperation_AddressState] FOREIGN KEY([AddressState])
+		REFERENCES [dbo].[Address]([AddressState])
 )
 GO
 
 print '' print '***  creating farmoperation test records ***'
 GO
 INSERT INTO [dbo].[FarmOperation]
-	([OperationName],[UserID_Operator],[ZipCode],[Active])
+	([OperationName],[UserID_Operator],[AddressState],[Active])
 	VALUES
-		('Tebows Farm', 100002, 11111, 1)
+		('Tebows Farm', 100002, "IA", 1)
 GO
 
 print '' print '***  creating userrole table ***'
 GO
 CREATE TABLE [dbo].[UserRole] (
-	[OperationID]	[int]		NOT NULL,
+	[OperationID]	[int]		NULL,
 	[UserID]		[int]		NOT NULL,
 	[RoleName]	[nvarchar](64)	NOT NULL,
 	CONSTRAINT [fk_userRole_userID] FOREIGN KEY([UserID])
@@ -183,21 +230,22 @@ GO
 print '' print '*** creating restaraunt table ***'
 GO
 CREATE TABLE [dbo].[Restaraunt] (
-	[UserID_Customer]			[int]		NOT NULL,
-	[ZipCode]					[int]		NOT NULL,
-	CONSTRAINT [fk_restaraunt_userID_customer] FOREIGN KEY([UserID_Customer])
-		REFERENCES [dbo].[UserAccount](UserID)
+	[UserID_Customer]	[int]		NOT NULL,
+	[AddressState]		[char](2)		NOT NULL,
+	CONSTRAINT [fk_restaraunt_AddressState] FOREIGN KEY([AddressState])
+		REFERENCES [dbo].[Address]([AddressState])
 )
 GO
 
 print '' print '*** creating directsale table ***'
 GO
 CREATE TABLE [dbo].[DirectSale] (
-	[UserID_Customer]			[int]		NOT NULL,
-	[ZipCode]					[int]		NOT NULL,
+	[UserID_Customer]		[int]		NOT NULL,
+	[AddressState]			[char](2)		NOT NULL,
 	CONSTRAINT [fk_directSale_userID_customer] FOREIGN KEY([UserID_Customer])
-		REFERENCES [dbo].[UserAccount](UserID)
-		ON UPDATE CASCADE
+		REFERENCES [dbo].[UserAccount](UserID),
+	CONSTRAINT [fk_directSale_AddressState] FOREIGN KEY([AddressState])
+			REFERENCES [dbo].[Address]([AddressState])
 )
 GO
 
@@ -205,11 +253,12 @@ print '' print '*** creating marketstall table ***'
 GO
 CREATE TABLE [dbo].[MarketStall] (
 	[OperationID]				[int]		NOT NULL,
-	[ZipCode]					[int]		NOT NULL,
-	[Frequency]				[int]		NOT NULL
+	[Frequency]				[int]		NOT NULL,
+	[AddressState]			[char](2)		NOT NULL,
+	CONSTRAINT [fk_marketStall_AddressState] FOREIGN KEY([AddressState])
+			REFERENCES [dbo].[Address]([AddressState])
 	CONSTRAINT [fk_marketStall_operationID] FOREIGN KEY([OperationID])
 		REFERENCES [dbo].[FarmOperation](OperationID)
-		ON UPDATE CASCADE
 )
 GO
 
@@ -370,7 +419,7 @@ print '' print '*** creating sp_create_user_role ***'
 GO
 CREATE PROCEDURE [dbo].[sp_create_user_role]
 	(
-		@Email				[nvarchar](100),
+		@UserID				[int],
 		@RoleName				[nvarchar](64)
 	)
 AS
@@ -385,18 +434,37 @@ AS
 	END
 GO
 
+print '' print '*** creating sp_create_user_role_with_operation ***'
+GO
+CREATE PROCEDURE [dbo].[sp_create_user_role_with_operation]
+	(
+		@UserID				[int],
+		@OperationID			[int],
+		@RoleName				[nvarchar](64)
+	)
+AS
+	BEGIN
+		IF EXISTS (SELECT RoleName
+					FROM UserRole
+					WHERE RoleName = @RoleName)
+		INSERT INTO [dbo].[UserRole]
+				([UserID], [OperationID], [RoleName])
+			VALUES
+				(@UserID, @OperationID, @RoleName)
+	END
+GO
+
 print '' print '*** creating sp_select_user_role_by_email ***'
 GO
 CREATE PROCEDURE [dbo].[sp_select_user_role_by_email]
 	(
-		@Email				[nvarchar](100)
+		@UserID				[int]
 	)
 AS
 	BEGIN
 		SELECT RoleName
 		FROM UserRole
-			JOIN UserAccount ON UserRole.UserID = UserAccount.UserID
-		WHERE @Email = UserAccount.Email
+		WHERE @UserID = UserID
 	END
 GO
 
@@ -437,34 +505,14 @@ GO
 print '' print '*** stored procedures for address ***'
 GO
 
-print '' print '*** creating sp_create_address ***'
+print '' print '*** creating sp_select_all_address ***'
 GO
-CREATE PROCEDURE [dbo].[sp_create_address]
-	(
-		@ZipCode				[int],
-		@AddressState			[char](2)
-	)
+CREATE PROCEDURE [dbo].[sp_select_all_address]
 AS
 BEGIN
-	INSERT INTO [dbo].[Address]
-			([ZipCode], [AddressState])
-		VALUES
-			(@ZipCode, @AddressState)
-	RETURN @@ROWCOUNT
-END
-GO
-
-print '' print '*** creating sp_select_address_by_ZipCode ***'
-GO
-CREATE PROCEDURE [dbo].[sp_select_address_by_ZipCode]
-	(
-		@ZipCode				[int]
-	)
-AS
-BEGIN
-	SELECT ZipCode, AddressState
+	SELECT AddressState
 	FROM Address
-	WHERE ZipCode = @ZipCode
+	ORDER BY AddressState ASC
 END
 GO
 
@@ -476,15 +524,15 @@ GO
 CREATE PROCEDURE [dbo].[sp_create_farmoperation]
 	(
 		@UserID_Operator		[int],
-		@ZipCode				[int],
+		@AddressState			[char](2),
 		@OperationName			[nvarchar](64)
 	)
 AS
 BEGIN
 	INSERT INTO [dbo].[FarmOperation]
-			(UserID_Operator,ZipCode,OperationName)
+			(UserID_Operator,AddressState,OperationName)
 		VALUES
-			(@UserID_Operator, @ZipCode,@OperationName)
+			(@UserID_Operator, @AddressState,@OperationName)
 	SELECT SCOPE_IDENTITY()
 END
 GO
@@ -497,23 +545,23 @@ CREATE PROCEDURE [dbo].[sp_select_farmoperation_by_operator]
 	)
 AS
 BEGIN
-	SELECT OperationID, OperationName, ZipCode, MaxShares, Active
+	SELECT OperationID, OperationName, AddressState, MaxShares, Active
 	FROM FarmOperation
 	WHERE UserID_Operator = @UserID_Operator
 END
 GO
 
-print '' print '*** creating sp_select_farmoperation_by_ZipCode ***'
+print '' print '*** creating sp_select_farmoperation_by_state ***'
 GO
-CREATE PROCEDURE [dbo].[sp_select_farmoperation_by_ZipCode]
+CREATE PROCEDURE [dbo].[sp_select_farmoperation_by_addressstate]
 	(
-		@ZipCode					[int]
+		@AddressState			[char](2),
 	)
 AS
 BEGIN
-	SELECT OperationID, OperationName, ZipCode, MaxShares, Active
+	SELECT OperationID, OperationName, MaxShares, Active
 	FROM FarmOperation
-	WHERE ZipCode = @ZipCode
+	WHERE AddressState = @AddressState
 END
 GO
 
@@ -521,13 +569,15 @@ print '' print '*** creating sp_select_farmoperation_by_state ***'
 GO
 CREATE PROCEDURE [dbo].[sp_select_farmoperation_by_state]
 	(
-		@AddressState				[int]
+		@AddressState				[char](2)
 	)
 AS
 BEGIN
-	SELECT OperationID, OperationName, FarmOperation.ZipCode, MaxShares, Active
+	IF EXISTS(SELECT AddressState
+			FROM Address
+			WHERE @AddressState = AddressState)
+	SELECT OperationID, OperationName, FarmOperation.AddressState, MaxShares, Active
 	FROM FarmOperation
-		JOIN Address ON Address.ZipCode = FarmOperation.ZipCode
 	WHERE Address.AddressState = @AddressState
 END
 GO
@@ -539,7 +589,7 @@ CREATE PROCEDURE [dbo].[sp_update_farmoperation]
 		@OperationID				[int],
 		@UserID_Operator			[int],
 		@MaxShares				[int],
-		@ZipCode					[int],
+		@AddressState				[char](2),
 		@Active					[bit],
 		@OperationName				[nvarchar](64)
 	)
@@ -548,7 +598,7 @@ AS
 		UPDATE FarmOperation
 			SET UserID_Operator = @UserID_Operator,
 				MaxShares = @MaxShares,
-				ZipCode = @ZipCode,
+				AddressState = @AddressState,
 				Active = @Active,
 				OperationName = @OperationName
 			WHERE OperationID = @OperationID
@@ -855,14 +905,14 @@ GO
 CREATE PROCEDURE [dbo].[sp_create_restaraunt]
 	(
 		@UserID_Customer				[int],
-		@ZipCode						[int]
+		@AddressState					[char](2)
 	)
 AS
 	BEGIN
 		INSERT INTO [dbo].[Restaraunt]
-				(UserID_Customer, ZipCode)
+				(UserID_Customer, AddressState)
 			VALUES
-				(@UserID_Customer, @ZipCode)
+				(@UserID_Customer, @AddressState)
 		SELECT SCOPE_IDENTITY()
 	END
 GO
@@ -875,23 +925,23 @@ CREATE PROCEDURE [dbo].[sp_select_restaraunt_by_customer]
 	)
 AS
 	BEGIN
-		SELECT ZipCode
+		SELECT AddressState
 		FROM Restaraunt
 		WHERE UserID_Customer = @UserID_Customer
 	END
 GO
 
-print '' print '*** creating sp_select_restaraunt_by_zip ***'
+print '' print '*** creating sp_select_restaraunt_by_state ***'
 GO
-CREATE PROCEDURE [dbo].[sp_select_restaraunt_by_zip]
+CREATE PROCEDURE [dbo].[sp_select_restaraunt_by_state]
 	(
-		@ZipCode					[int]
+		@AddressState					[char](2)
 	)
 AS
 	BEGIN
 		SELECT UserID_Customer
 		FROM Restaraunt
-		WHERE ZipCode = @ZipCode
+		WHERE AddressState = @AddressState
 	END
 GO
 
@@ -900,13 +950,13 @@ GO
 CREATE PROCEDURE [dbo].[sp_delete_restaraunt]
 	(
 		@UserID_Customer			[int],
-		@ZipCode					[int]
+		@AddressState				[char](2)
 	)
 AS
 	BEGIN
 		DELETE FROM Restaraunt
 		WHERE UserID_Customer = @UserID_Customer
-			AND ZipCode = @ZipCode
+			AND AddressState = @AddressState
 		RETURN @@ROWCOUNT
 	END
 GO
@@ -919,14 +969,14 @@ GO
 CREATE PROCEDURE [dbo].[sp_create_directsale]
 	(
 		@UserID_Customer				[int],
-		@ZipCode						[int]
+		@AddressState				[char](2)
 	)
 AS
 	BEGIN
 		INSERT INTO [dbo].[DirectSale]
-				(UserID_Customer, ZipCode)
+				(UserID_Customer, AddressState)
 			VALUES
-				(@UserID_Customer, @ZipCode)
+				(@UserID_Customer, @AddressState)
 		SELECT SCOPE_IDENTITY()
 	END
 GO
@@ -939,23 +989,23 @@ CREATE PROCEDURE [dbo].[sp_select_directsale_by_customer]
 	)
 AS
 	BEGIN
-		SELECT ZipCode
+		SELECT AddressState
 		FROM Restaraunt
 		WHERE UserID_Customer = @UserID_Customer
 	END
 GO
 
-print '' print '*** creating sp_select_directsale_by_zip ***'
+print '' print '*** creating sp_select_directsale_by_state ***'
 GO
-CREATE PROCEDURE [dbo].[sp_select_directsale_by_zip]
+CREATE PROCEDURE [dbo].[sp_select_directsale_by_state]
 	(
-		@ZipCode					[int]
+		@AddressState				[char](2)
 	)
 AS
 	BEGIN
 		SELECT UserID_Customer
 		FROM Restaraunt
-		WHERE ZipCode = @ZipCode
+		WHERE AddressState = @AddressState
 	END
 GO
 
@@ -964,13 +1014,13 @@ GO
 CREATE PROCEDURE [dbo].[sp_delete_directsale]
 	(
 		@UserID_Customer			[int],
-		@ZipCode					[int]
+		@AddressState				[char](2)
 	)
 AS
 	BEGIN
 		DELETE FROM DirectSale
 		WHERE UserID_Customer = @UserID_Customer
-			AND ZipCode = @ZipCode
+			AND AddressState = @AddressState
 		RETURN @@ROWCOUNT
 	END
 GO
@@ -983,15 +1033,15 @@ GO
 CREATE PROCEDURE [dbo].[sp_create_marketstall]
 	(
 		@OperationID					[int],
-		@ZipCode						[int],
+		@AddressState					[char](2),
 		@Frequency					[int]
 	)
 AS
 	BEGIN
 		INSERT INTO [dbo].[MarketStall]
-				(OperationID, ZipCode, Frequency)
+				(OperationID, AddressState, Frequency)
 			VALUES
-				(@OperationID, @ZipCode, @Frequency)
+				(@OperationID, @AddressState, @Frequency)
 		SELECT SCOPE_IDENTITY()
 	END
 GO
@@ -1004,7 +1054,7 @@ CREATE PROCEDURE [dbo].[sp_select_marketstall_by_operation]
 	)
 AS
 	BEGIN
-		SELECT ZipCode, Frequency
+		SELECT AddressState, Frequency
 		FROM MarketStall
 		WHERE OperationID = @OperationID
 	END
@@ -1015,14 +1065,14 @@ GO
 CREATE PROCEDURE [dbo].[sp_delete_marketstall]
 	(
 		@OperationID					[int],
-		@ZipCode						[int],
+		@AddressState					[char](2),
 		@Frequency					[int]
 	)
 AS
 	BEGIN
 		DELETE FROM MarketStall
 		WHERE OperationID = @OperationID
-			AND ZipCode = @ZipCode
+			AND AddressState = @AddressState
 			AND Frequency = @Frequency
 		RETURN @@ROWCOUNT
 	END

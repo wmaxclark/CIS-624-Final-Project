@@ -9,6 +9,7 @@ namespace LogicLayer
 {
     public interface IOperationManager
     {
+        int CreateOperation(int userID_operator, int zipCode, string operationName);
         Operation GetOperationByOperator(User operatorUser);
         bool AddProduct(Product product);
         //List<Product> RetrieveProductsByOperation(Operation operation);

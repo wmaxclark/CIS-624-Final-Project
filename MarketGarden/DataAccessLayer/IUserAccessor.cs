@@ -16,6 +16,7 @@ namespace DataAccessLayer
         int UpdatePassword(string email, string newPasswordHash, string oldPasswordHash);
         int UpdateUserRole(string email, string role);
         int CreateUserAccount(string email, string firstName, string lastName, string passwordHash);
+        int CreateUserRole(int userID, int operationID, string role);
         int CreateUserRole(int userID, string role);
     }
 }
