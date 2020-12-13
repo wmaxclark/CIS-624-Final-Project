@@ -18,5 +18,10 @@ namespace DataAccessLayer
         List<string> RetrieveRolesByEmail(string email);
         List<string> RetrieveAllStates();
         List<Operation> RetrieveAllOperations();
+        int CreateProduct(int operationID, string productName, string productDescription, string unit, decimal inputCost, decimal unitPrice, 
+            DateTime germinationDate, DateTime plantDate, DateTime transplantDate, DateTime harvestDate);
+        int UpdateProduct(int operationID, Product oldProduct, string productName, string productDescription, string unit, decimal inputCost, decimal unitPrice, 
+            DateTime germinationDate, DateTime plantDate, DateTime transplantDate, DateTime harvestDate);
+        int DeleteProduct(int productID);
     }
 }

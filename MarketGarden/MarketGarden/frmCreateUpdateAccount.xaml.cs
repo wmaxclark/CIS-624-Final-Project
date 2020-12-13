@@ -30,7 +30,6 @@ namespace PresentationLayer
         private List<string> _roleList;
         private List<string> _states;
         private List<Operation> _operations;
-        private List<string> _operationNames;
 
         public frmCreateUpdateAccount()
         {
@@ -66,9 +65,9 @@ namespace PresentationLayer
         {
             _roleList = _userManager.getAllRoles();
             cmbUserRoles.ItemsSource = _roleList;
-            _states = _operationManager.getAllStates();
+            _states = _operationManager.GetAllStates();
             cmbStates.ItemsSource = _states;
-            _operations = _operationManager.getAllOperations();
+            _operations = _operationManager.GetAllOperations();
             cmbOperations.ItemsSource = _operations;
             if (_isNewUserAccount)
             {

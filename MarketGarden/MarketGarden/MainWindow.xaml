@@ -45,7 +45,7 @@
                 Content="Login" Click="btnLogin_Click"></Button>
 
         <TabControl x:Name="tabMain" Grid.Row="2" Grid.RowSpan="2" Grid.Column="1" Grid.ColumnSpan="5">
-            <TabItem x:Name="tabItemOperationManagement" GotFocus="tabItemOperationManagement_GotFocus" IsVisibleChanged="tabItemOperationManagement_IsVisibleChanged">
+            <TabItem x:Name="tabItemOperationManagement" GotFocus="tabItemOperationManagement_GotFocus">
                 <TabItem.Header>
                     <TextBlock Text="Operation Manager" Style="{StaticResource Header1}"></TextBlock>
                 </TabItem.Header>
@@ -56,12 +56,10 @@
 
                             </RowDefinition>
                             <RowDefinition></RowDefinition>
-                            <RowDefinition Height="40"></RowDefinition>
-                            <RowDefinition Height="100"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition Width="250px"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Label Style="{StaticResource NormalLabel}" x:Name="lblProducts" Content="Products" 
                                Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left"></Label>
@@ -71,13 +69,12 @@
                         </Button>
                         <Label Style="{StaticResource NormalLabel}" x:Name="lblDistribution" Content="Distribution" 
                                Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left"></Label>
-                        <Label Style="{StaticResource NormalLabel}" x:Name="lblTasks" Content="Tasks" 
-                               Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left"></Label>
+                        <!--Removed due to time constraints-->
+                        <!--<Label Style="{StaticResource NormalLabel}" x:Name="lblTasks" Content="Tasks" 
+                               Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left"></Label>-->
                         
-                        <DataGrid x:Name="dgProductsList" Grid.Row="1" Grid.Column="0" Margin="10" MouseDoubleClick="dgProductsList_MouseDoubleClick">
-                            
-                        </DataGrid>
-                        
+                        <DataGrid x:Name="dgProductsList" Grid.Row="1" Grid.Column="0" Margin="10" MouseDoubleClick="dgProductsList_MouseDoubleClick"/>
+
                         <TabControl x:Name="tabDistribution" Grid.Row="1" Grid.Column="1" Margin="10">
                             <TabItem x:Name="tabItemWeekly" GotFocus="tabItemCSA_GotFocus">
                                 <TabItem.Header>

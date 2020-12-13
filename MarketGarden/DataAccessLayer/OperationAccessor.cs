@@ -115,17 +115,18 @@ namespace DataAccessLayer
                         var unit = reader.GetString(4);
                         var unitPrice = reader.GetDecimal(5);
                         var germinationDate = reader.GetSqlDateTime(6);
-                        var daysAfterGerminationToPlant = reader.GetInt32(7);
-                        var daysAfterGerminationToTransplant = reader.GetInt32(8);
-                        var daysAfterGerminationToHarvest = reader.GetInt32(9);
+                        var plantDate = reader.GetSqlDateTime(7);
+                        var transplantDate = reader.GetSqlDateTime(8);
+                        var harvestDate = reader.GetSqlDateTime(9);
                         
 
                         // Construct new operation with captured values
-                        var product = new Product(productID, operationID, productName, productDescription,
-                            unit, inputCost, unitPrice, (DateTime)germinationDate,
-                            daysAfterGerminationToPlant,
-                            daysAfterGerminationToTransplant,
-                            daysAfterGerminationToHarvest);
+                        var product = new Product(productID, operationID, productName, 
+                            productDescription, unit, inputCost, 
+                            unitPrice, (DateTime)germinationDate,
+                            (DateTime)plantDate,
+                            (DateTime)transplantDate,
+                            (DateTime)harvestDate);
 
                         // Add the resulting product to the list
                         productList.Add(product);
@@ -491,6 +492,242 @@ namespace DataAccessLayer
                 conn.Close();
             }
             return operationList;
+        }
+
+        public int CreateProduct(int operationID, string productName, string productDescription, string unit, decimal inputCost, decimal unitPrice, 
+            DateTime germinationDate, DateTime plantDate, DateTime transplantDate, DateTime harvestDate)
+        {
+            int result = 0;
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_create_product", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Add parameter to command
+            cmd.Parameters.Add("@OperationID", SqlDbType.Int);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@ProductName", SqlDbType.NVarChar, 64);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@ProductDescription", SqlDbType.NVarChar, 1024);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@InputCost", SqlDbType.Decimal);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@Unit", SqlDbType.NVarChar, 64);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@UnitPrice", SqlDbType.Decimal);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@GerminationDate", SqlDbType.DateTime);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@PlantDate", SqlDbType.DateTime);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@TransplantDate", SqlDbType.DateTime);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@HarvestDate", SqlDbType.DateTime);
+
+            // Set parameter to value
+            cmd.Parameters["@OperationID"].Value = operationID;
+
+            // Set parameter to value
+            cmd.Parameters["@ProductName"].Value = productName;
+
+            // Set parameter to value
+            cmd.Parameters["@ProductDescription"].Value = productDescription;
+
+            // Set parameter to value
+            cmd.Parameters["@InputCost"].Value = inputCost;
+
+            // Set parameter to value
+            cmd.Parameters["@Unit"].Value = unit;
+
+            // Set parameter to value
+            cmd.Parameters["@UnitPrice"].Value = unitPrice;
+
+            // Set parameter to value
+            cmd.Parameters["@GerminationDate"].Value = germinationDate;
+
+            // Set parameter to value
+            cmd.Parameters["@PlantDate"].Value = plantDate;
+
+            // Set parameter to value
+            cmd.Parameters["@TransplantDate"].Value = transplantDate;
+
+            // Set parameter to value
+            cmd.Parameters["@HarvestDate"].Value = harvestDate;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                result = cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return result;
+        }
+
+        public int UpdateProduct(int operationID, Product oldProduct, string productName, string productDescription, string unit, decimal inputCost, decimal unitPrice, DateTime germinationDate, DateTime plantDate, DateTime transplantDate, DateTime harvestDate)
+        {
+            int result = 0;
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_update_product", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Add parameter to command
+            cmd.Parameters.Add("@ProductID", SqlDbType.Int);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@OperationID", SqlDbType.Int);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@ProductName", SqlDbType.NVarChar, 64);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@ProductDescription", SqlDbType.NVarChar, 1024);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@InputCost", SqlDbType.Decimal);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@Unit", SqlDbType.NVarChar, 64);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@UnitPrice", SqlDbType.Decimal);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@GerminationDate", SqlDbType.DateTime);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@PlantDate", SqlDbType.DateTime);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@TransplantDate", SqlDbType.DateTime);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@HarvestDate", SqlDbType.DateTime);
+
+            // Set parameter to value
+            cmd.Parameters["@ProductID"].Value = oldProduct.ProductID;
+
+            // Set parameter to value
+            cmd.Parameters["@OperationID"].Value = operationID;
+
+            // Set parameter to value
+            cmd.Parameters["@ProductName"].Value = productName;
+
+            // Set parameter to value
+            cmd.Parameters["@ProductDescription"].Value = productDescription;
+
+            // Set parameter to value
+            cmd.Parameters["@InputCost"].Value = inputCost;
+
+            // Set parameter to value
+            cmd.Parameters["@Unit"].Value = unit;
+
+            // Set parameter to value
+            cmd.Parameters["@UnitPrice"].Value = unitPrice;
+
+            // Set parameter to value
+            cmd.Parameters["@GerminationDate"].Value = germinationDate;
+
+            // Set parameter to value
+            cmd.Parameters["@PlantDate"].Value = plantDate;
+
+            // Set parameter to value
+            cmd.Parameters["@TransplantDate"].Value = transplantDate;
+
+            // Set parameter to value
+            cmd.Parameters["@HarvestDate"].Value = harvestDate;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                result = cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return result;
+        }
+
+        public int DeleteProduct(int productID)
+        {
+            int result = 0;
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_delete_product", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Add parameter to command
+            cmd.Parameters.Add("@ProductID", SqlDbType.Int);
+
+            // Set parameter to value
+            cmd.Parameters["@ProductID"].Value = productID;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                result = cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return result;
         }
     }
 }

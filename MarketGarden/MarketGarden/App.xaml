@@ -60,8 +60,8 @@
             <Style x:Key="NormalDatePicker" TargetType="DatePicker">
                 <Setter Property="Height" Value="40"></Setter>
                 <Setter Property="FontSize" Value="14"></Setter>
-                <Setter Property="Background" Value="#0f3f43"></Setter>
-                <Setter Property="Foreground" Value="#bfd7f1"></Setter>
+                <!--<Setter Property="Background" Value="#0f3f43"></Setter>-->
+                <Setter Property="Foreground" Value="#0f3f43"></Setter>
                 <Setter Property="HorizontalContentAlignment" Value="Center"></Setter>
                 <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
                 <Setter Property="Margin" Value="3"></Setter>

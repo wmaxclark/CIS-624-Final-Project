@@ -121,7 +121,6 @@ INSERT INTO [dbo].[Role]
 	([RoleName])
 	VALUES
 		('Farmer')
-		, ('Helper')
 		, ('Customer')
 GO
 
@@ -200,9 +199,9 @@ CREATE TABLE [dbo].[Product] (
 	[Unit]						[nvarchar](64)		NOT NULL,
 	[UnitPrice]					[decimal](10,2)	NOT NULL,
 	[GerminationDate]				[DateTime]		NOT NULL,
-	[DaysAfterGerminationToPlant]		[int]			NULL,
-	[DaysAfterGerminationToTransplant]	[int]			NULL,
-	[DaysAfterGerminationToHarvest]	[int]			NULL,
+	[PlantDate]					[DateTime]		NOT NULL,
+	[TransplantDate]				[DateTime]		NOT NULL,
+	[HarvestDate]					[DateTime]		NOT NULL,
 	CONSTRAINT [pk_product_productID] PRIMARY KEY([ProductID] ASC),
 	CONSTRAINT [fk_product_operation] FOREIGN KEY([OperationID])
 		REFERENCES [dbo].[FarmOperation](OperationID)
@@ -706,25 +705,25 @@ CREATE PROCEDURE [dbo].[sp_create_product]
 		@Unit						[nvarchar](64),
 		@UnitPrice					[decimal](10,2),
 		@GerminationDate				[DateTime],
-		@DaysAfterGerminationToPlant		[int],
-		@DaysAfterGerminationToTransplant	[int],
-		@DaysAfterGerminationToHarvest	[int]
+		@PlantDate					[DateTime],
+		@TransplantDate				[DateTime],
+		@HarvestDate					[DateTime]
 	)
 AS
 	BEGIN
 		INSERT INTO [dbo].[Product]
 				(OperationID, ProductName, ProductDescription, InputCost,
 					Unit, UnitPrice, GerminationDate,
-					DaysAfterGerminationToPlant,
-					DaysAfterGerminationToTransplant,
-					DaysAfterGerminationToHarvest)
+					PlantDate,
+					TransplantDate,
+					HarvestDate)
 			VALUES
 				(@OperationID, @ProductName,
 					@ProductDescription, @InputCost,
 					@Unit, @UnitPrice, @GerminationDate,
-					@DaysAfterGerminationToPlant,
-					@DaysAfterGerminationToTransplant,
-					@DaysAfterGerminationToHarvest)
+					@PlantDate,
+					@TransplantDate,
+					@HarvestDate)
 		SELECT SCOPE_IDENTITY()
 	END
 GO
@@ -739,9 +738,9 @@ AS
 	BEGIN
 		SELECT ProductID, ProductName, ProductDescription, InputCost,
 			Unit, UnitPrice, GerminationDate,
-			DaysAfterGerminationToPlant,
-			DaysAfterGerminationToTransplant,
-			DaysAfterGerminationToHarvest
+			PlantDate,
+			TransplantDate,
+			HarvestDate
 		FROM Product
 		WHERE OperationID = @OperationID
 		ORDER BY ProductName ASC
@@ -760,9 +759,9 @@ CREATE PROCEDURE [dbo].[sp_update_product]
 		@Unit						[nvarchar](64),
 		@UnitPrice					[decimal](10,2),
 		@GerminationDate				[DateTime],
-		@DaysAfterGerminationToPlant		[int],
-		@DaysAfterGerminationToTransplant	[int],
-		@DaysAfterGerminationToHarvest	[int]
+		@PlantDate					[DateTime],
+		@TransplantDate				[DateTime],
+		@HarvestDate					[DateTime]
 	)
 AS
 	BEGIN
@@ -774,10 +773,10 @@ AS
 			Unit = @Unit,
 			UnitPrice = @UnitPrice,
 			GerminationDate = @GerminationDate,
-			DaysAfterGerminationToPlant = @DaysAfterGerminationToPlant,
-			DaysAfterGerminationToTransplant =
-			@DaysAfterGerminationToTransplant,
-			DaysAfterGerminationToHarvest = @DaysAfterGerminationToHarvest
+			PlantDate = @PlantDate,
+			TransplantDate =
+			@TransplantDate,
+			HarvestDate = @HarvestDate
 		WHERE ProductID = @ProductID
 		RETURN @@ROWCOUNT
 	END

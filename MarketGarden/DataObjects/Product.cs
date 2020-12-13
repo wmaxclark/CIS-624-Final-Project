@@ -16,16 +16,16 @@ namespace DataObjects
         public decimal InputCost { get; private set; }
         public decimal UnitPrice { get; private set; }
         public DateTime GerminationDate { get; private set; }
-        public int DaysAfterGerminationToPlant { get; private set; }
-        public int DaysAfterGerminationToTransplant { get; private set; }
-        public int DaysAfterGerminationToHarvest { get; private set; }
+        public DateTime PlantDate { get; private set; }
+        public DateTime TransplantDate { get; private set; }
+        public DateTime HarvestDate { get; private set; }
 
         public Product(int productID, int operationID, string productName, 
             string productDescription, string unit, decimal inputCost, 
-            decimal unitPrice, DateTime germinationDate, 
-            int daysAfterGerminationToPlant, 
-            int daysAfterGerminationToTransplant, 
-            int daysAfterGerminationToHarvest)
+            decimal unitPrice, DateTime germinationDate,
+            DateTime daysAfterGerminationToPlant,
+            DateTime daysAfterGerminationToTransplant,
+            DateTime daysAfterGerminationToHarvest)
         {
             this.ProductID = productID;
             this.OperationID = operationID;
@@ -35,9 +35,9 @@ namespace DataObjects
             this.InputCost = inputCost;
             this.UnitPrice = unitPrice;
             this.GerminationDate = germinationDate;
-            this.DaysAfterGerminationToPlant = daysAfterGerminationToPlant;
-            this.DaysAfterGerminationToTransplant = daysAfterGerminationToTransplant;
-            this.DaysAfterGerminationToHarvest = daysAfterGerminationToHarvest;
+            this.PlantDate = daysAfterGerminationToPlant;
+            this.TransplantDate = daysAfterGerminationToTransplant;
+            this.HarvestDate = daysAfterGerminationToHarvest;
         }
     }
 }

@@ -182,7 +182,7 @@ namespace PresentationLayer
 
                 if (!updatePassword.ShowDialog() == true)
                 {
-                    
+
                     MessageBox.Show("Account not updated.");
                     return;
                 }
@@ -229,6 +229,14 @@ namespace PresentationLayer
         private void refreshProductsList()
         {
             dgProductsList.Visibility = Visibility.Visible;
+            try
+            {
+                _operation.Products = _operationManager.RefreshProductList(_operation);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Product list could not be refreshed" + ex.InnerException.Message);
+            }
             dgProductsList.ItemsSource = _operation.Products;
 
             // Remove the header for the unique ID, not meaningful to user
@@ -241,9 +249,9 @@ namespace PresentationLayer
             dgProductsList.Columns[3].Header = "Input Cost";
             dgProductsList.Columns[4].Header = "Unit Price";
             dgProductsList.Columns[5].Header = "Germination Date";
-            dgProductsList.Columns[6].Header = "Days after Germination to plant";
-            dgProductsList.Columns[7].Header = "Days after Germination to transplant";
-            dgProductsList.Columns[8].Header = "Days after Germination to harvest";
+            dgProductsList.Columns[6].Header = "Plant Date";
+            dgProductsList.Columns[7].Header = "Transplant Date";
+            dgProductsList.Columns[8].Header = "Harvest Date";
         }
         private void dgProductsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -253,8 +261,10 @@ namespace PresentationLayer
                 MessageBox.Show("You need to select a product in order to edit.",
                     "Edit Operation Not Available", MessageBoxButton.OK,
                     MessageBoxImage.Information);
-
-                var detailWindow = new frmProductAddEditDetail(selectedProduct);
+            }
+            else
+            {
+                var detailWindow = new frmProductAddEditDetail(_user, _operation, selectedProduct);
                 if (detailWindow.ShowDialog() == true)
                 {
                     refreshProductsList();
@@ -263,7 +273,7 @@ namespace PresentationLayer
         }
         private void addProduct_Click(object sender, RoutedEventArgs e)
         {
-            var detailWindow = new frmProductAddEditDetail(_user, _operation, true);
+            var detailWindow = new frmProductAddEditDetail(_user, _operation);
             if (detailWindow.ShowDialog() == true)
             {
                 refreshProductsList();
@@ -288,12 +298,5 @@ namespace PresentationLayer
         {
 
         }
-
-        private void tabItemOperationManagement_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-
-        }
-
-        
     }
 }

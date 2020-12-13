@@ -21,69 +21,77 @@
             <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition Height="10"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition Width="300"></ColumnDefinition>
-            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="230"></ColumnDefinition>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+            <ColumnDefinition Width="230"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="10"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <TextBlock x:Name="tbkMessage" TextWrapping="Wrap"
                    Style="{StaticResource Header1}"
                    FontSize="16" Margin="5" Grid.Column="2"
-                   Grid.Row="2" Grid.ColumnSpan="2">Create</TextBlock>
+                   Grid.Row="2" Grid.ColumnSpan="3">Create</TextBlock>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="3" Grid.Column="2">Product Name</Label>
+               Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2">Product Name</Label>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="4" Grid.Column="2">Product Description</Label>
+               Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2">Product Description</Label>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="5" Grid.Column="2">Unit</Label>
+               Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2">Unit</Label>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="6" Grid.Column="2">Input Cost</Label>
+               Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2">Input Cost</Label>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="7" Grid.Column="2">Unit Price</Label>
+               Grid.Row="7" Grid.Column="2" Grid.ColumnSpan="2">Unit Price</Label>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="8" Grid.Column="2">Germination Date</Label>
+               Grid.Row="8" Grid.Column="2" Grid.ColumnSpan="2">Germination Date</Label>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="9" Grid.Column="2">Days after germination to plant</Label>
+               Grid.Row="9" Grid.Column="2" Grid.ColumnSpan="2">Plant Date</Label>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="10" Grid.Column="2">Days after germination to transplant</Label>
+               Grid.Row="10" Grid.Column="2" Grid.ColumnSpan="2">Transplant Date</Label>
         <Label Style="{StaticResource NormalLabel}"
-               Grid.Row="11" Grid.Column="2">Days after germination to harvest</Label>
+               Grid.Row="11" Grid.Column="2" Grid.ColumnSpan="2">Harvest</Label>
         <TextBox x:Name="txtProductName" 
                  Style="{StaticResource NormalTextBox}"
-                 Grid.Row="3" Grid.Column="3"></TextBox>
+                 Grid.Row="3" Grid.Column="4"></TextBox>
         <TextBox x:Name="txtProductDescription" 
                  Style="{StaticResource NormalTextBox}"
-                 Grid.Row="4" Grid.Column="3"></TextBox>
+                 Grid.Row="4" Grid.Column="4"></TextBox>
         <TextBox x:Name="txtUnit" 
                  Style="{StaticResource NormalTextBox}"
-                 Grid.Row="5" Grid.Column="3"></TextBox>
+                 Grid.Row="5" Grid.Column="4"></TextBox>
         <TextBox x:Name="txtInputCost" 
                  Style="{StaticResource NormalTextBox}"
-                 Grid.Row="6" Grid.Column="3"></TextBox>
+                 Grid.Row="6" Grid.Column="4"></TextBox>
         <TextBox x:Name="txtUnitPrice" 
                  Style="{StaticResource NormalTextBox}"
-                 Grid.Row="7" Grid.Column="3"></TextBox>
-        <DatePicker x:Name="dptGerminationDate" Grid.Row="8" Grid.Column="3"
-                    Width="190" Style="{StaticResource NormalDatePicker}">
+                 Grid.Row="7" Grid.Column="4"></TextBox>
+        <DatePicker x:Name="dptGerminationDate" Grid.Row="8" Grid.Column="4"
+                    Width="230" Style="{StaticResource NormalDatePicker}" CalendarClosed="dptGerminationDate_CalendarClosed">
         </DatePicker>
-        <TextBox x:Name="txtDaysAfterToPlant" 
-                 Style="{StaticResource NormalTextBox}"
-                 Grid.Row="9" Grid.Column="3"></TextBox>
-        <TextBox x:Name="txtDaysAfterToTransPlant" 
-                 Style="{StaticResource NormalTextBox}"
-                 Grid.Row="10" Grid.Column="3"></TextBox>
-        <TextBox x:Name="txtDaysAfterToHarvest" 
-                 Style="{StaticResource NormalTextBox}"
-                 Grid.Row="11" Grid.Column="3"></TextBox>
-        <Button x:Name="btnSubmit" Grid.Row="12" Grid.Column="2" Grid.ColumnSpan="2"
+        <DatePicker x:Name="dptPlantDate" Grid.Row="9" Grid.Column="4"
+                    Width="230" Style="{StaticResource NormalDatePicker}">
+        </DatePicker>
+        <DatePicker x:Name="dptTransplantDate" Grid.Row="10" Grid.Column="4"
+                    Width="230" Style="{StaticResource NormalDatePicker}">
+        </DatePicker>
+        <DatePicker x:Name="dptHarvestDate" Grid.Row="11" Grid.Column="4"
+                    Width="230" Style="{StaticResource NormalDatePicker}">
+        </DatePicker>
+        <Button x:Name="btnSubmit" Grid.Row="12" Grid.Column="2" Grid.ColumnSpan="3"
                      Style="{StaticResource NormalButton}" 
                 Width="300px" Height="34"          
                 Content="Submit" Click="btnSubmit_Button_Click"/>
+        <Button x:Name="btnDelete" Grid.Row="13" Grid.Column="2" 
+                     Style="{StaticResource NormalButton}" 
+                Width="130px" Height="34" HorizontalAlignment="Right" Click="btnDelete_Click">Delete</Button>
+        <Button x:Name="btnClone" Grid.Row="13" Grid.Column="4" 
+                     Style="{StaticResource NormalButton}" 
+                Width="130px" Height="34" HorizontalAlignment="Left" Click="btnClone_Click">Clone</Button>
     </Grid>
 </Window>
