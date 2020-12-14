@@ -29,7 +29,7 @@ namespace PresentationLayer
         private IOperationManager _operationManager = new OperationManager();
         private User _user = null;
         private OperationVM _operation = null;
-        private List<Operation> _operationList;
+        private BindingList<Operation> _operationList;
         private const string newUserPassword = "newuser";
         private BindingList<Order> _orderList;
         /**
@@ -388,6 +388,11 @@ namespace PresentationLayer
                         btnCreateWeeklyShare.IsEnabled = false;
                         btnCreateWeeklyShare.Content = "Subscribed";
                     }
+                    else
+                    {
+                        btnCreateWeeklyShare.IsEnabled = true;
+                        btnCreateWeeklyShare.Content = "Subscribe to CSA";
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -408,6 +413,7 @@ namespace PresentationLayer
                     _orderList = _operationManager.GetOrderListByUser(_user);
                     dgCustomerOrderList.ItemsSource = _orderList;
                     MessageBox.Show("Order Made!");
+                    _productCart.Clear();
                 }
                 catch (Exception ex)
                 {
@@ -439,15 +445,7 @@ namespace PresentationLayer
 
         private void cmbOperations_Initialized(object sender, EventArgs e)
         {
-            try
-            {
-                _operationList = _operationManager.GetAllOperations();
-                cmbOperations.ItemsSource = _operationList;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
-            }
+            
         }
 
         private void tabItemCustomer_Initialized(object sender, EventArgs e)
@@ -558,5 +556,27 @@ namespace PresentationLayer
             }
         }
 
+        private void cmbOperations_Drop(object sender, DragEventArgs e)
+        {
+            
+        }
+
+        private void cmbOperations_GotFocus(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void cmbOperations_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                _operationList = _operationManager.GetAllOperations();
+                cmbOperations.ItemsSource = _operationList;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@
 using LogicLayer;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,7 +30,7 @@ namespace PresentationLayer
         private string _newUserPassword;
         private List<string> _roleList;
         private List<string> _states;
-        private List<Operation> _operations;
+        private BindingList<Operation> _operations;
 
         public frmCreateUpdateAccount()
         {

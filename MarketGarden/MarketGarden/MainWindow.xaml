@@ -125,7 +125,7 @@
                             <ColumnDefinition Width="250px"></ColumnDefinition>
                         </Grid.ColumnDefinitions>
                         <Label Width="300px" HorizontalAlignment="Center" Style="{StaticResource NormalLabel}"> Available Products</Label>
-                        <ComboBox x:Name="cmbOperations" Width="300px" Height="30" HorizontalAlignment="Right" Style="{StaticResource NormalDropDown}" DropDownClosed="cmbOperations_DropDownClosed" Initialized="cmbOperations_Initialized"></ComboBox>
+                        <ComboBox x:Name="cmbOperations" Width="300px" Height="30" HorizontalAlignment="Right" Style="{StaticResource NormalDropDown}" DropDownClosed="cmbOperations_DropDownClosed" Initialized="cmbOperations_Initialized" Drop="cmbOperations_Drop" GotFocus="cmbOperations_GotFocus" Loaded="cmbOperations_Loaded"></ComboBox>
                         <Button x:Name="btnPlaceOrder" Grid.Row="2" Grid.Column="2" Style="{StaticResource NormalButton}" Click="btnPlaceOrder_Click">Place Order</Button>
                         <DataGrid x:Name="dgOrderProductList" Grid.Row="1" Grid.RowSpan="2" MouseDoubleClick="dgOrderProductList_MouseDoubleClick">
                             

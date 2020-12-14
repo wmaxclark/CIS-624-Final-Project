@@ -309,9 +309,9 @@ namespace DataAccessLayer
             return states;
         }
 
-        public List<Operation> RetrieveAllOperations()
+        public BindingList<Operation> RetrieveAllOperations()
         {
-            List<Operation> operationList = new List<Operation>();
+            BindingList<Operation> operationList = new BindingList<Operation>();
 
             // Retrieve a connection from factory
             var conn = DBConnection.GetDBConnection();
@@ -334,23 +334,27 @@ namespace DataAccessLayer
                 // Capture results
                 if (reader.HasRows)
                 {
-                    reader.Read();
-                    var operationID = reader.GetInt32(0);
-                    var operationName = reader.GetString(1);
-                    var userID_Operator = reader.GetInt32(2);
-                    var addressState = reader.GetString(3);
-                    /**
-                     * Solution credited to user Stefan Hoffman, found at:
-                     * https://social.msdn.microsoft.com/Forums/en-US/69a113aa-fadf-44bb-a090-5156a33e85d7/how-to-read-null-values-in-sql-table-column-readergetint32-c?forum=adodotnetdataproviders
-                     */
-                    int? maxShares = reader.IsDBNull(4) ? (int?)null : reader.GetInt32(4);
-                    var active = reader.GetBoolean(5);
+                    while (reader.Read())
+                    {
+                        var operationID = reader.GetInt32(0);
+                        var operationName = reader.GetString(1);
+                        var userID_Operator = reader.GetInt32(2);
+                        var addressState = reader.GetString(3);
+                        /**
+                         * Solution credited to user Stefan Hoffman, found at:
+                         * https://social.msdn.microsoft.com/Forums/en-US/69a113aa-fadf-44bb-a090-5156a33e85d7/how-to-read-null-values-in-sql-table-column-readergetint32-c?forum=adodotnetdataproviders
+                         */
+                        int? maxShares = reader.IsDBNull(4) ? (int?)null : reader.GetInt32(4);
+                        var active = reader.GetBoolean(5);
+                        
+
+                        // Construct new operation with captured values
+                        var operation = new Operation(operationID, userID_Operator, operationName, addressState, maxShares, active);
+
+                        operationList.Add(operation);
+                    }
                     reader.Close();
 
-                    // Construct new operation with captured values
-                    var operation = new Operation(operationID, userID_Operator, operationName, addressState, maxShares, active);
-
-                    operationList.Add(operation);
                 }
             }
             catch (Exception ex)
@@ -989,7 +993,7 @@ namespace DataAccessLayer
                 conn.Open();
 
                 // Execute command
-                result = Convert.ToInt32(cmd.ExecuteScalar());
+                result = cmd.ExecuteNonQuery();
 
             }
 

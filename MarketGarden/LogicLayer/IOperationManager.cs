@@ -15,7 +15,7 @@ namespace LogicLayer
         Operation GetOperationByOperator(User operatorUser);
         bool DeleteProduct(Product product);
         List<string> GetAllStates();
-        List<Operation> GetAllOperations();
+        BindingList<Operation> GetAllOperations();
         OperationVM GetOperationVMByOperator(User user);
         bool AddProduct(int operationID, string productName, string productDescription, string unit, decimal inputCost, decimal unitPrice,
             DateTime germinationDate, DateTime plantDate, DateTime transplantDate, DateTime harvestDate);

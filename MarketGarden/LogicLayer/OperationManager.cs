@@ -46,9 +46,9 @@ namespace LogicLayer
             }
             return operation;
         }
-        public List<Operation> GetAllOperations()
+        public BindingList<Operation> GetAllOperations()
         {
-            List<Operation> operations = new List<Operation>();
+            BindingList<Operation> operations = new BindingList<Operation>();
 
             try
             {
@@ -240,7 +240,7 @@ namespace LogicLayer
             bool result = false;
             try
             {
-                result = (1 == _operationAccessor.CreateWeeklyShare(user.UserID, operationID, v1, v2));
+                result = (0 != _operationAccessor.CreateWeeklyShare(user.UserID, operationID, v1, v2));
             }
             catch (Exception ex)
             {

@@ -812,7 +812,7 @@ AS
 				(UserID_Customer, OperationID, SharePortion, Frequency)
 			VALUES
 				(@UserID_Customer, @OperationID, @SharePortion, @Frequency)
-		SELECT SCOPE_IDENTITY()
+		RETURN @@ROWCOUNT
 	END
 GO
 
