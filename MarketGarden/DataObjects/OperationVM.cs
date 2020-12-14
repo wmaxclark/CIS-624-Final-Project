@@ -9,7 +9,7 @@ namespace DataObjects
     public class OperationVM : Operation
     {
 
-        public User Operator { get; private set; }
+        public User Operator { get;  set; }
 
         public List<Product> Products { get; set; }
         public List<Order> Orders { get; set; }

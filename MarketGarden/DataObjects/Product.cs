@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DataObjects
 {
-    public class Product
+    public class Product : INotifyCollectionChanged
     {
         public int ProductID { get; private set; }
         public int OperationID { get; private set; }
@@ -39,6 +40,8 @@ namespace DataObjects
             this.TransplantDate = daysAfterGerminationToTransplant;
             this.HarvestDate = daysAfterGerminationToHarvest;
         }
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
     }
 }
 

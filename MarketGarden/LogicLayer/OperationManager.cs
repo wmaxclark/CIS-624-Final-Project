@@ -174,7 +174,6 @@ namespace LogicLayer
             }
             return states;
         }
-
         public List<WeeklyShare> RefreshWeeklyShares(OperationVM operation)
         {
             List<WeeklyShare> weeklyShares = new List<WeeklyShare>();
@@ -188,6 +187,36 @@ namespace LogicLayer
                 throw new ApplicationException("Weekly share list could not be refreshed." + ex.InnerException.Message);
             }
             return weeklyShares;
+        }
+
+        public List<Order> RefreshOrderList(OperationVM operation)
+        {
+            List<Order> orders = new List<Order>();
+            try
+            {
+                orders = _operationAccessor.RetrieveOrdersByOperation(operation.OperationID);
+            }
+            catch (Exception ex)
+            {
+
+                throw new ApplicationException("Weekly share list could not be refreshed." + ex.InnerException.Message);
+            }
+            return orders;
+        }
+
+        public bool CreateOrder(User user, OperationVM operation, DateTime now)
+        {
+            bool result = false;
+            try
+            {
+                result = (1 == _operationAccessor.CreateOrder(user.UserID, operation.OperationID, now));
+            }
+            catch (Exception ex)
+            {
+
+                throw new ApplicationException("Order could not be created." + ex.InnerException.Message);
+            }
+            return result;
         }
     }
 }

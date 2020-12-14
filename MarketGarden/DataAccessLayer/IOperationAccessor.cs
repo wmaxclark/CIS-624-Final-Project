@@ -23,5 +23,6 @@ namespace DataAccessLayer
         List<Order> RetrieveOrdersByOperation(int operationID);
         List<OrderLine> RetrieveOrderLinesByOrder(int orderID);
         List<WeeklyShare> RetrieveWeeklySharesByOperation(int operationID);
+        int CreateOrder(int userID, int operationID, DateTime now);
     }
 }

@@ -26,7 +26,10 @@ namespace PresentationLayer
         private IOperationManager _operationManager = new OperationManager();
         private User _user = null;
         private OperationVM _operation = null;
+        private List<Operation> _operationList;
         private const string newUserPassword = "newuser";
+        private List<Order> _orderList = null;
+        private List<Product> _productCart;
 
         public MainWindow()
         {
@@ -119,8 +122,8 @@ namespace PresentationLayer
             txtEmail.Text = "Email";
             pwdPassword.Visibility = Visibility.Visible;
             lblPassword.Visibility = Visibility.Visible;
+            
 
-            dgProductsList.ItemsSource = null;
         }
 
         private void hideAllTabs()
@@ -277,10 +280,8 @@ namespace PresentationLayer
             }
         }
 
-
         private void refreshWeeklySharesList()
         {
-            dgWeeklyShares.Visibility = Visibility.Visible;
             try
             {
                 _operation.WeeklyShares = _operationManager.RefreshWeeklyShares(_operation);
@@ -294,29 +295,155 @@ namespace PresentationLayer
 
         private void tabWeeklyShare_GotFocus(object sender, RoutedEventArgs e)
         {
-            dgWeeklyShares.ItemsSource = _operationManager.RefreshWeeklyShares(_operation);
+            refreshWeeklySharesList();
+            if (_operation.MaxShares.HasValue)
+            {
+                _operation.WeeklyShares = _operationManager.RefreshWeeklyShares(_operation);
+                var totalPortion = 0.0m;
+                var totalProfit = 0.0m;
+                foreach (WeeklyShare share in _operation.WeeklyShares)
+                {
+                    totalPortion += share.Portion;
+                    foreach (var product in _operation.Products)
+                    {
+                        totalProfit += product.UnitPrice - product.InputCost;
+                    }
+                }
+                txtShareCounter.Text = totalPortion.ToString() + " out of: " +  _operation.MaxShares.ToString() + " ordered";
+                txtTotal.Text = "$" + totalProfit.ToString() + " weekly share profit";
+            }
+        }
+
+        private void tabDirectSale_GotFocus(object sender, RoutedEventArgs e)
+        {
             try
             {
-                if (dgWeeklyShares.ItemsSource == null)
-                {
-                    refreshWeeklySharesList();
-                }
+                _operation.Orders = _operationManager.RefreshOrderList(_operation);
+                dgOrderList.ItemsSource = _operation.Orders;
             }
             catch (Exception ex)
             {
 
+                MessageBox.Show("Order list could not be refreshed" + ex.InnerException.Message);
+            }
+        }
+
+        private void cmbOperations_DropDownClosed(object sender, EventArgs e)
+        {
+            if (cmbOperations.SelectedItem != null)
+            {
+                try
+                {
+                    var id = (Operation)cmbOperations.SelectedItem;
+                    dgOrderProductList.ItemsSource = _operationManager.GetProductsByOperation(id.OperationID);
+
+                    // Remove the header for the unique ID, not meaningful to user
+                    dgOrderProductList.Columns.Remove(dgOrderProductList.Columns[0]);
+                    dgOrderProductList.Columns.Remove(dgOrderProductList.Columns[0]);
+                    dgOrderProductList.Columns.Remove(dgOrderProductList.Columns[3]);
+                    dgOrderProductList.Columns.Remove(dgOrderProductList.Columns[4]);
+                    dgOrderProductList.Columns.Remove(dgOrderProductList.Columns[4]);
+                    dgOrderProductList.Columns.Remove(dgOrderProductList.Columns[4]);
+
+
+                    dgOrderProductList.Columns[0].Header = "Product Name";
+                    dgOrderProductList.Columns[1].Header = "Product Description";
+                    dgOrderProductList.Columns[2].Header = "Unit";
+                    dgOrderProductList.Columns[3].Header = "Unit Price";
+                }
+                catch (Exception ex)
+                {
+
+                    MessageBox.Show("Product list could not be loaded." + ex.InnerException.Message);
+                }
+            }
+        }
+
+        private void btnPlaceOrder_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void dgOrderProductList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var selectedProduct = (Product)dgOrderProductList.SelectedItem;
+            if (selectedProduct == null)
+            {
+                MessageBox.Show("You need to select a product in order to add to cart.");
+            }
+            else
+            {
+                refreshCustomerCart(selectedProduct);
+                
+            }
+        }
+
+        private void refreshCustomerCart(Product selectedProduct)
+        {
+            dgCustomerCart.Visibility = Visibility.Visible;
+            if (_productCart == null)
+            {
+                _productCart = new List<Product>();
+                _productCart.Add(selectedProduct);
+                dgCustomerCart.ItemsSource = _productCart;
+                // Remove the header for the unique ID, not meaningful to user
+                dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[0]);
+                dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[0]);
+                dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[3]);
+                dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
+                dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
+                dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
+                dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
+
+
+                dgCustomerCart.Columns[0].Header = "Product Name";
+                dgCustomerCart.Columns[1].Header = "Product Description";
+                dgCustomerCart.Columns[2].Header = "Unit";
+                dgCustomerCart.Columns[3].Header = "Unit Price";
+            }
+            else
+            {
+                _productCart.Add(selectedProduct);
+                dgCustomerCart.ItemsSource = _productCart;
+                //// Remove the header for the unique ID, not meaningful to user
+                //dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[0]);
+                //dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[0]);
+                //dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[3]);
+                //dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
+                //dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
+                //dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
+                //dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
+
+
+                //dgCustomerCart.Columns[0].Header = "Product Name";
+                //dgCustomerCart.Columns[1].Header = "Product Description";
+                //dgCustomerCart.Columns[2].Header = "Unit";
+                //dgCustomerCart.Columns[3].Header = "Unit Price";
+            }
+        }
+
+        private void tabItemCustomer_GotFocus(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        private void cmbOperations_Initialized(object sender, EventArgs e)
+        {
+            try
+            {
+                _operationList = _operationManager.GetAllOperations();
+                cmbOperations.ItemsSource = _operationList;
+            }
+            catch (Exception ex)
+            {
                 MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
             }
         }
 
-        private void dgWeeklyShares_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void tabItemCustomer_Initialized(object sender, EventArgs e)
         {
-
+            tabItemOperationManagement.Visibility = Visibility.Collapsed;
         }
 
-        private void dgDirectSale_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-
-        }
     }
 }

@@ -23,5 +23,7 @@ namespace LogicLayer
         List<Product> GetProductsByOperation(int operationID);
         List<Product> RefreshProductList(OperationVM operation);
         List<WeeklyShare> RefreshWeeklyShares(OperationVM operation);
+        List<Order> RefreshOrderList(OperationVM operation);
+        bool CreateOrder(User user, OperationVM operation, DateTime now);
     }
 }

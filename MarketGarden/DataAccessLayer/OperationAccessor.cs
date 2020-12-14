@@ -772,5 +772,58 @@ namespace DataAccessLayer
             }
             return lineList;
         }
+
+        public int CreateOrder(int userID, int operationID, DateTime now)
+        {
+            int result = 0;
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_create_farmoperation", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Add parameter to command
+            cmd.Parameters.Add("@UserID_Customer", SqlDbType.Int);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@OperationID", SqlDbType.Int);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@OrderDate", SqlDbType.DateTime);
+
+            // Set parameter to value
+            cmd.Parameters["@UserID_Customer"].Value = userID;
+
+            // Set parameter to value
+            cmd.Parameters["@OperationID"].Value = operationID;
+
+            // Set parameter to value
+            cmd.Parameters["@OrderDate"].Value = now;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                result = cmd.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return result;
+        }
     }
 }
