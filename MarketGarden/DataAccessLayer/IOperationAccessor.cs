@@ -1,6 +1,7 @@
 ﻿using DataObjects;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,9 @@ namespace DataAccessLayer
         List<Order> RetrieveOrdersByOperation(int operationID);
         List<OrderLine> RetrieveOrderLinesByOrder(int orderID);
         List<WeeklyShare> RetrieveWeeklySharesByOperation(int operationID);
-        int CreateOrder(int userID, int operationID, DateTime now);
+        int CreateOrder(int userID, int operationID, DateTime now, BindingList<Product> products);
+        BindingList<Order> RetrieveOrdersByCustomer(int userID);
+        int CreateWeeklyShare(int userID, int operationID, decimal v1, int v2);
+        List<WeeklyShare> GetWeeklyShareByCustomer(int userID);
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccessLayer;
+using System.ComponentModel;
 
 namespace LogicLayer
 {
@@ -204,12 +205,12 @@ namespace LogicLayer
             return orders;
         }
 
-        public bool CreateOrder(User user, OperationVM operation, DateTime now)
+        public bool CreateOrder(User user, int operationID, DateTime now, BindingList<Product> productList)
         {
             bool result = false;
             try
             {
-                result = (1 == _operationAccessor.CreateOrder(user.UserID, operation.OperationID, now));
+                result = (1 == _operationAccessor.CreateOrder(user.UserID, operationID, now, productList));
             }
             catch (Exception ex)
             {
@@ -217,6 +218,57 @@ namespace LogicLayer
                 throw new ApplicationException("Order could not be created." + ex.InnerException.Message);
             }
             return result;
+        }
+
+        public BindingList<Order> GetOrderListByUser(User user)
+        {
+            BindingList<Order> orders = new BindingList<Order>();
+            try
+            {
+                orders = _operationAccessor.RetrieveOrdersByCustomer(user.UserID);
+            }
+            catch (Exception ex)
+            {
+
+                throw new ApplicationException("Weekly share list could not be refreshed." + ex.InnerException.Message);
+            }
+            return orders;
+        }
+
+        public bool CreateWeeklyShare(User user, int operationID, decimal v1, int v2)
+        {
+            bool result = false;
+            try
+            {
+                result = (1 == _operationAccessor.CreateWeeklyShare(user.UserID, operationID, v1, v2));
+            }
+            catch (Exception ex)
+            {
+
+                throw new ApplicationException("Weekly share could not be created." + ex.InnerException.Message);
+            }
+            return result;
+        }
+
+        public bool GetWeeklyShareByUser(User user, int operationID)
+        {
+            bool isSubscribed = false;
+            try
+            {
+                foreach (var subscription in _operationAccessor.GetWeeklyShareByCustomer(user.UserID))
+                {
+                    if (subscription.OperationID == operationID)
+                    {
+                        isSubscribed = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw new ApplicationException("Weekly share could not be created." + ex.InnerException.Message);
+            }
+            return isSubscribed;
         }
     }
 }

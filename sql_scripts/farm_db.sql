@@ -215,8 +215,6 @@ CREATE TABLE [dbo].[WeeklyShare] (
 	[OperationID]					[int]		NOT NULL,
 	[SharePortion]					[decimal](10,2)NOT NULL DEFAULT 1,
 	[Frequency]					[int]		NOT NULL DEFAULT 1,
-	CONSTRAINT [pk_weeklyShare_shareID]
-		PRIMARY KEY([OperationID], [UserID_Customer] ASC),
 	CONSTRAINT [fk_weeklyShare_userID_customer] FOREIGN KEY([UserID_Customer])
 		REFERENCES [dbo].[UserAccount](UserID)
 		ON UPDATE CASCADE,
@@ -1078,7 +1076,7 @@ CREATE PROCEDURE [dbo].[sp_create_productorder]
 	)
 AS
 	BEGIN
-		INSERT INTO [dbo].[Order]
+		INSERT INTO [dbo].[ProductOrder]
 				(UserID_Customer, OperationID, OrderDate)
 			VALUES
 				(@UserID_Customer, @OperationID, @OrderDate)

@@ -1,6 +1,7 @@
 ﻿using DataObjects;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -667,7 +668,7 @@ namespace DataAccessLayer
             var conn = DBConnection.GetDBConnection();
 
             // Retrieve a command
-            var cmd = new SqlCommand("sp_select_productorder_by_operation", conn);
+            var cmd = new SqlCommand("sp_select_weeklyshare_by_operation", conn);
 
             // Set command type to stored procedure
             cmd.CommandType = CommandType.StoredProcedure;
@@ -724,7 +725,7 @@ namespace DataAccessLayer
             var conn = DBConnection.GetDBConnection();
 
             // Retrieve a command
-            var cmd = new SqlCommand("sp_select_productorder_by_operation", conn);
+            var cmd = new SqlCommand("sp_select_orderline_by_order", conn);
 
             // Set command type to stored procedure
             cmd.CommandType = CommandType.StoredProcedure;
@@ -773,7 +774,7 @@ namespace DataAccessLayer
             return lineList;
         }
 
-        public int CreateOrder(int userID, int operationID, DateTime now)
+        public int CreateOrder(int userID, int operationID, DateTime now, BindingList<Product> products)
         {
             int result = 0;
 
@@ -781,7 +782,7 @@ namespace DataAccessLayer
             var conn = DBConnection.GetDBConnection();
 
             // Retrieve a command
-            var cmd = new SqlCommand("sp_create_farmoperation", conn);
+            var cmd = new SqlCommand("sp_create_productorder", conn);
 
             // Set command type to stored procedure
             cmd.CommandType = CommandType.StoredProcedure;
@@ -811,8 +812,127 @@ namespace DataAccessLayer
                 conn.Open();
 
                 // Execute command
-                result = cmd.ExecuteNonQuery();
+                result = Convert.ToInt32(cmd.ExecuteScalar());
 
+                foreach (var product in products)
+                {
+                    CreateOrderLine(result, product.ProductID, product.UnitPrice);
+                }
+            }
+
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            
+            return result;
+        }
+
+        public int CreateOrderLine(int orderID, int productID, decimal unitPrice)
+        {
+            int result = 0;
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_create_orderline", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Add parameter to command
+            cmd.Parameters.Add("@OrderID", SqlDbType.Int);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@ProductID", SqlDbType.Int);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@PriceCharged", SqlDbType.Decimal);
+
+            // Set parameter to value
+            cmd.Parameters["@OrderID"].Value = orderID;
+
+            // Set parameter to value
+            cmd.Parameters["@ProductID"].Value = productID;
+
+            // Set parameter to value
+            cmd.Parameters["@PriceCharged"].Value = unitPrice;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                result = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+            return result;
+        }
+
+        public BindingList<Order> RetrieveOrdersByCustomer(int userID)
+        {
+            BindingList<Order> orderList = new BindingList<Order>();
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_select_productorder_by_customer", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Add parameter to command
+            cmd.Parameters.Add("@UserID_Customer", SqlDbType.Int);
+
+            // Set parameter to value
+            cmd.Parameters["@UserID_Customer"].Value = userID;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                var reader = cmd.ExecuteReader();
+
+                // Capture results
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var orderID = reader.GetInt32(0);
+                        var operationID = reader.GetInt32(1);
+                        var orderDate = reader.GetDateTime(2);
+
+                        var orderLines = RetrieveOrderLinesByOrder(orderID);
+
+                        var order = new Order(orderID, operationID, userID, orderDate, orderLines);
+
+                        // Add the resulting order to the list
+                        orderList.Add(order);
+                    }
+                    reader.Close();
+                }
             }
             catch (Exception ex)
             {
@@ -823,7 +943,194 @@ namespace DataAccessLayer
             {
                 conn.Close();
             }
+            return orderList;
+        }
+
+        public int CreateWeeklyShare(int userID, int operationID, decimal v1, int v2)
+        {
+            int result = 0;
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_create_weeklyshare", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Add parameter to command
+            cmd.Parameters.Add("@UserID_Customer", SqlDbType.Int);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@OperationID", SqlDbType.Int);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@SharePortion", SqlDbType.Decimal);
+
+            // Add parameter to command
+            cmd.Parameters.Add("@Frequency", SqlDbType.Int);
+
+            // Set parameter to value
+            cmd.Parameters["@UserID_Customer"].Value = userID;
+
+            // Set parameter to value
+            cmd.Parameters["@OperationID"].Value = operationID;
+
+            // Set parameter to value
+            cmd.Parameters["@SharePortion"].Value = v1;
+            // Set parameter to value
+            cmd.Parameters["@Frequency"].Value = v2;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                result = Convert.ToInt32(cmd.ExecuteScalar());
+
+            }
+
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+
             return result;
         }
+
+        public List<WeeklyShare> GetWeeklyShareByCustomer(int userID)
+        {
+            List<WeeklyShare> weeklyShares = new List<WeeklyShare>();
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_select_weeklyshare_by_customer", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Add parameter to command
+            cmd.Parameters.Add("@UserID_Customer", SqlDbType.Int);
+
+            // Set parameter to value
+            cmd.Parameters["@UserID_Customer"].Value = userID;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                var reader = cmd.ExecuteReader();
+
+                // Capture results
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var operationID = reader.GetInt32(0);
+                        var sharePortion = reader.GetDecimal(1);
+                        var frequency = reader.GetInt32(2);
+
+                        var share = new WeeklyShare(operationID, userID, sharePortion, frequency);
+
+                        // Add the resulting order to the list
+                        weeklyShares.Add(share);
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return weeklyShares;
+        }
+        //public Order RetrieveOrderByOrderID(int orderID)
+        //{
+        //    Order result;
+        //    // Retrieve a connection from factory
+        //    var conn = DBConnection.GetDBConnection();
+
+        //    // Retrieve a command
+        //    var cmd = new SqlCommand("sp_create_productorder", conn);
+
+        //    // Set command type to stored procedure
+        //    cmd.CommandType = CommandType.StoredProcedure;
+
+        //    // Add parameter to command
+        //    cmd.Parameters.Add("@UserID_Customer", SqlDbType.Int);
+
+        //    // Add parameter to command
+        //    cmd.Parameters.Add("@OperationID", SqlDbType.Int);
+
+        //    // Add parameter to command
+        //    cmd.Parameters.Add("@OrderDate", SqlDbType.DateTime);
+
+        //    // Set parameter to value
+        //    cmd.Parameters["@UserID_Customer"].Value = userID;
+
+        //    // Set parameter to value
+        //    cmd.Parameters["@OperationID"].Value = operationID;
+
+        //    // Set parameter to value
+        //    cmd.Parameters["@OrderDate"].Value = now;
+
+        //    // Execute command
+        //    try
+        //    {
+        //        // Open connection
+        //        conn.Open();
+        //        // Execute command
+        //        var reader = cmd.ExecuteReader();
+
+
+        //        // Capture results
+        //        if (reader.HasRows)
+        //        {
+        //            while (reader.Read())
+        //            {
+        //                var orderID = reader.GetInt32(0);
+        //                var userID_Customer = reader.GetInt32(1);
+        //                var orderDate = reader.GetDateTime(2);
+
+        //                var orderLines = RetrieveOrderLinesByOrder(orderID);
+
+        //                var order = new Order(orderID, operationID, userID_Customer, orderDate, orderLines);
+
+        //                // Add the resulting order to the list
+        //                orderList.Add(order);
+        //            }
+        //            reader.Close();
+        //        }
+        //    }
+
+        //    catch (Exception ex)
+        //    {
+
+        //        throw ex;
+        //    }
+        //    finally
+        //    {
+        //        conn.Close();
+        //    }
+        //    return result;
+        //}
     }
 }

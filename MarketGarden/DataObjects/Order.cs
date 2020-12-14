@@ -12,7 +12,7 @@ namespace DataObjects
         int OperationID { get; set; }
         int CustomerID { get; set; }
         DateTime OrderDate { get; set; }
-        List<OrderLine> Lines { get; set; }
+        public List<OrderLine> Lines { get; set; }
 
         public Order(int orderID, int operationID, int customerID, DateTime orderDate, List<OrderLine> lines)
         {
@@ -21,6 +21,16 @@ namespace DataObjects
             CustomerID = customerID;
             OrderDate = orderDate;
             Lines = lines;
+        }
+
+        public override string ToString()
+        {
+            var stringBuilder = new StringBuilder();
+            foreach (var item in Lines)
+            {
+                stringBuilder.Append(item.ToString());
+            }
+            return OrderDate.ToString() + " " + stringBuilder.ToString() ;
         }
     }
 }

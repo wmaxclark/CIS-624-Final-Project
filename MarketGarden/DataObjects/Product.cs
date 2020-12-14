@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DataObjects
 {
-    public class Product : INotifyCollectionChanged
+    public class Product 
     {
         public int ProductID { get; private set; }
         public int OperationID { get; private set; }
@@ -41,7 +41,6 @@ namespace DataObjects
             this.HarvestDate = daysAfterGerminationToHarvest;
         }
 
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
     }
 }
 

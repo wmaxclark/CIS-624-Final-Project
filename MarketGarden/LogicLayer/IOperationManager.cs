@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,9 @@ namespace LogicLayer
         List<Product> RefreshProductList(OperationVM operation);
         List<WeeklyShare> RefreshWeeklyShares(OperationVM operation);
         List<Order> RefreshOrderList(OperationVM operation);
-        bool CreateOrder(User user, OperationVM operation, DateTime now);
+        bool CreateOrder(User user, int operationID, DateTime now, BindingList<Product> productList);
+        BindingList<Order> GetOrderListByUser(User _user);
+        bool CreateWeeklyShare(User user, int operationID, decimal v1, int v2);
+        bool GetWeeklyShareByUser(User user, int operationID);
     }
 }

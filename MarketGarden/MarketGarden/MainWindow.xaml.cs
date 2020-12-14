@@ -14,6 +14,9 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LogicLayer;
 using DataObjects;
+using System.Collections;
+using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace PresentationLayer
 {
@@ -28,8 +31,13 @@ namespace PresentationLayer
         private OperationVM _operation = null;
         private List<Operation> _operationList;
         private const string newUserPassword = "newuser";
-        private List<Order> _orderList = null;
-        private List<Product> _productCart;
+        private BindingList<Order> _orderList;
+        /**
+         * Cart must be a binding list to fire CollectionChanged events
+         * Solution from https://stackoverflow.com/questions/4588359/implementing-collectionchanged
+         * User: https://stackoverflow.com/users/114994/jay
+         */
+        private BindingList<Product> _productCart;
 
         public MainWindow()
         {
@@ -296,30 +304,50 @@ namespace PresentationLayer
         private void tabWeeklyShare_GotFocus(object sender, RoutedEventArgs e)
         {
             refreshWeeklySharesList();
-            if (_operation.MaxShares.HasValue)
+            //_operation.WeeklyShares = _operationManager.RefreshWeeklyShares(_operation);
+            var totalPortion = 0;
+            var totalProfit = 0.0m;
+            foreach (WeeklyShare share in _operation.WeeklyShares)
             {
-                _operation.WeeklyShares = _operationManager.RefreshWeeklyShares(_operation);
-                var totalPortion = 0.0m;
-                var totalProfit = 0.0m;
-                foreach (WeeklyShare share in _operation.WeeklyShares)
+                totalPortion++;
+                foreach (var product in _operation.Products)
                 {
-                    totalPortion += share.Portion;
-                    foreach (var product in _operation.Products)
-                    {
-                        totalProfit += product.UnitPrice - product.InputCost;
-                    }
+                    totalProfit += product.UnitPrice - product.InputCost;
                 }
-                txtShareCounter.Text = totalPortion.ToString() + " out of: " +  _operation.MaxShares.ToString() + " ordered";
-                txtTotal.Text = "$" + totalProfit.ToString() + " weekly share profit";
             }
+            lblShareCounter.Content = totalPortion + " subscribers";
+            lblTotal.Content = "$" + totalProfit.ToString() + " weekly share profit";
         }
 
         private void tabDirectSale_GotFocus(object sender, RoutedEventArgs e)
         {
+            refreshOrderList();
+            var totalOrders = 0;
+            var totalProfit = 0.0m;
+            foreach (Order order in _operation.Orders)
+            {
+                totalOrders++;
+                foreach (var line in order.Lines)
+                {
+                    foreach (var product in _operation.Products)
+                    {
+                        if (line.ProductID == product.ProductID)
+                        {
+                            totalProfit += line.PriceCharged - product.InputCost;
+                        }
+                    }
+                     
+                }
+            }
+            lblOrderCounter.Content = totalOrders + " orders";
+            lblOrderTotal.Content = "$" + totalProfit.ToString() + " order profit";
+        }
+
+        private void refreshOrderList()
+        {
             try
             {
                 _operation.Orders = _operationManager.RefreshOrderList(_operation);
-                dgOrderList.ItemsSource = _operation.Orders;
             }
             catch (Exception ex)
             {
@@ -332,6 +360,7 @@ namespace PresentationLayer
         {
             if (cmbOperations.SelectedItem != null)
             {
+
                 try
                 {
                     var id = (Operation)cmbOperations.SelectedItem;
@@ -350,6 +379,15 @@ namespace PresentationLayer
                     dgOrderProductList.Columns[1].Header = "Product Description";
                     dgOrderProductList.Columns[2].Header = "Unit";
                     dgOrderProductList.Columns[3].Header = "Unit Price";
+
+                    btnCreateWeeklyShare.Visibility = Visibility.Visible;
+
+                    bool isSubscribed = _operationManager.GetWeeklyShareByUser(_user, id.OperationID);
+                    if (isSubscribed)
+                    {
+                        btnCreateWeeklyShare.IsEnabled = false;
+                        btnCreateWeeklyShare.Content = "Subscribed";
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -361,7 +399,22 @@ namespace PresentationLayer
 
         private void btnPlaceOrder_Click(object sender, RoutedEventArgs e)
         {
+            if (dgCustomerCart.Items.Count != 0)
+            {
+                try
+                {
+                    var id = (Operation)cmbOperations.SelectedItem;
+                    _operationManager.CreateOrder(_user, id.OperationID, DateTime.Now, _productCart);
+                    _orderList = _operationManager.GetOrderListByUser(_user);
+                    dgCustomerOrderList.ItemsSource = _orderList;
+                    MessageBox.Show("Order Made!");
+                }
+                catch (Exception ex)
+                {
 
+                    MessageBox.Show("Order could not be created." + ex.InnerException.Message);
+                }
+            }
         }
 
         private void dgOrderProductList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -373,52 +426,9 @@ namespace PresentationLayer
             }
             else
             {
-                refreshCustomerCart(selectedProduct);
-                
-            }
-        }
-
-        private void refreshCustomerCart(Product selectedProduct)
-        {
-            dgCustomerCart.Visibility = Visibility.Visible;
-            if (_productCart == null)
-            {
-                _productCart = new List<Product>();
                 _productCart.Add(selectedProduct);
                 dgCustomerCart.ItemsSource = _productCart;
-                // Remove the header for the unique ID, not meaningful to user
-                dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[0]);
-                dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[0]);
-                dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[3]);
-                dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
-                dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
-                dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
-                dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
-
-
-                dgCustomerCart.Columns[0].Header = "Product Name";
-                dgCustomerCart.Columns[1].Header = "Product Description";
-                dgCustomerCart.Columns[2].Header = "Unit";
-                dgCustomerCart.Columns[3].Header = "Unit Price";
-            }
-            else
-            {
-                _productCart.Add(selectedProduct);
-                dgCustomerCart.ItemsSource = _productCart;
-                //// Remove the header for the unique ID, not meaningful to user
-                //dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[0]);
-                //dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[0]);
-                //dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[3]);
-                //dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
-                //dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
-                //dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
-                //dgCustomerCart.Columns.Remove(dgCustomerCart.Columns[4]);
-
-
-                //dgCustomerCart.Columns[0].Header = "Product Name";
-                //dgCustomerCart.Columns[1].Header = "Product Description";
-                //dgCustomerCart.Columns[2].Header = "Unit";
-                //dgCustomerCart.Columns[3].Header = "Unit Price";
+                updateTotalPrice();
             }
         }
 
@@ -443,6 +453,109 @@ namespace PresentationLayer
         private void tabItemCustomer_Initialized(object sender, EventArgs e)
         {
             tabItemOperationManagement.Visibility = Visibility.Collapsed;
+            btnCreateWeeklyShare.Visibility = Visibility.Hidden;
+
+        }
+
+        private void dgCustomerCart_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+
+            var selectedProduct = (Product)dgCustomerCart.SelectedItem;
+            if (selectedProduct == null)
+            {
+                MessageBox.Show("You need to select a product in order to add to cart.");
+            }
+            else
+            {
+                
+                _productCart.Remove(selectedProduct);
+                dgCustomerCart.ItemsSource = _productCart;
+                updateTotalPrice();
+
+            }
+        }
+
+        private void updateTotalPrice()
+        {
+            if (_productCart.Count != 0)
+            {
+                var totalPrice = 0.0m;
+                foreach (var item in _productCart)
+                {
+                    totalPrice += item.UnitPrice;
+                }
+                tbkTotalPrice.Text = "Total Price: " + totalPrice;
+            }
+            else
+            {
+                tbkTotalPrice.Text = "Total Price: ";
+            }
+            
+        }
+
+        private void dgCustomerCart_Initialized(object sender, EventArgs e)
+        {
+            _productCart = new BindingList<Product>();
+        }
+
+        private void dgCustomerOrderList_Initialized(object sender, EventArgs e)
+        {
+            _orderList = new BindingList<Order>();
+            
+        }
+
+        private void dgCustomerOrderList_GotFocus(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                _orderList = _operationManager.GetOrderListByUser(_user);
+                dgCustomerOrderList.ItemsSource = _orderList;
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
+            }
+        }
+
+        private void dgOrderList_Initialized(object sender, EventArgs e)
+        {
+            try
+            {
+                //_orderList = _operationManager.GetOrderListByUser(_user);
+                //dgCustomerOrderList.ItemsSource = _orderList;
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
+            }
+        }
+
+        private void btnCreateWeeklyShare_Click(object sender, RoutedEventArgs e)
+        {
+            if (cmbOperations.SelectedItem != null)
+            {
+
+                try
+                {
+                    var id = (Operation)cmbOperations.SelectedItem;
+
+                    if (_operationManager.CreateWeeklyShare(_user, id.OperationID, 1.0m, 1))
+                    {
+                        MessageBox.Show("Weekly Share Created!");
+                        btnCreateWeeklyShare.IsEnabled = false;
+                        btnCreateWeeklyShare.Content = "Subscribed";
+
+                    }
+                    
+                }
+                catch (Exception ex)
+                {
+
+                    MessageBox.Show("Product list could not be loaded." + ex.InnerException.Message);
+                }
+            }
         }
 
     }

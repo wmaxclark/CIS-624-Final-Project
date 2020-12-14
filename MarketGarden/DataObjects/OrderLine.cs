@@ -7,8 +7,8 @@ namespace DataObjects
     {
         int OrderID { get; set; }
         int OrderLineID { get; set; }
-        int ProductID { get; set; }
-        decimal PriceCharged { get; set; }
+        public int ProductID { get; set; }
+        public decimal PriceCharged { get; set; }
 
         public OrderLine(int orderID, int productID, int orderLineID, decimal priceCharged)
         {
@@ -16,6 +16,12 @@ namespace DataObjects
             ProductID = productID;
             OrderLineID = orderLineID;
             PriceCharged = priceCharged;
+        }
+
+        public override string ToString()
+        {
+
+            return PriceCharged.ToString();
         }
     }
 }
