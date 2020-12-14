@@ -1157,7 +1157,7 @@ CREATE PROCEDURE [dbo].[sp_select_orderline_by_order]
 	)
 AS
 	BEGIN
-		SELECT ProductID, PriceCharged
+		SELECT ProductID, OrderLineID, PriceCharged
 		FROM OrderLine
 		WHERE OrderID = @OrderID
 	END

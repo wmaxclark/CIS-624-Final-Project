@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,10 +12,7 @@ namespace LogicLayer
     {
         int CreateOperation(int userID_operator, string state, string operationName);
         Operation GetOperationByOperator(User operatorUser);
-        
         bool DeleteProduct(Product product);
-        bool AddTask(UserTask userTask);
-        bool FinishTask(UserTask userTask);
         List<string> GetAllStates();
         List<Operation> GetAllOperations();
         OperationVM GetOperationVMByOperator(User user);
@@ -24,5 +22,6 @@ namespace LogicLayer
             DateTime germinationDate, DateTime plantDate, DateTime transplantDate, DateTime harvestDate);
         List<Product> GetProductsByOperation(int operationID);
         List<Product> RefreshProductList(OperationVM operation);
+        List<WeeklyShare> RefreshWeeklyShares(OperationVM operation);
     }
 }

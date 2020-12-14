@@ -69,32 +69,28 @@
                         </Button>
                         <Label Style="{StaticResource NormalLabel}" x:Name="lblDistribution" Content="Distribution" 
                                Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left"></Label>
-                        <!--Removed due to time constraints-->
-                        <!--<Label Style="{StaticResource NormalLabel}" x:Name="lblTasks" Content="Tasks" 
-                               Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left"></Label>-->
-                        
-                        <DataGrid x:Name="dgProductsList" Grid.Row="1" Grid.Column="0" Margin="10" MouseDoubleClick="dgProductsList_MouseDoubleClick"/>
+
+                        <DataGrid x:Name="dgProductsList" Grid.Row="1" Grid.Column="0" MouseDoubleClick="dgProductsList_MouseDoubleClick"/>
 
                         <TabControl x:Name="tabDistribution" Grid.Row="1" Grid.Column="1" Margin="10">
-                            <TabItem x:Name="tabItemWeekly" GotFocus="tabItemCSA_GotFocus">
+                            <TabItem x:Name="tabWeeklyShare" GotFocus="tabWeeklyShare_GotFocus">
                                 <TabItem.Header>
                                     <TextBlock Text="Weekly Shares"></TextBlock>
                                 </TabItem.Header>
-                            </TabItem>
-                            <TabItem x:Name="tabItemRestaraunt" GotFocus="tabItemRestaraunt_GotFocus">
-                                <TabItem.Header>
-                                    <TextBlock Text="Restaraunt"></TextBlock>
-                                </TabItem.Header>
-                            </TabItem>
-                            <TabItem x:Name="tabMarketStall" GotFocus="tabMarketStall_GotFocus">
-                                <TabItem.Header>
-                                    <TextBlock Text="Market Stall"></TextBlock>
-                                </TabItem.Header>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="40px"></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <TextBox x:Name="txtShareCounter"></TextBox>
+                                </Grid>
+                                
                             </TabItem>
                             <TabItem x:Name="tabDirectSale" GotFocus="tabDirectSale_GotFocus">
                                 <TabItem.Header>
                                     <TextBlock Text="DirectSale"></TextBlock>
                                 </TabItem.Header>
+                                <DataGrid x:Name="dgOrderList"></DataGrid>
                             </TabItem>
                         </TabControl>
                     </Grid>
@@ -104,11 +100,20 @@
                 <TabItem.Header>
                     <TextBlock Text="Customer" Style="{StaticResource Header1}"></TextBlock>
                 </TabItem.Header>
-            </TabItem>
-            <TabItem x:Name="tabItemHelper">
-                <TabItem.Header>
-                    <TextBlock Text="Helper" Style="{StaticResource Header1}"></TextBlock>
-                </TabItem.Header>
+                <TabItem.Content>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40">
+
+                            </RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition Width="250px"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </TabItem.Content>
             </TabItem>
             <TabItem x:Name="tabItemEmpty">
                 

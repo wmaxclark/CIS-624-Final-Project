@@ -10,17 +10,17 @@ namespace DataObjects
     {
 
         public User Operator { get; private set; }
-        public List<User> Helpers { get; set; }
 
         public List<Product> Products { get; set; }
-        public List<UserTask> Tasks { get; set; }
+        public List<Order> Orders { get; set; }
+        public List<WeeklyShare> WeeklyShares{ get; set;}
 
-        public OperationVM(int operationID, User operatorUser, string operationName, string addressState, int? maxShares, bool active, List<User> helpers, List<Product> products, List<UserTask> userTasks) : base(operationID, operatorUser.UserID, operationName, addressState, maxShares, active)
+        public OperationVM(int operationID, User operatorUser, string operationName, string addressState, int? maxShares, bool active, List<Product> products, List<Order> orders, List<WeeklyShare> weeklyShares) : base(operationID, operatorUser.UserID, operationName, addressState, maxShares, active)
         {
             this.Operator = operatorUser;
-            this.Helpers = helpers;
             this.Products = products;
-            this.Tasks = userTasks;
+            this.Orders = orders;
+            this.WeeklyShares = weeklyShares;
         }
 
         public override bool Equals(object obj)

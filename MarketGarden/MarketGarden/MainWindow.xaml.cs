@@ -148,10 +148,6 @@ namespace PresentationLayer
                         tabItemCustomer.Visibility = Visibility.Visible;
                         tabItemCustomer.IsSelected = true;
                         break;
-                    case "Helper":
-                        tabItemHelper.Visibility = Visibility.Visible;
-                        tabItemHelper.IsSelected = true;
-                        break;
                 }
             }
         }
@@ -232,26 +228,27 @@ namespace PresentationLayer
             try
             {
                 _operation.Products = _operationManager.RefreshProductList(_operation);
+                dgProductsList.ItemsSource = _operation.Products;
+
+                // Remove the header for the unique ID, not meaningful to user
+                dgProductsList.Columns.Remove(dgProductsList.Columns[0]);
+                dgProductsList.Columns.Remove(dgProductsList.Columns[0]);
+
+                dgProductsList.Columns[0].Header = "Product Name";
+                dgProductsList.Columns[1].Header = "Product Description";
+                dgProductsList.Columns[2].Header = "Unit";
+                dgProductsList.Columns[3].Header = "Input Cost";
+                dgProductsList.Columns[4].Header = "Unit Price";
+                dgProductsList.Columns[5].Header = "Germination Date";
+                dgProductsList.Columns[6].Header = "Plant Date";
+                dgProductsList.Columns[7].Header = "Transplant Date";
+                dgProductsList.Columns[8].Header = "Harvest Date";
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Product list could not be refreshed" + ex.InnerException.Message);
             }
-            dgProductsList.ItemsSource = _operation.Products;
-
-            // Remove the header for the unique ID, not meaningful to user
-            dgProductsList.Columns.Remove(dgProductsList.Columns[0]);
-            dgProductsList.Columns.Remove(dgProductsList.Columns[0]);
-
-            dgProductsList.Columns[0].Header = "Product Name";
-            dgProductsList.Columns[1].Header = "Product Description";
-            dgProductsList.Columns[2].Header = "Unit";
-            dgProductsList.Columns[3].Header = "Input Cost";
-            dgProductsList.Columns[4].Header = "Unit Price";
-            dgProductsList.Columns[5].Header = "Germination Date";
-            dgProductsList.Columns[6].Header = "Plant Date";
-            dgProductsList.Columns[7].Header = "Transplant Date";
-            dgProductsList.Columns[8].Header = "Harvest Date";
+            
         }
         private void dgProductsList_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -279,22 +276,45 @@ namespace PresentationLayer
                 refreshProductsList();
             }
         }
-        private void tabItemCSA_GotFocus(object sender, RoutedEventArgs e)
+
+
+        private void refreshWeeklySharesList()
+        {
+            dgWeeklyShares.Visibility = Visibility.Visible;
+            try
+            {
+                _operation.WeeklyShares = _operationManager.RefreshWeeklyShares(_operation);
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show("Weekly share list could not be refreshed" + ex.InnerException.Message);
+            }
+        }
+
+        private void tabWeeklyShare_GotFocus(object sender, RoutedEventArgs e)
+        {
+            dgWeeklyShares.ItemsSource = _operationManager.RefreshWeeklyShares(_operation);
+            try
+            {
+                if (dgWeeklyShares.ItemsSource == null)
+                {
+                    refreshWeeklySharesList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
+            }
+        }
+
+        private void dgWeeklyShares_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
 
         }
 
-        private void tabItemRestaraunt_GotFocus(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void tabMarketStall_GotFocus(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void tabDirectSale_GotFocus(object sender, RoutedEventArgs e)
+        private void dgDirectSale_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
 
         }

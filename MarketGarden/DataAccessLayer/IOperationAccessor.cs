@@ -12,9 +12,6 @@ namespace DataAccessLayer
         int CreateOperation(int userID_operator, string state, string operationName);
         Operation RetrieveOperationByOperator(User operatorUser);
         List<Product> RetrieveProductsByOperation(int operationID);
-
-        List<User> RetrieveHelpersByOperation(int operationID);
-        List<UserTask> RetrieveTasksBySender(User operationID);
         List<string> RetrieveRolesByEmail(string email);
         List<string> RetrieveAllStates();
         List<Operation> RetrieveAllOperations();
@@ -23,5 +20,8 @@ namespace DataAccessLayer
         int UpdateProduct(int operationID, Product oldProduct, string productName, string productDescription, string unit, decimal inputCost, decimal unitPrice, 
             DateTime germinationDate, DateTime plantDate, DateTime transplantDate, DateTime harvestDate);
         int DeleteProduct(int productID);
+        List<Order> RetrieveOrdersByOperation(int operationID);
+        List<OrderLine> RetrieveOrderLinesByOrder(int orderID);
+        List<WeeklyShare> RetrieveWeeklySharesByOperation(int operationID);
     }
 }

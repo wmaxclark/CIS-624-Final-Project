@@ -66,81 +66,87 @@ namespace PresentationLayer
                 dptHarvestDate.SelectedDate = _selectedProduct.HarvestDate;
 
                 btnSubmit.Content = "Save";
-                btnClone.Visibility = Visibility.Visible;
-                btnDelete.Visibility = Visibility.Visible;
+                
+            }
+            else
+            {
+                btnClone.Visibility = Visibility.Hidden;
+                btnDelete.Visibility = Visibility.Hidden;
             }
         }
         private void btnSubmit_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (txtProductName.Text.Length > 64)
+            if (isValidProduct())
             {
-                MessageBox.Show("Product Name too long.");
-                txtProductName.Clear();
-                txtProductName.Focus();
-                return;
-            }
-            if (txtProductDescription.Text.Length > 1024)
-            {
-                MessageBox.Show("Product Description too long.");
-                txtProductDescription.Clear();
-                txtProductDescription.Focus();
-                return;
-            }
-            if (txtUnit.Text.Length > 64)
-            {
-                MessageBox.Show("Unit name too long.");
-                txtUnit.Clear();
-                txtUnit.Focus();
-                return;
-            }
-            if (_addProduct) // Product is being created
-            {
-                try
+                if (_addProduct) // Product is being created
                 {
-                    _operationManager.AddProduct(_operation.OperationID,
-                    txtProductName.Text,
-                    txtProductDescription.Text,
-                    txtUnit.Text,
-                    decimal.Parse(txtInputCost.Text),
-                    decimal.Parse(txtUnitPrice.Text),
-                    (DateTime)dptGerminationDate.SelectedDate,
-                    (DateTime)dptPlantDate.SelectedDate,
-                    (DateTime)dptTransplantDate.SelectedDate,
-                    (DateTime)dptHarvestDate.SelectedDate);
+                    try
+                    {
+                        _operationManager.AddProduct(_operation.OperationID,
+                        txtProductName.Text,
+                        txtProductDescription.Text,
+                        txtUnit.Text,
+                        decimal.Parse(txtInputCost.Text),
+                        decimal.Parse(txtUnitPrice.Text),
+                        (DateTime)dptGerminationDate.SelectedDate,
+                        (DateTime)dptPlantDate.SelectedDate,
+                        (DateTime)dptTransplantDate.SelectedDate,
+                        (DateTime)dptHarvestDate.SelectedDate);
+                        // Operation has completed
+                        this.DialogResult = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Product could not be created." + ex.InnerException.Message);
+                    }
                 }
-                catch (Exception ex)
+                else if (_isClone)
                 {
-                    MessageBox.Show("Product could not be created." + ex.InnerException.Message);
+                    try
+                    {
+                        _operationManager.AddProduct(_operation.OperationID,
+                        txtProductName.Text,
+                        txtProductDescription.Text,
+                        txtUnit.Text,
+                        decimal.Parse(txtInputCost.Text),
+                        decimal.Parse(txtUnitPrice.Text),
+                        (DateTime)dptGerminationDate.SelectedDate,
+                        (DateTime)dptPlantDate.SelectedDate,
+                        (DateTime)dptTransplantDate.SelectedDate,
+                        (DateTime)dptHarvestDate.SelectedDate);
+                        // Operation has completed
+                        this.DialogResult = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Product could not be created." + ex.InnerException.Message);
+                    }
                 }
-                // Operation has completed
-                this.DialogResult = true;
-            }
-            else
-            {
-                try
+                else
                 {
-                    _operationManager.UpdateProduct(_operation.OperationID,
-                    _selectedProduct,
-                    txtProductName.Text,
-                    txtProductDescription.Text,
-                    txtUnit.Text,
-                    decimal.Parse(txtInputCost.Text),
-                    decimal.Parse(txtUnitPrice.Text),
-                    (DateTime)dptGerminationDate.SelectedDate,
-                    (DateTime)dptPlantDate.SelectedDate,
-                    (DateTime)dptTransplantDate.SelectedDate,
-                    (DateTime)dptHarvestDate.SelectedDate);
-                }
-                catch (Exception ex)
-                {
+                    try
+                    {
+                        _operationManager.UpdateProduct(_operation.OperationID,
+                        _selectedProduct,
+                        txtProductName.Text,
+                        txtProductDescription.Text,
+                        txtUnit.Text,
+                        decimal.Parse(txtInputCost.Text),
+                        decimal.Parse(txtUnitPrice.Text),
+                        (DateTime)dptGerminationDate.SelectedDate,
+                        (DateTime)dptPlantDate.SelectedDate,
+                        (DateTime)dptTransplantDate.SelectedDate,
+                        (DateTime)dptHarvestDate.SelectedDate);
+                        // Operation has completed
+                        this.DialogResult = true;
+                    }
+                    catch (Exception ex)
+                    {
 
-                    MessageBox.Show("Product could not be updated." + ex.InnerException.Message);
+                        MessageBox.Show("Product could not be updated." + ex.InnerException.Message);
+                    }
                 }
-                // Operation has completed
-                this.DialogResult = true;
             }
-            // Operation has completed
-            
         }
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
@@ -166,7 +172,6 @@ namespace PresentationLayer
         {
             btnDelete.Visibility = Visibility.Hidden;
             _isClone = true;
-            _addProduct = true;
             txtProductName.Focus();
             btnSubmit.Content = "Save Clone";
         }
@@ -197,6 +202,86 @@ namespace PresentationLayer
                 // Add the interval to the date
                 dptHarvestDate.SelectedDate = dptGerminationDate.SelectedDate.Value.Add(timeSpan);
             }
+        }
+        private bool isValidProduct()
+        {
+            bool result = true;
+            if (txtProductName.Text.Length > 64)
+            {
+                MessageBox.Show("Product Name too long.");
+                txtProductName.Clear();
+                txtProductName.Focus();
+                result = false;
+            }
+            if (txtProductName.Text == "" || txtProductName.Text == null)
+            {
+                MessageBox.Show("Must have a product name");
+                txtProductName.Focus();
+                result = false;
+            }
+            if (txtProductDescription.Text.Length > 1024)
+            {
+                MessageBox.Show("Product Description too long.");
+                txtProductDescription.Clear();
+                txtProductDescription.Focus();
+                result = false;
+            }
+            if (txtProductDescription.Text == "" || txtProductDescription.Text == null)
+            {
+                MessageBox.Show("Must have a product description.");
+                txtProductDescription.Focus();
+                result = false;
+            }
+            if (txtUnit.Text.Length > 64)
+            {
+                MessageBox.Show("Unit name too long.");
+                txtUnit.Clear();
+                txtUnit.Focus();
+                result = false;
+            }
+            if (txtUnit.Text == "" || txtUnit.Text == null)
+            {
+                MessageBox.Show("Must have a unit of distribution.");
+                txtUnit.Focus();
+                result = false;
+            }
+            if (txtInputCost.Text == "" || txtInputCost.Text == null)
+            {
+                MessageBox.Show("Must have an input cost.");
+                txtInputCost.Focus();
+                result = false;
+            }
+            if (txtUnitPrice.Text == "" || txtUnitPrice.Text == null)
+            {
+                MessageBox.Show("Must have a unit price.");
+                txtUnitPrice.Focus();
+                result = false;
+            }
+            if (dptGerminationDate.SelectedDate == null)
+            {
+                MessageBox.Show("Must have a germination date.");
+                dptGerminationDate.Focus();
+                result = false;
+            }
+            if (dptPlantDate.SelectedDate == null)
+            {
+                MessageBox.Show("Must have a plant date.");
+                dptPlantDate.Focus();
+                result = false;
+            }
+            if (dptTransplantDate.SelectedDate == null)
+            {
+                MessageBox.Show("Must have a transplant date.");
+                dptTransplantDate.Focus();
+                result = false;
+            }
+            if (dptHarvestDate.SelectedDate == null)
+            {
+                MessageBox.Show("Must have a harvest date.");
+                dptHarvestDate.Focus();
+                result = false;
+            }
+            return result;
         }
     }
 }

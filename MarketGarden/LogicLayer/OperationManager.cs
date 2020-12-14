@@ -69,9 +69,9 @@ namespace LogicLayer
                 Operation operation = _operationAccessor.RetrieveOperationByOperator(user);
                 operationVM = new OperationVM(operation.OperationID, user, operation.OperationName,
                     operation.AddressState, operation.MaxShares, operation.Active,
-                    _operationAccessor.RetrieveHelpersByOperation(operation.OperationID),
                     _operationAccessor.RetrieveProductsByOperation(operation.OperationID),
-                    _operationAccessor.RetrieveTasksBySender(user));
+                    _operationAccessor.RetrieveOrdersByOperation(operation.OperationID),
+                    _operationAccessor.RetrieveWeeklySharesByOperation(operation.OperationID));
             }
             catch (Exception ex)
             {
@@ -145,7 +145,6 @@ namespace LogicLayer
             }
             return products;
         }
-
         public bool DeleteProduct(Product product)
         {
             bool result = false;
@@ -160,15 +159,6 @@ namespace LogicLayer
             }
             return result;
         }
-        public bool AddTask(UserTask userTask)
-        {
-            throw new NotImplementedException();
-        }
-        public bool FinishTask(UserTask userTask)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<string> GetAllStates()
         {
             List<string> states = new List<string>();
@@ -185,6 +175,19 @@ namespace LogicLayer
             return states;
         }
 
-        
+        public List<WeeklyShare> RefreshWeeklyShares(OperationVM operation)
+        {
+            List<WeeklyShare> weeklyShares = new List<WeeklyShare>();
+            try
+            {
+                weeklyShares = _operationAccessor.RetrieveWeeklySharesByOperation(operation.OperationID);
+            }
+            catch (Exception ex)
+            {
+
+                throw new ApplicationException("Weekly share list could not be refreshed." + ex.InnerException.Message);
+            }
+            return weeklyShares;
+        }
     }
 }

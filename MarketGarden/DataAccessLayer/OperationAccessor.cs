@@ -147,136 +147,6 @@ namespace DataAccessLayer
             return productList;
         }
 
-        public List<User> RetrieveHelpersByOperation(int operationID)
-        {
-            List<User> helperList = new List<User>();
-
-            // Retrieve a connection from factory
-            var conn = DBConnection.GetDBConnection();
-
-            // Retrieve a command
-            var cmd = new SqlCommand("sp_select_user_role_by_operation", conn);
-
-            // Set command type to stored procedure
-            cmd.CommandType = CommandType.StoredProcedure;
-
-            // Add parameter to command
-            cmd.Parameters.Add("@OperationID", SqlDbType.Int);
-
-            // Set parameter to value
-            cmd.Parameters["@OperationID"].Value = operationID;
-
-            // Execute command
-            try
-            {
-                // Open connection
-                conn.Open();
-
-                // Execute command
-                var reader = cmd.ExecuteReader();
-
-                // Capture results
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        var userID = reader.GetInt32(0);
-                        var firstName = reader.GetString(1);
-                        var lastName = reader.GetString(2);
-                        var email = reader.GetString(3);
-                        var role = reader.GetString(4);
-                        // Instantiate a list of roles the user has by calling the stored procedure
-                        //List<string> roles = RetrieveRolesByEmail(email);
-
-                        // Validate that the user has the role of a helper
-                        if (role.Equals("Helper"))
-                        {
-                            // Construct new user with captured values
-                            User helper = new User(userID, firstName, lastName, email);
-                            // Add the resulting user to the list
-                            helperList.Add(helper);
-                        }
-                    }
-                    reader.Close();
-                }
-                
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-            finally
-            {
-                conn.Close();
-            }
-            return helperList;
-        }
-
-        public List<UserTask> RetrieveTasksBySender(User operatorUser)
-        {
-            List<UserTask> taskList = new List<UserTask>();
-
-            // Retrieve a connection from factory
-            var conn = DBConnection.GetDBConnection();
-
-            // Retrieve a command
-            var cmd = new SqlCommand("sp_select_task_by_sender", conn);
-
-            // Set command type to stored procedure
-            cmd.CommandType = CommandType.StoredProcedure;
-
-            // Add parameter to command
-            cmd.Parameters.Add("@UserID_Sender", SqlDbType.Int);
-
-            // Set parameter to value
-            cmd.Parameters["@UserID_Sender"].Value = operatorUser.UserID;
-
-            // Execute command
-            try
-            {
-                // Open connection
-                conn.Open();
-
-                // Execute command
-                var reader = cmd.ExecuteReader();
-
-                // Capture results
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        var userID_assignee = reader.GetInt32(0);
-                        var assignDate = reader.GetSqlDateTime(1);
-                        var dueDate = reader.GetSqlDateTime(2);
-                        var taskName = reader.GetString(3);
-                        var taskDescription = reader.GetString(3);
-                        var finished = reader.GetBoolean(4);
-
-                        // Construct new task with captured values
-                        UserTask task = new UserTask(operatorUser, userID_assignee, (DateTime)assignDate,
-                            (DateTime)dueDate, taskName, taskDescription);
-
-                        // Add the resulting task to the list
-                        taskList.Add(task);
-
-                    }
-                    reader.Close();
-                }
-                
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-            finally
-            {
-                conn.Close();
-            }
-            return taskList;
-        }
-
         public List<string> RetrieveRolesByEmail(string email)
         {
             List<string> roleList = new List<string>();
@@ -728,6 +598,179 @@ namespace DataAccessLayer
                 conn.Close();
             }
             return result;
+        }
+
+        public List<Order> RetrieveOrdersByOperation(int operationID)
+        {
+            List<Order> orderList = new List<Order>();
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_select_productorder_by_operation", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Add parameter to command
+            cmd.Parameters.Add("@OperationID", SqlDbType.Int);
+
+            // Set parameter to value
+            cmd.Parameters["@OperationID"].Value = operationID;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                var reader = cmd.ExecuteReader();
+
+                // Capture results
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var orderID = reader.GetInt32(0);
+                        var userID_Customer = reader.GetInt32(1);
+                        var orderDate = reader.GetDateTime(2);
+
+                        var orderLines = RetrieveOrderLinesByOrder(orderID);
+
+                        var order = new Order(orderID, operationID, userID_Customer, orderDate, orderLines);
+
+                        // Add the resulting order to the list
+                        orderList.Add(order);
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return orderList;
+        }
+
+        public List<WeeklyShare> RetrieveWeeklySharesByOperation(int operationID)
+        {
+            List<WeeklyShare> weeklyShares = new List<WeeklyShare>();
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_select_productorder_by_operation", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Add parameter to command
+            cmd.Parameters.Add("@OperationID", SqlDbType.Int);
+
+            // Set parameter to value
+            cmd.Parameters["@OperationID"].Value = operationID;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                var reader = cmd.ExecuteReader();
+
+                // Capture results
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var userID_Customer = reader.GetInt32(0);
+                        var sharePortion = reader.GetDecimal(1);
+                        var frequency = reader.GetInt32(2);
+
+                        var share = new WeeklyShare(operationID, userID_Customer, sharePortion, frequency);
+
+                        // Add the resulting order to the list
+                        weeklyShares.Add(share);
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return weeklyShares;
+        }
+
+        public List<OrderLine> RetrieveOrderLinesByOrder(int orderID)
+        {
+            List<OrderLine> lineList = new List<OrderLine>();
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_select_productorder_by_operation", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Add parameter to command
+            cmd.Parameters.Add("@OrderID", SqlDbType.Int);
+
+            // Set parameter to value
+            cmd.Parameters["@OrderID"].Value = orderID;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                var reader = cmd.ExecuteReader();
+
+                // Capture results
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var productID = reader.GetInt32(0);
+                        var orderLineID = reader.GetInt32(1);
+                        var priceCharged = reader.GetDecimal(2);
+
+                        var line = new OrderLine(orderID, productID, orderLineID, priceCharged);
+
+                        // Add the resulting order to the list
+                        lineList.Add(line);
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return lineList;
         }
     }
 }

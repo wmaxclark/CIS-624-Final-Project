@@ -244,6 +244,9 @@ namespace PresentationLayer
                         if (cmbUserRoles.SelectedItem.ToString() == _roleList[0]) // User is a customer
                         {
                             _userManager.CreateUserRole(_user.UserID, cmbUserRoles.SelectedItem.ToString());
+                            // If all checks have succeeded
+                            MessageBox.Show("Account created, please log in to continue.");
+                            this.DialogResult = true;
                         }
                         else if (cmbUserRoles.SelectedItem.ToString() == _roleList[1]) // User is a Farmer
                         {
@@ -254,6 +257,9 @@ namespace PresentationLayer
                                 try
                                 {
                                     _userManager.CreateUserRole(_user.UserID, _operationManager.GetOperationByOperator(_user), _roleList[1]);
+                                    // If all checks have succeeded
+                                    MessageBox.Show("Account created, please log in to continue.");
+                                    this.DialogResult = true;
                                 }
                                 catch (Exception ex)
                                 {
@@ -268,14 +274,10 @@ namespace PresentationLayer
                             }
                             
                         }
-                        else // User is a helper
+                        else
                         {
-                            
-                            _userManager.CreateUserRole(id, (Operation)cmbOperations.SelectedItem, cmbUserRoles.SelectedItem.ToString());
+                            MessageBox.Show("You must select a role.");
                         }
-                        // If all checks have succeeded
-                        MessageBox.Show("Account created, please log in to continue.");
-                        this.DialogResult = true;
                     }
                 }
                 catch (Exception ex)
@@ -303,23 +305,6 @@ namespace PresentationLayer
                 {
                     lblOperationName.Visibility = Visibility.Visible;
                     txtOperationName.Visibility = Visibility.Visible;
-                }
-                // Handle interface for helpers
-                if (cmbUserRoles.SelectedItem.ToString() == _roleList[2])
-                {
-                    lblOperationName.Visibility = Visibility.Hidden;
-                    txtOperationName.Visibility = Visibility.Hidden;
-                    lblOperation.Visibility = Visibility.Visible;
-                    cmbOperations.Visibility = Visibility.Visible;
-                    try
-                    {
-                        //TODO get the items source cmbOperations.ItemsSource
-                    }
-                    catch (Exception ex)
-                    {
-
-                        MessageBox.Show(ex.Message + "\n\n" + ex.InnerException.Message);
-                    }
                 }
             }
         }
