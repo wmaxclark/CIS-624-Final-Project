@@ -45,7 +45,6 @@ namespace LogicLayer
             }
             return user;
         }
-
         public List<string> GetAllRoles()
         {
             
@@ -60,7 +59,6 @@ namespace LogicLayer
             }
             return roleList;
         }
-
         public bool UpdatePassword(string email, string oldPassword, string newPassword)
         {
             bool result = false;
@@ -87,7 +85,6 @@ namespace LogicLayer
             }
             return result;
         }
-
         public bool UpdateUserRole(string email, string role)
         {
             bool result = false;
@@ -103,7 +100,6 @@ namespace LogicLayer
             }
             return result;
         }
-        
         public int CreateUserAccount(string email, string firstName, string lastName, string passwordHash)
         {
             int result = 0;
@@ -119,14 +115,13 @@ namespace LogicLayer
             }
             return result;
         }
-
-        public bool CreateUserRole(int userID, Operation operation, string role)
+        public bool CreateUserRole(int userID, string role)
         {
             bool result = false;
 
             try
             {
-                result = (1 == userAccessor.CreateUserRole(userID, operation.OperationID, role));
+                result = (1 == userAccessor.CreateUserRole(userID, role));
             }
             catch (Exception ex)
             {
@@ -135,14 +130,13 @@ namespace LogicLayer
             }
             return result;
         }
-
-        public bool CreateUserRole(int userID, string role)
+        public bool CreateUserRole(int userID, string role, Operation operation)
         {
             bool result = false;
 
             try
             {
-                result = (1 == userAccessor.CreateUserRole(userID, role));
+                result = (1 == userAccessor.CreateUserRole(userID, operation.OperationID, role));
             }
             catch (Exception ex)
             {

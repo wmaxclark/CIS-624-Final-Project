@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Foolproof;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace WebPresentation.Models
@@ -64,6 +65,15 @@ namespace WebPresentation.Models
 
     public class RegisterViewModel
     {
+
+        [Required]
+        [Display(Name = "Given Name")]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Surname")]
+        public string LastName { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
@@ -80,6 +90,16 @@ namespace WebPresentation.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
+        [Required]
+        [Display(Name = "How will you be using this application?")]
+        public string Role { get; set; }
+
+        [Display(Name = "In which state are you located?")]
+        public string State { get; set; }
+
+        [RequiredIf("Role", "Farmer", ErrorMessage = "You need to indicate a name for your operation")]
+        [Display(Name = "What is the name of your operation?")]
+        public string OperationName { get; set; }
     }
 
     public class ResetPasswordViewModel

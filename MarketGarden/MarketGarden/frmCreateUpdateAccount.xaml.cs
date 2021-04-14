@@ -257,7 +257,7 @@ namespace PresentationLayer
                                 _operationManager.CreateOperation(_user.UserID, cmbStates.SelectedItem.ToString(), txtOperationName.Text);
                                 try
                                 {
-                                    _userManager.CreateUserRole(_user.UserID, _operationManager.GetOperationByOperator(_user), _roleList[1]);
+                                    _userManager.CreateUserRole(_user.UserID, _roleList[1], _operationManager.GetOperationByOperator(_user));
                                     // If all checks have succeeded
                                     MessageBox.Show("Account created, please log in to continue.");
                                     this.DialogResult = true;
