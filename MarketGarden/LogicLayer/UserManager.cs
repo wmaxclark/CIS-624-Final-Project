@@ -46,7 +46,7 @@ namespace LogicLayer
             return user;
         }
 
-        public List<string> getAllRoles()
+        public List<string> GetAllRoles()
         {
             
             List<string> roleList = new List<string>();

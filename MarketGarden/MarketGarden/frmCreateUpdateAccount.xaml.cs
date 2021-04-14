@@ -64,7 +64,7 @@ namespace PresentationLayer
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _roleList = _userManager.getAllRoles();
+            _roleList = _userManager.GetAllRoles();
             cmbUserRoles.ItemsSource = _roleList;
             _states = _operationManager.GetAllStates();
             cmbStates.ItemsSource = _states;
@@ -312,7 +312,7 @@ namespace PresentationLayer
 
         private void cmbUserRoles_DropDownOpened(object sender, EventArgs e)
         {
-            _roleList = _userManager.getAllRoles();
+            _roleList = _userManager.GetAllRoles();
             cmbUserRoles.ItemsSource = _roleList;
         }
     }
