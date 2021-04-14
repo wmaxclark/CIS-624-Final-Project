@@ -17,6 +17,7 @@ namespace WebPresentation.Controllers
 
         public ViewResult Dashboard(OperationVM operationVM)
         {
+            ViewBag.Title = operationVM.OperationName;
             return View(operationVM);
         }
     }
