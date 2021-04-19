@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace WebPresentation.Controllers
 {
+    [Authorize(Roles ="Farmer")]
     public class OperationController : Controller
     {
         // GET: Operation

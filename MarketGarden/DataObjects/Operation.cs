@@ -28,6 +28,11 @@ namespace DataObjects
             this.Active = active;
         }
 
+        public Operation()
+        {
+
+        }
+
         public override string ToString()
         {
             return OperationName;

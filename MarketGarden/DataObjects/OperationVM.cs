@@ -23,6 +23,11 @@ namespace DataObjects
             this.WeeklyShares = weeklyShares;
         }
 
+        public OperationVM() : base()
+        {
+
+        }
+
         public override bool Equals(object obj)
         {
             return base.Equals(obj);
