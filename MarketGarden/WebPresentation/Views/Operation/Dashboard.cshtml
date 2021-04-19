@@ -1,6 +1,80 @@
 ﻿@model DataObjects.OperationVM
-<<<<<<< HEAD
-=======
 
-<h2>@ViewBag.Title.</h2>
->>>>>>> 39bce54d1ca9e17eec806d8b8a270973e98a13c1
+<h2>@Model.OperationName</h2>
+<h2>Products</h2>
+<p>
+    @Html.ActionLink("Create New", "Create", "Product", Model.OperationID)
+</p>
+@if (Model.Products.Count > 0)
+{
+    foreach (var product in Model.Products)
+    {
+        
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => product.ProductName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => product.ProductDescription)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => product.Unit)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => product.InputCost)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => product.UnitPrice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => product.GerminationDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => product.PlantDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => product.TransplantDate)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => product.HarvestDate)
+                </th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => product.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.ProductDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.Unit)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.InputCost)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.UnitPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.GerminationDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.PlantDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.TransplantDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.HarvestDate)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = product.ProductID }) |
+                    @Html.ActionLink("Details", "Details", new { id = product.ProductID }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = product.ProductID })
+                </td>
+            </tr>
+        </table>
+    }
+}

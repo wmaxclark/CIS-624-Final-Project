@@ -182,6 +182,8 @@ namespace WebPresentation.Controllers
                                     var operation = _oldOperationManager.GetOperationByOperator(oldUser);
                                     _oldUserManager.CreateUserRole(oldUser.UserID, model.Role, operation);
 
+                                    UserManager.AddToRole(user.Id, "Farmer");
+
                                     var operationVM = _oldOperationManager.GetOperationVMByOperator(oldUser);
                                     return RedirectToAction("Dashboard", "Operation", operationVM);
                                 }

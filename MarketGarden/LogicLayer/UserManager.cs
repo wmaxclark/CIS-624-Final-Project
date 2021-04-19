@@ -45,6 +45,20 @@ namespace LogicLayer
             }
             return user;
         }
+
+        public User GetUserByEmail(string email)
+        {
+            User user = null;
+            try
+            {
+                user = userAccessor.SelectUserByEmail(email);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Login Failed.", ex);
+            }
+            return user;
+        }
         public List<string> GetAllRoles()
         {
             
@@ -145,5 +159,7 @@ namespace LogicLayer
             }
             return result;
         }
+
+        
     }
 }

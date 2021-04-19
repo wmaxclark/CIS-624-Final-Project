@@ -10,6 +10,7 @@ namespace LogicLayer
     public interface IUserManager
     {
         User AuthenticateUser(string userName, string password);
+        User GetUserByEmail(string email);
         int CreateUserAccount(string email, string firstName, string lastName, string passwordHash);
         bool UpdatePassword(string email, string oldPassword, string newPassword);
         List<string> GetAllRoles();
