@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataObjects
 {
-    public class Product 
+    public class Product
     {
         public int ProductID { get;  set; }
         public int OperationID { get;  set; }
@@ -30,8 +30,8 @@ namespace DataObjects
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime HarvestDate { get;  set; }
 
-        public Product(int productID, int operationID, string productName, 
-            string productDescription, string unit, decimal inputCost, 
+        public Product(int productID, int operationID, string productName,
+            string productDescription, string unit, decimal inputCost,
             decimal unitPrice, DateTime germinationDate,
             DateTime daysAfterGerminationToPlant,
             DateTime daysAfterGerminationToTransplant,
@@ -162,4 +162,3 @@ namespace DataObjects
         public DateTime HarvestDate { get; set; }
     }
 }
-
