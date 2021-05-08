@@ -3,7 +3,7 @@
 <h2>@Model.OperationName</h2>
 <h2>Products</h2>
 <p>
-    @Html.ActionLink("Create New", "Create", "Product", Model.OperationID)
+    @Html.ActionLink("Create New", "Create", "Product", Model.OperationID, null)
 </p>
 @if (Model.Products.Count > 0)
 {
@@ -70,9 +70,9 @@
                     @Html.DisplayFor(modelItem => product.HarvestDate)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = product.ProductID }) |
-                    @Html.ActionLink("Details", "Details", new { id = product.ProductID }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = product.ProductID })
+                    @Html.ActionLink("Edit", "Edit", "Product", new { id = product.ProductID },null) |
+                    @Html.ActionLink("Clone", "Clone", "Product", new { id = product.ProductID }, null) |
+                    @Html.ActionLink("Delete", "Delete", "Product", new { id = product.ProductID }, null)
                 </td>
             </tr>
         </table>

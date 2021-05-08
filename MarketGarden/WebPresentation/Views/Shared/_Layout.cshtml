@@ -17,13 +17,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Market Garden", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     @if (User.IsInRole("Farmer"))
                     {
-                        <li>@Html.ActionLink("My Operation", "Index", "Operation")</li>
+                        @Html.ActionLink("My Operation", "Index", "Operation", new { area = "" }, new { @class = "navbar-brand" })
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")
@@ -34,7 +33,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Market Garden</p>
         </footer>
     </div>
 

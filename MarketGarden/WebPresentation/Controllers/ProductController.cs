@@ -4,21 +4,91 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.ComponentModel.DataAnnotations;
+using DataObjects;
+using LogicLayer;
+using System.Net;
 
 namespace WebPresentation.Controllers
 {
     [Authorize(Roles = "Farmer")]
     public class ProductController : Controller
     {
-        // GET: Product
-        public ActionResult Index()
+        IOperationManager _operationManager = new OperationManager();
+        IUserManager _oldUserManager = new UserManager();
+        [HttpGet]
+        public ActionResult Create()
         {
             return View();
         }
 
-        public ActionResult Create()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(CreateProductViewModel model)
         {
-            return View();
+            try
+            {
+                User farmer = _oldUserManager.GetUserByEmail(User.Identity.Name);
+                Operation operation = _operationManager.GetOperationByOperator(farmer);
+                model.OperationID = operation.OperationID;
+                if (ModelState.IsValid)
+                {
+                    _operationManager.AddProduct(model.OperationID, model.ProductName, model.ProductDescription, model.Unit, model.InputCost, model.UnitPrice, model.GerminationDate, model.PlantDate, model.TransplantDate, model.HarvestDate);
+                    ViewBag.Success = true;
+                }
+            }
+            catch (Exception)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public ViewResult Edit(string id)
+        {
+            try
+            {
+                User farmer = _oldUserManager.GetUserByEmail(User.Identity.Name);
+                Operation operation = _operationManager.GetOperationByOperator(farmer);
+                Product product = _operationManager.GetProductsByOperation(operation.OperationID).Where(p => p.ProductID == Int32.Parse(id)).Single();
+                return View(new EditProductViewModel(product));
+            }
+            catch (Exception)
+            {
+                return View("Dashboard", "Operation");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ViewResult Edit(EditProductViewModel product)
+        {
+            try
+            {
+                User farmer = _oldUserManager.GetUserByEmail(User.Identity.Name);
+                Operation operation = _operationManager.GetOperationByOperator(farmer);
+                Product oldProduct = _operationManager.GetProductsByOperation(operation.OperationID).Where(p => p.ProductID == product.ProductID).Single();
+                if (ModelState.IsValid)
+                {
+                    _operationManager.UpdateProduct(operation.OperationID,
+                    oldProduct,
+                    product.ProductName,
+                    product.ProductDescription,
+                    product.Unit,
+                    product.InputCost,
+                    product.UnitPrice,
+                    product.GerminationDate,
+                    product.PlantDate,
+                    product.TransplantDate,
+                    product.HarvestDate);
+                    ViewBag.Success = true;
+                }
+            }
+            catch (Exception)
+            {
+                ViewBag.Success = false;
+            }
+            return View(product);
         }
     }
 }

@@ -2,48 +2,56 @@
 
 @{
     ViewBag.Title = "Create";
+
 }
 
 <h2>Create</h2>
+@if (ViewBag.Success == true)
+{
+    <h3>Product Created Successfully</h3>
+}
 
-
-@using (Html.BeginForm())
+@using (Html.BeginForm("Create", "Product", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     
-    <div class="form-horizontal">
-        <h4>CreateProductViewModel</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <div class="form-group">
         <div class="form-group">
             @Html.LabelFor(p => p.ProductName, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">
                 @Html.TextBoxFor(p => p.ProductName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(p => p.ProductName, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(p => p.ProductDescription, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">
                 @Html.TextBoxFor(p => p.ProductDescription, new { @class = "form-control" })
+                @Html.ValidationMessageFor(p => p.ProductDescription, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(p => p.Unit, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">
                 @Html.TextBoxFor(p => p.Unit, new { @class = "form-control" })
+                @Html.ValidationMessageFor(p => p.Unit, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(p => p.InputCost, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">
-                @Html.PasswordFor(p => p.InputCost, new { @class = "form-control" })
+                @Html.TextBoxFor(p => p.InputCost, new { @class = "form-control" })
+                @Html.ValidationMessageFor(p => p.InputCost, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
             @Html.LabelFor(p => p.UnitPrice, new { @class = "col-md-2 control-label" })
             <div class="col-md-10">
-                @Html.PasswordFor(p => p.UnitPrice, new { @class = "form-control" })
+                @Html.TextBoxFor(p => p.UnitPrice, new { @class = "form-control" })
+                @Html.ValidationMessageFor(p => p.UnitPrice, "", new { @class = "text-danger" })
             </div>
         </div>
         <div class="form-group">
@@ -78,11 +86,11 @@
             <input type="submit" value="Save" class="btn btn-default" />
         </div>
     </div>
-    </div>
+</div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", "Operation")
 </div>
 
 @section Scripts {
