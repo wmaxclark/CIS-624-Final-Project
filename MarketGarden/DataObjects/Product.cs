@@ -10,26 +10,26 @@ namespace DataObjects
 {
     public class Product
     {
-        public int ProductID { get;  set; }
-        public int OperationID { get;  set; }
+        public int ProductID { get; set; }
+        public int OperationID { get; set; }
         [Display(Name = "Product Name")]
-        public string ProductName { get;  set; }
+        public string ProductName { get; set; }
         [Display(Name = "Product Description")]
-        public string ProductDescription { get;  set; }
+        public string ProductDescription { get; set; }
         [Display(Name = "Distribution Unit")]
-        public string Unit { get;  set; }
+        public string Unit { get; set; }
         [Display(Name = "Input Cost")]
-        public decimal InputCost { get;  set; }
+        public decimal InputCost { get; set; }
         [Display(Name = "Unit Price")]
-        public decimal UnitPrice { get;  set; }
+        public decimal UnitPrice { get; set; }
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime GerminationDate { get;  set; }
+        public DateTime GerminationDate { get; set; }
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime PlantDate { get;  set; }
+        public DateTime PlantDate { get; set; }
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime TransplantDate { get;  set; }
+        public DateTime TransplantDate { get; set; }
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime HarvestDate { get;  set; }
+        public DateTime HarvestDate { get; set; }
 
         public Product(int productID, int operationID, string productName,
             string productDescription, string unit, decimal inputCost,
@@ -73,31 +73,31 @@ namespace DataObjects
 
         [Required]
         [Display(Name = "Name")]
-        public string ProductName { get;  set; }
+        public string ProductName { get; set; }
         [Required]
         [Display(Name = "Description")]
-        public string ProductDescription { get;  set; }
+        public string ProductDescription { get; set; }
         [Required]
         [Display(Name = "Unit for Distribution")]
-        public string Unit { get;  set; }
+        public string Unit { get; set; }
         [Required]
         [Display(Name = "Average Input Cost per Unit")]
-        public decimal InputCost { get;  set; }
+        public decimal InputCost { get; set; }
         [Required]
         [Display(Name = "MSRP per Unit")]
-        public decimal UnitPrice { get;  set; }
+        public decimal UnitPrice { get; set; }
         [Required]
         [Display(Name = "Germination Date")]
-        public DateTime GerminationDate { get;  set; }
+        public DateTime GerminationDate { get; set; }
         [Required]
         [Display(Name = "Plant Date")]
-        public DateTime PlantDate { get;  set; }
+        public DateTime PlantDate { get; set; }
         [Required]
         [Display(Name = "Transplant Date")]
-        public DateTime TransplantDate { get;  set; }
+        public DateTime TransplantDate { get; set; }
         [Required]
         [Display(Name = "Harvest Date")]
-        public DateTime HarvestDate { get;  set; }
+        public DateTime HarvestDate { get; set; }
     }
     public class EditProductViewModel
     {
@@ -219,5 +219,28 @@ namespace DataObjects
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime GerminationDate { get; set; }
+    }
+    public class DeleteProductViewModel
+    {
+        public DeleteProductViewModel(Product product)
+        {
+            this.ProductID = product.ProductID;
+            this.ProductName = product.ProductName;
+            this.DeleteSelection = false;
+        }
+        public DeleteProductViewModel()
+        {
+            this.ProductID = 0;
+            this.ProductName = "";
+            this.DeleteSelection = false;
+        }
+        [Required]
+        public int ProductID { get; set; }
+        [Required]
+        [Display(Name = "Name")]
+        public string ProductName { get; set; }
+        [Required]
+        [Display(Name = "Name")]
+        public bool DeleteSelection { get; set; }
     }
 }

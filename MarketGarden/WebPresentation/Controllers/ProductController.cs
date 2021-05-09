@@ -135,5 +135,44 @@ namespace WebPresentation.Controllers
             }
             return View(product);
         }
+
+        [HttpGet]
+        public ActionResult Delete(string id)
+        {
+            try
+            {
+                User farmer = _oldUserManager.GetUserByEmail(User.Identity.Name);
+                Operation operation = _operationManager.GetOperationByOperator(farmer);
+                Product product = _operationManager.GetProductsByOperation(operation.OperationID).Where(p => p.ProductID == Int32.Parse(id)).Single();
+                return View(new DeleteProductViewModel(product));
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Dashboard", "Operation");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Delete(DeleteProductViewModel target)
+        {
+            try
+            {
+                User farmer = _oldUserManager.GetUserByEmail(User.Identity.Name);
+                Operation operation = _operationManager.GetOperationByOperator(farmer);
+                Product product = _operationManager.GetProductsByOperation(operation.OperationID).Where(p => p.ProductID == target.ProductID).Single();
+                target.ProductID = product.ProductID;
+                target.ProductName = product.ProductName;
+                if (ModelState.IsValid && target.DeleteSelection)
+                {
+                    _operationManager.DeleteProduct(product);
+                }
+            }
+            catch (Exception)
+            {
+                ViewBag.Success = false;
+                return View(target);
+            }
+            return RedirectToAction("Index", "Operation", null);
+        }
     }
 }

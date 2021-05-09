@@ -62,5 +62,10 @@ namespace WebPresentation.Controllers
             ViewBag.Title = operationVM.OperationName;
             return View("Dashboard", operationVM);
         }
+
+        public ActionResult Dashboard()
+        {
+            return Index();
+        }
     }
 }

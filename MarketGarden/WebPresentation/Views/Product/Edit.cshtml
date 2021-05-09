@@ -18,79 +18,81 @@
 {
     @Html.AntiForgeryToken()
 
-        <h4>Product</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.ProductID)
+    <h4>Product</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ProductID)
 
+    <div class="form-group">
         <div class="form-group">
-            <div class="form-group">
-                @Html.LabelFor(p => p.ProductName, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(p => p.ProductName, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(p => p.ProductName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(p => p.ProductDescription, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(p => p.ProductDescription, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(p => p.ProductDescription, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(p => p.Unit, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(p => p.Unit, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(p => p.Unit, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(p => p.InputCost, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(p => p.InputCost, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(p => p.InputCost, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(p => p.UnitPrice, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(p => p.UnitPrice, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(p => p.UnitPrice, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(p => p.GerminationDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(p => p.GerminationDate, new { @type = "date", @class = "form-control" })
-                    @Html.ValidationMessageFor(p => p.GerminationDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(p => p.PlantDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(p => p.PlantDate, new { @type = "date", @class = "form-control" })
-                    @Html.ValidationMessageFor(p => p.PlantDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(p => p.TransplantDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(p => p.TransplantDate, new { @type = "date", @class = "form-control" })
-                    @Html.ValidationMessageFor(p => p.TransplantDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(p => p.HarvestDate, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(p => p.HarvestDate, new { @type = "date", @class = "form-control" })
-                    @Html.ValidationMessageFor(p => p.HarvestDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+            @Html.LabelFor(p => p.ProductName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(p => p.ProductName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(p => p.ProductName, "", new { @class = "text-danger" })
             </div>
         </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.ProductDescription, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(p => p.ProductDescription, new { @class = "form-control" })
+                @Html.ValidationMessageFor(p => p.ProductDescription, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.Unit, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(p => p.Unit, new { @class = "form-control" })
+                @Html.ValidationMessageFor(p => p.Unit, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.InputCost, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(p => p.InputCost, new { @class = "form-control" })
+                @Html.ValidationMessageFor(p => p.InputCost, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.UnitPrice, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(p => p.UnitPrice, new { @class = "form-control" })
+                @Html.ValidationMessageFor(p => p.UnitPrice, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.GerminationDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(p => p.GerminationDate, new { @type = "date", @class = "form-control" })
+                @Html.ValidationMessageFor(p => p.GerminationDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.PlantDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(p => p.PlantDate, new { @type = "date", @class = "form-control" })
+                @Html.ValidationMessageFor(p => p.PlantDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.TransplantDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(p => p.TransplantDate, new { @type = "date", @class = "form-control" })
+                @Html.ValidationMessageFor(p => p.TransplantDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(p => p.HarvestDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(p => p.HarvestDate, new { @type = "date", @class = "form-control" })
+                @Html.ValidationMessageFor(p => p.HarvestDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+            @Html.ActionLink("Clone", "Clone", "Product", new { id = Model.ProductID }, new { @class = "btn btn-default" })
+            @Html.ActionLink("Delete", "Delete", "Product", new { id = Model.ProductID }, new { @class = "btn btn-danger" })
+        </div>
+    </div>
 }
 
 <div>

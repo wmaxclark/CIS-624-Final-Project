@@ -1,0 +1,30 @@
+﻿@model DataObjects.DeleteProductViewModel
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Are you sure you want to delete @Model.ProductName?</h2>
+@if (ViewBag.Sucess == false)
+{
+    <h3 class="text-danger">Something went wrong deleting the product.</h3>
+}
+<div>
+    <hr />
+    @using (Html.BeginForm("Delete", "Product", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(p => p.ProductID)
+        @Html.HiddenFor(p => p.ProductName)
+        
+        <div class="col-md-offset-2 col-md-10">
+            @Html.RadioButtonFor(p => p.DeleteSelection, true, new { @class = "btn btn-danger", @type = "submit", @name = "DeleteSelection"})
+            @Html.RadioButtonFor(p => p.DeleteSelection, false, new { @class = "btn btn-default", @type = "submit", @name = "DeleteSelection" })
+        </div>
+        <br />
+}
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ProductID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
