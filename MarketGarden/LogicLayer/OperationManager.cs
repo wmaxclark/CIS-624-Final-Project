@@ -119,6 +119,36 @@ namespace LogicLayer
             }
             return result;
         }
+        public bool CloneProduct(Product oldProduct, int operationID, string productName, string productDescription, string unit, decimal inputCost, decimal unitPrice, DateTime germinationDate)
+        {
+            bool result = false;
+            try
+            {
+                // Calculate the interval between the germination date of the original product
+                TimeSpan timeSpan = oldProduct.PlantDate - oldProduct.GerminationDate;
+
+                // Add the interval to the date
+                DateTime newPlantDate = germinationDate.Add(timeSpan);
+
+                // Calculate the interval between the germination date of the original product
+                timeSpan = oldProduct.TransplantDate - oldProduct.GerminationDate;
+
+                // Add the interval to the date
+                DateTime newTransplantDate = germinationDate.Add(timeSpan);
+
+                // Calculate the interval between the germination date of the original product
+                timeSpan = oldProduct.HarvestDate - oldProduct.GerminationDate;
+
+                // Add the interval to the date
+                DateTime newHarvestDate = germinationDate.Add(timeSpan);
+                result = AddProduct(operationID, productName, productDescription, unit, inputCost, unitPrice, germinationDate, newPlantDate, newTransplantDate, newHarvestDate);
+            }
+            catch (Exception)
+            {
+                throw new ApplicationException("Product could not be created.");
+            }
+            return result;
+        }
         public List<Product> GetProductsByOperation(int operationID)
         {
             List<Product> products = new List<Product>();
@@ -189,7 +219,6 @@ namespace LogicLayer
             }
             return weeklyShares;
         }
-
         public List<Order> RefreshOrderList(OperationVM operation)
         {
             List<Order> orders = new List<Order>();
@@ -204,7 +233,6 @@ namespace LogicLayer
             }
             return orders;
         }
-
         public bool CreateOrder(User user, int operationID, DateTime now, BindingList<Product> productList)
         {
             bool result = false;
@@ -219,7 +247,6 @@ namespace LogicLayer
             }
             return result;
         }
-
         public BindingList<Order> GetOrderListByUser(User user)
         {
             BindingList<Order> orders = new BindingList<Order>();
@@ -234,7 +261,6 @@ namespace LogicLayer
             }
             return orders;
         }
-
         public bool CreateWeeklyShare(User user, int operationID, decimal v1, int v2)
         {
             bool result = false;
@@ -249,7 +275,6 @@ namespace LogicLayer
             }
             return result;
         }
-
         public bool GetWeeklyShareByUser(User user, int operationID)
         {
             bool isSubscribed = false;
@@ -270,5 +295,6 @@ namespace LogicLayer
             }
             return isSubscribed;
         }
+        
     }
 }

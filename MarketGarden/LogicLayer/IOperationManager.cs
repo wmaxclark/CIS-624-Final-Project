@@ -21,6 +21,7 @@ namespace LogicLayer
             DateTime germinationDate, DateTime plantDate, DateTime transplantDate, DateTime harvestDate);
         bool UpdateProduct(int operationID, Product oldProduct, string productName, string productDescription, string unit, decimal inputCost, decimal unitPrice, 
             DateTime germinationDate, DateTime plantDate, DateTime transplantDate, DateTime harvestDate);
+        bool CloneProduct(Product oldProduct, int operationID, string productName, string productDescription, string unit, decimal inputCost, decimal unitPrice, DateTime germinationDate);
         List<Product> GetProductsByOperation(int operationID);
         List<Product> RefreshProductList(OperationVM operation);
         List<WeeklyShare> RefreshWeeklyShares(OperationVM operation);
@@ -29,5 +30,6 @@ namespace LogicLayer
         BindingList<Order> GetOrderListByUser(User _user);
         bool CreateWeeklyShare(User user, int operationID, decimal v1, int v2);
         bool GetWeeklyShareByUser(User user, int operationID);
+        
     }
 }

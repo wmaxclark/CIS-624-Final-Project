@@ -7,74 +7,73 @@
 </p>
 @if (Model.Products.Count > 0)
 {
-    foreach (var product in Model.Products)
-    {
-
-        <table class="table">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => product.ProductName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => product.ProductDescription)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => product.Unit)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => product.InputCost)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => product.UnitPrice)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => product.GerminationDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => product.PlantDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => product.TransplantDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => product.HarvestDate)
-                </th>
-                <th></th>
-            </tr>
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => product.ProductName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.ProductDescription)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.Unit)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.InputCost)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.UnitPrice)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.GerminationDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.PlantDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.TransplantDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.HarvestDate)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", "Product", new { id = product.ProductID },null) |
-                    @Html.ActionLink("Clone", "Clone", "Product", new { id = product.ProductID }, null) |
-                    @Html.ActionLink("Delete", "Delete", "Product", new { id = product.ProductID }, null)
-                </td>
-            </tr>
-        </table>
-    }
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(p => p.Products[0].ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(p => p.Products[0].ProductDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(p => p.Products[0].Unit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(p => p.Products[0].InputCost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(p => p.Products[0].UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(p => p.Products[0].GerminationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(p => p.Products[0].PlantDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(p => p.Products[0].TransplantDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(p => p.Products[0].HarvestDate)
+            </th>
+            <th></th>
+        </tr>
+        @foreach (var product in Model.Products.OrderBy(o => o.ProductName + (o.GerminationDate.Ticks * -1)))
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => product.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => product.ProductDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => product.Unit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => product.InputCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => product.UnitPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => product.GerminationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => product.PlantDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => product.TransplantDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => product.HarvestDate)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", "Product", new { id = product.ProductID }, null) |
+                @Html.ActionLink("Clone", "Clone", "Product", new { id = product.ProductID }, null) |
+                @Html.ActionLink("Delete", "Delete", "Product", new { id = product.ProductID }, null)
+            </td>
+        </tr>
+        }
+    </table>
 }

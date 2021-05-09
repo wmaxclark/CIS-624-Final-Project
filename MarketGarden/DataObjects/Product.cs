@@ -12,21 +12,22 @@ namespace DataObjects
     {
         public int ProductID { get;  set; }
         public int OperationID { get;  set; }
+        [Display(Name = "Product Name")]
         public string ProductName { get;  set; }
+        [Display(Name = "Product Description")]
         public string ProductDescription { get;  set; }
+        [Display(Name = "Distribution Unit")]
         public string Unit { get;  set; }
+        [Display(Name = "Input Cost")]
         public decimal InputCost { get;  set; }
+        [Display(Name = "Unit Price")]
         public decimal UnitPrice { get;  set; }
-        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime GerminationDate { get;  set; }
-        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime PlantDate { get;  set; }
-        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime TransplantDate { get;  set; }
-        [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime HarvestDate { get;  set; }
 
@@ -150,15 +151,73 @@ namespace DataObjects
         public decimal UnitPrice { get; set; }
         [Required]
         [Display(Name = "Germination Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime GerminationDate { get; set; }
         [Required]
         [Display(Name = "Plant Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime PlantDate { get; set; }
         [Required]
         [Display(Name = "Transplant Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime TransplantDate { get; set; }
         [Required]
         [Display(Name = "Harvest Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime HarvestDate { get; set; }
+    }
+    public class CloneProductViewModel
+    {
+        public CloneProductViewModel(Product product)
+        {
+            this.ProductID = product.ProductID;
+            this.OperationID = product.OperationID;
+            this.ProductName = product.ProductName;
+            this.ProductDescription = product.ProductDescription;
+            this.Unit = product.Unit;
+            this.InputCost = product.InputCost;
+            this.UnitPrice = product.UnitPrice;
+            this.GerminationDate = product.GerminationDate;
+        }
+        public CloneProductViewModel()
+        {
+            this.ProductID = 0;
+            this.OperationID = 0;
+            this.ProductName = "";
+            this.ProductDescription = "";
+            this.Unit = "";
+            this.InputCost = 0M;
+            this.UnitPrice = 0M;
+            this.GerminationDate = DateTime.Today;
+        }
+
+        [Required]
+        public int OperationID { get; set; }
+        [Required]
+        public int ProductID { get; set; }
+        [Required]
+        [Display(Name = "Name")]
+        public string ProductName { get; set; }
+        [Required]
+        [Display(Name = "Description")]
+        public string ProductDescription { get; set; }
+        [Required]
+        [Display(Name = "Unit for Distribution")]
+        public string Unit { get; set; }
+        [Required]
+        [Display(Name = "Average Input Cost per Unit")]
+        public decimal InputCost { get; set; }
+        [Required]
+        [Display(Name = "MSRP per Unit")]
+        public decimal UnitPrice { get; set; }
+        [Required]
+        [Display(Name = "Germination Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime GerminationDate { get; set; }
     }
 }

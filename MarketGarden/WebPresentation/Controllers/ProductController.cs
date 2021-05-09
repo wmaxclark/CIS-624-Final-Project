@@ -90,5 +90,50 @@ namespace WebPresentation.Controllers
             }
             return View(product);
         }
+
+        [HttpGet]
+        public ViewResult Clone(string id)
+        {
+            try
+            {
+                User farmer = _oldUserManager.GetUserByEmail(User.Identity.Name);
+                Operation operation = _operationManager.GetOperationByOperator(farmer);
+                Product product = _operationManager.GetProductsByOperation(operation.OperationID).Where(p => p.ProductID == Int32.Parse(id)).Single();
+                return View(new CloneProductViewModel(product));
+            }
+            catch (Exception)
+            {
+                return View("Dashboard", "Operation");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ViewResult Clone(CloneProductViewModel product)
+        {
+            try
+            {
+                User farmer = _oldUserManager.GetUserByEmail(User.Identity.Name);
+                Operation operation = _operationManager.GetOperationByOperator(farmer);
+                Product oldProduct = _operationManager.GetProductsByOperation(operation.OperationID).Where(p => p.ProductID == product.ProductID).Single();
+
+                if (ModelState.IsValid)
+                {
+                    _operationManager.CloneProduct(oldProduct, operation.OperationID,
+                    product.ProductName,
+                    product.ProductDescription,
+                    product.Unit,
+                    product.InputCost,
+                    product.UnitPrice,
+                    product.GerminationDate);
+                    ViewBag.Success = true;
+                }
+            }
+            catch (Exception)
+            {
+                ViewBag.Success = false;
+            }
+            return View(product);
+        }
     }
 }

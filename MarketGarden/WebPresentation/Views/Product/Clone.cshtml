@@ -1,0 +1,88 @@
+﻿@model DataObjects.CloneProductViewModel
+
+@{
+    ViewBag.Title = "Clone";
+}
+
+<h2>@ViewBag.Title</h2>
+@if (ViewBag.Success == true)
+{
+    <h3 class="text-success">Product Cloned</h3>
+}
+@if (ViewBag.Sucess == false)
+{
+    <h3 class="text-danger">Something went wrong cloning the product.</h3>
+}
+
+@using (Html.BeginForm("Clone", "Product", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <h4>@Model.ProductName</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(p => p.ProductID)
+
+<div class="form-group">
+    <div class="form-group">
+        @Html.LabelFor(p => p.ProductName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(p => p.ProductName, new { @class = "form-control" })
+            @Html.ValidationMessageFor(p => p.ProductName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(p => p.ProductDescription, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(p => p.ProductDescription, new { @class = "form-control" })
+            @Html.ValidationMessageFor(p => p.ProductDescription, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(p => p.Unit, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(p => p.Unit, new { @class = "form-control" })
+            @Html.ValidationMessageFor(p => p.Unit, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(p => p.InputCost, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(p => p.InputCost, new { @class = "form-control" })
+            @Html.ValidationMessageFor(p => p.InputCost, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(p => p.UnitPrice, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(p => p.UnitPrice, new { @class = "form-control" })
+            @Html.ValidationMessageFor(p => p.UnitPrice, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(p => p.GerminationDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(p => p.GerminationDate, new { @class = "form-control" })
+            @Html.ValidationMessageFor(p => p.GerminationDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-10">
+            The products Plant Date, Transplant Date, and Harvest Date will be set at the same interval to the product being cloned.
+        </div>
+    </div>
+    <div class="col-md-offset-2 col-md-10">
+        <input type="submit" value="Save" class="btn btn-default" />
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+}
+
