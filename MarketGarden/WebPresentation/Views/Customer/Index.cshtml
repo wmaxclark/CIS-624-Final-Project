@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<DataObjects.OperationViewModel>
-@using DataObjects
 
 @{
     ViewBag.Title = "Browse Products";
@@ -7,9 +6,9 @@
 
 
 
-<div class="col-md-6">
-    <h2>Browse Products</h2>
-</div>
+    <div class="col-md-6">
+        <h2>Browse Products</h2>
+    </div>
 <div class="col-md-6">
     <br />
     @if (Session["cart"] != null)
@@ -18,18 +17,20 @@
         @Html.ActionLink("View Cart", "Cart")
     }
 </div>
-
-@foreach (var operation in Model)
-{
-    if (operation.Products.Count > 0)
+    @foreach (var operation in Model)
     {
-        <div class="col-md-10">
+        if (operation.Products.Count > 0)
+        {
+        <div class="col-md-10 row">
             <h3>@Html.DisplayFor(o => operation.OperationName) @Html.DisplayFor(o => operation.AddressState)</h3>
+                @Html.ActionLink("Subscribe to CSA", "Subscribe", new { id = operation.OperationID }, new { @class = "btn btn-default" })
+            <p></p>
+
         </div>
-        <div class="col-md-2 col-md-offset-10">
-            @Html.ActionLink("Subscribe to CSA", "Subscribe", new { id = operation.OperationID })
-        </div>
-            
+            <div class="col-md-2 col-md-offset-10">
+                
+            </div>
+
             <table class="table">
                 <tr>
 
@@ -69,6 +70,5 @@
                     </tr>
                 }
             </table>
-            }
-            }
-
+        }
+    }

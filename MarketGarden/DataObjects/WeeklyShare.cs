@@ -20,5 +20,26 @@ namespace DataObjects
             Portion = portion;
             Frequency = frequency;
         }
+        public WeeklyShare()
+        {
+            OperationID = 0;
+            CustomerID = 0;
+            Portion = 1.0m;
+            Frequency = 1;
+        }
+    }
+    public class WeeklyShareViewModel : WeeklyShare
+    {
+        public WeeklyShareViewModel() : base()
+        {
+
+        }
+        public WeeklyShareViewModel(Operation operation, int userId) : base()
+        {
+            this.Operation = operation;
+            this.OperationID = operation.OperationID;
+            this.CustomerID = userId;
+        }
+        public Operation Operation { get; set; }
     }
 }

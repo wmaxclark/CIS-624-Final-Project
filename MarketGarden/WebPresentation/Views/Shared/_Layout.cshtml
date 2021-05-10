@@ -31,8 +31,8 @@
                     }
                     @if (User.IsInRole("Customer"))
                     {
-
                         @Html.ActionLink("My Orders", "Orders", "Customer", new { area = "" }, new { @class = "navbar-brand" })
+                        @Html.ActionLink("My Subscriptions", "Subscriptions", "Customer", new { area = "" }, new { @class = "navbar-brand" })
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")

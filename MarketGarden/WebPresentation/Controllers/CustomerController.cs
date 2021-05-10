@@ -17,17 +17,37 @@ namespace WebPresentation.Controllers
         IOperationManager _operationManager = new OperationManager();
         IUserManager _userManager = new UserManager();
         // GET: Customer
-        public ActionResult Index()
+        public ActionResult Index(string state)
         {
-            List<Operation> operations = _operationManager.GetAllOperations().ToList();
-            List<OperationViewModel> operationViewModels = new List<OperationViewModel>();
-            foreach (var operation in operations)
+            try
             {
-                operationViewModels.Add(_operationManager.GetOperationViewModelByOperation(operation));
+                List<Operation> operations = _operationManager.GetAllOperations().ToList();
+                var statelist = _operationManager.GetAllStates();
+                if (statelist.Contains(state))
+                {
+                    ViewData["StateFilter"] = state;
+                    operations = operations.Where(o => o.AddressState == state).ToList();
+                }
+                else
+                {
+                    state = null;
+                }
+                List<OperationViewModel> operationViewModels = new List<OperationViewModel>();
+
+                foreach (var operation in operations)
+                {
+                    operationViewModels.Add(_operationManager.GetOperationViewModelByOperation(operation));
+                }
+                ViewBag.CartLines = TempData["cartLines"];
+                ViewBag.CartTotal = TempData["totalPrice"];
+                ViewBag.States = statelist;
+                return View(operationViewModels.OrderBy(o => o.OperationName));
             }
-            ViewBag.CartLines = TempData["cartLines"];
-            ViewBag.CartTotal = TempData["totalPrice"];
-            return View(operationViewModels.OrderBy(o => o.OperationName));
+            catch (Exception)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            
         }
 
         [HttpGet]
@@ -135,5 +155,27 @@ namespace WebPresentation.Controllers
             return RedirectToAction("Index", "Customer");
         }
 
+        [Authorize(Roles = "Customer")]
+        public ActionResult Subscriptions()
+        {
+            List<WeeklyShareViewModel> weeklyShareViewModels = new List<WeeklyShareViewModel>();
+            try
+            {
+                User customer = _userManager.GetUserByEmail(User.Identity.Name);
+                BindingList<Operation> operations = _operationManager.GetAllOperations();
+                foreach (var operation in operations)
+                {
+                    if(_operationManager.GetWeeklyShareByUser(customer, operation.OperationID))
+                    {
+                        weeklyShareViewModels.Add(new WeeklyShareViewModel(operation, customer.UserID));
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Write a message
+            }
+            return View(weeklyShareViewModels);
+        }
     }
 }
