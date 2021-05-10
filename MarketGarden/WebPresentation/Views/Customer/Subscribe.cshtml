@@ -1,0 +1,65 @@
+﻿@model DataObjects.SubscribeOperationViewModel
+
+@{
+    ViewBag.Title = "Subscribe";
+}
+
+<h2>Are you sure you'd like to subscribe to a weekly subscription for @Html.DisplayFor(o => Model.OperationName)?</h2>
+@using (Html.BeginForm("Subscribe", "Customer", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(p => Model.OperationID)
+
+    <div class="col-md-offset-2 col-md-10">
+        @Html.RadioButtonFor(p => Model.Selection, true, new { @class = "btn btn-primary", @type = "submit", @name = "DeleteSelection" })
+        @Html.RadioButtonFor(p => Model.Selection, false, new { @class = "btn btn-default", @type = "submit", @name = "DeleteSelection" })
+    </div>
+    <br />
+}
+@if (Model.Products.Count > 0)
+{
+    <div class="col-md-10">
+        <h3></h3>
+    </div>
+
+    <table class="table">
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Products[0].ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Products[0].ProductDescription)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Products[0].UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Products[0].HarvestDate)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var product in Model.Products)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => product.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.ProductDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.UnitPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.HarvestDate)
+                </td>
+            </tr>
+        }
+    </table>
+}
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>
+

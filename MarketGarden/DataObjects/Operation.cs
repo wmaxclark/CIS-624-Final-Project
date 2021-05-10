@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,12 @@ namespace DataObjects
 
         public Operation()
         {
-
+            this.OperationID = 0;
+            this.UserID_Operator = 0;
+            this.OperationName = "";
+            this.AddressState = "";
+            this.MaxShares = 0;
+            this.Active = true;
         }
 
         public override string ToString()
@@ -61,5 +67,28 @@ namespace DataObjects
         {
             return base.ToString();
         }
+    }
+
+    public class SubscribeOperationViewModel : Operation
+    {
+        public SubscribeOperationViewModel() : base()
+        {
+            Selection = false;
+        }
+        public SubscribeOperationViewModel(OperationViewModel model)
+        {
+            Selection = false;
+            this.OperationID = model.OperationID;
+            this.OperationName = model.OperationName;
+            this.MaxShares = model.MaxShares;
+            this.Active = model.Active;
+            this.AddressState = model.AddressState;
+            this.UserID_Operator = model.UserID_Operator;
+            this.Products = model.Products;
+        }
+        [Required]
+        public bool Selection { get; set; }
+
+        public List<Product> Products { get; set; }
     }
 }

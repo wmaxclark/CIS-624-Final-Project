@@ -293,6 +293,7 @@
     <Content Include="Views\Customer\Index.cshtml" />
     <Content Include="Views\Customer\Cart.cshtml" />
     <Content Include="Views\Customer\Orders.cshtml" />
+    <Content Include="Views\Customer\Subscribe.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

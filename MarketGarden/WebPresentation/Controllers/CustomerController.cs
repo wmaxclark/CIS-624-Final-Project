@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 
@@ -68,9 +69,9 @@ namespace WebPresentation.Controllers
                 orders = _operationManager.GetOrderListByUser(user);
                 Session["cart"] = null;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
+                // Give a message
             }
             return View("Orders", orders);
         }
@@ -86,7 +87,7 @@ namespace WebPresentation.Controllers
             }
             catch (Exception)
             {
-
+                // Give a message
             }
             return View(orders);
         }
@@ -97,5 +98,42 @@ namespace WebPresentation.Controllers
             CartViewModel cart = (CartViewModel)Session["cart"] ?? new CartViewModel();
             return View(cart);
         }
+
+        [Authorize(Roles = "Customer")]
+        public ActionResult Subscribe(string id)
+        {
+            try
+            {
+                BindingList<Operation> operations = _operationManager.GetAllOperations();
+                OperationViewModel model = _operationManager.GetOperationViewModelByOperation(operations.Where(o => o.OperationID == int.Parse(id)).Single());
+                return View(new SubscribeOperationViewModel(model));
+            }
+            catch (Exception ex)
+            {
+                // Give a message
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            
+        }
+        [HttpPost]
+        public ActionResult Subscribe(SubscribeOperationViewModel target)
+        {
+            try
+            {
+                User customer = _userManager.GetUserByEmail(User.Identity.Name);
+                Operation operation = (Operation)target;
+                if (ModelState.IsValid && target.Selection)
+                {
+                    ViewBag.Success = _operationManager.CreateWeeklyShare(customer, operation.OperationID, 1.0m, 1);
+                }
+            }
+            catch (Exception)
+            {
+                ViewBag.Success = false;
+                return View(target);
+            }
+            return RedirectToAction("Index", "Customer");
+        }
+
     }
 }
