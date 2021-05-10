@@ -25,7 +25,10 @@ GO
 INSERT INTO [dbo].[FarmOperation]
 	([OperationName],[UserID_Operator],[AddressState],[Active])
 	VALUES
-		('Test Farm', 100000, "IA", 1)
+		('Savage Farm', 100000, "IA", 1),
+		('Jesus Farm', 100000, "IA", 1),
+		('Burna Farm', 100000, "IA", 1),
+		('Corporate Pop Farm', 100000, "IA", 1)
 GO
 
 print '' print '*** stored procedures for farmoperation ***'

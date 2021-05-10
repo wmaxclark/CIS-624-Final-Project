@@ -24,8 +24,7 @@ GO
 INSERT INTO [dbo].[UserAccount]
 		([Email], [FirstName], [LastName])
 	VALUES
-		('test@test.com', 'Test', 'Test')
-		, ('randy@company.com', 'Randy', 'Savage')
+		('randy@company.com', 'Randy', 'Savage')
 		, ('tim@company.com', 'Tim', 'Tebow')
 		, ('burna@company.com', 'Burna', 'Boy')
 		, ('ed@company.com', 'Ed', 'Sheeran')

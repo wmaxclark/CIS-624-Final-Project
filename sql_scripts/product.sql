@@ -29,11 +29,21 @@ GO
 INSERT INTO [dbo].[Product]
 	([OperationID],[ProductName],[ProductDescription],[InputCost],[Unit], [UnitPrice],[GerminationDate],[PlantDate],[TransplantDate],[HarvestDate])
 	VALUES
-		(100000, "Test Product 1", "Test Description", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
-		(100000, "Test Product 2", "Test Description", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
-		(100000, "Test Product 3", "Test Description", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
-		(100000, "Test Product 4", "Test Description", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
-		(100000, "Test Product 5", "Test Description", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00")
+		(100000, "Pawpaw", "(Asimina triloba) the American papaw, a small deciduous tree native to the eastern United States and Canada", 1.0, "Single", 4.0, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-09-30 00:00:00"),
+		(100000, "Mangosteen", "(Garcinia mangostana) is an exotic, tropical fruit with a slightly sweet and sour flavor.", 10.1, "Bundle", 20, "2021-05-10 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
+		(100000, "Cranberries", "Cranberries are a group of evergreen dwarf shrubs or trailing vines in the subgenus Oxycoccus of the genus Vaccinium. ", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
+		(100000, "Apple", "An apple is an edible fruit produced by an apple tree (Malus domestica)", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
+		(100000, "Pumpkin", "A pumpkin is a cultivar of winter squash that is round with smooth, slightly ribbed skin, and is most often deep yellow to orange in coloration.", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
+		(100001, "Pawpaw", "(Asimina triloba) the American papaw, a small deciduous tree native to the eastern United States and Canada", 1.0, "Single", 4.0, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-09-30 00:00:00"),
+		(100001, "Mangosteen", "(Garcinia mangostana) is an exotic, tropical fruit with a slightly sweet and sour flavor.", 10.1, "Bundle", 20, "2021-05-10 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
+		(100001, "Cranberries", "Cranberries are a group of evergreen dwarf shrubs or trailing vines in the subgenus Oxycoccus of the genus Vaccinium. ", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
+		(100001, "Apple", "An apple is an edible fruit produced by an apple tree (Malus domestica)", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
+		(100001, "Pumpkin", "A pumpkin is a cultivar of winter squash that is round with smooth, slightly ribbed skin, and is most often deep yellow to orange in coloration.", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
+		(100002, "Pawpaw", "(Asimina triloba) the American papaw, a small deciduous tree native to the eastern United States and Canada", 1.0, "Single", 4.0, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-09-30 00:00:00"),
+		(100002, "Mangosteen", "(Garcinia mangostana) is an exotic, tropical fruit with a slightly sweet and sour flavor.", 10.1, "Bundle", 20, "2021-05-10 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
+		(100002, "Cranberries", "Cranberries are a group of evergreen dwarf shrubs or trailing vines in the subgenus Oxycoccus of the genus Vaccinium. ", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
+		(100002, "Apple", "An apple is an edible fruit produced by an apple tree (Malus domestica)", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
+		(100002, "Pumpkin", "A pumpkin is a cultivar of winter squash that is round with smooth, slightly ribbed skin, and is most often deep yellow to orange in coloration.", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00")
 GO
 
 print '' print '*** stored procedures for product ***'
