@@ -233,7 +233,11 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="favicon.ico" />
+    <Content Include="Content\Images\Find-Some-Land-1024x512.jpg" />
+    <Content Include="Content\Images\pngaaa.com-224769.png" />
+    <Content Include="favicon.ico">
+      <BrowseToURL>C:\Users\Home\Desktop\CIS-624-Final-Project\MarketGarden\WebPresentation\Content\Images\pngaaa.com-224769.png</BrowseToURL>
+    </Content>
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -285,7 +289,6 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\Dashboard.cshtml" />
-    <Content Include="Views\Operation\Index.cshtml" />
     <Content Include="Views\Product\Create.cshtml" />
     <Content Include="Views\Product\Edit.cshtml" />
     <Content Include="Views\Product\Clone.cshtml" />

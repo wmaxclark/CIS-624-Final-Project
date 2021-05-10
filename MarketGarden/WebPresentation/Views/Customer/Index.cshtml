@@ -65,7 +65,7 @@
                             @Html.DisplayFor(modelItem => product.HarvestDate)
                         </td>
                         <td>
-                            @Html.ActionLink("Add to Order", "Order", new { id = product.ProductID, operationId = operation.OperationID })
+                            @Html.ActionLink("Add to Order", "Order", new { id = product.ProductID, operationId = operation.OperationID }, new { @class="btn btn-default"})
                         </td>
                     </tr>
                 }

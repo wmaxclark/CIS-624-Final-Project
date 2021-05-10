@@ -79,14 +79,14 @@
                 @Html.DisplayFor(modelItem => product.HarvestDate)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", "Product", new { id = product.ProductID }, null) |
-                @Html.ActionLink("Clone", "Clone", "Product", new { id = product.ProductID }, null)
+                @Html.ActionLink("Edit", "Edit", "Product", new { id = product.ProductID }, new { @class = "btn btn-default" }) 
+                @Html.ActionLink("Clone", "Clone", "Product", new { id = product.ProductID }, new { @class = "btn btn-default" })
             </td>
         </tr>
     }
     
 </table>
 <p>
-    @Html.ActionLink("Create New", "Create", "Product", Model.OperationID, null)
+    @Html.ActionLink("Create New", "Create", "Product", Model.OperationID, new { @class = "btn btn-default" })
 </p>
 }
