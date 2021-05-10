@@ -188,14 +188,20 @@ namespace WebPresentation.Controllers
                                     return RedirectToAction("Dashboard", "Operation", operationVM);
                                 }
                             }
+                            else if (model.Role == "Customer")
+                            {
+                                _oldUserManager.CreateUserRole(oldUser.UserID, model.Role);
+                                UserManager.AddToRole(user.Id, "Customer");
+                                return RedirectToAction("Index", "Customer");
+                            }
                         }
                     }
                     catch (Exception)
                     {
-                        return RedirectToAction("Index", "Home");
+                        AddErrors(result);
+                        return View(model);
                     }
                 }
-                AddErrors(result);
             }
 
             // If we got this far, something failed, redisplay form

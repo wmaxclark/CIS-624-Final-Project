@@ -474,5 +474,65 @@ namespace DataAccessLayer
             }
             return result;
         }
+
+        public User SelectUserById(int userID)
+        {
+            User user = null;
+
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
+
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_select_user_by_id", conn);
+
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            // Add parameter to command
+            cmd.Parameters.Add("@UserID", SqlDbType.Int);
+
+            // Set parameter to value
+            cmd.Parameters["@UserID"].Value = userID;
+
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
+
+                // Execute command
+                var reader = cmd.ExecuteReader();
+
+                // Capture results
+                if (reader.HasRows)
+                {
+                    reader.Read();
+                    var firstName = reader.GetString(0);
+                    var lastName = reader.GetString(1);
+                    var email = reader.GetString(2);
+                    var active = reader.GetBoolean(3);
+                    reader.Close();
+
+                    var roles = selectRolesByID(userID);
+
+                    // Construct new user with captured values
+                    user = new User(userID, firstName, lastName, email, roles);
+                }
+                else
+                {
+                    throw new ApplicationException("User not found.");
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return user;
+        }
     }
 }

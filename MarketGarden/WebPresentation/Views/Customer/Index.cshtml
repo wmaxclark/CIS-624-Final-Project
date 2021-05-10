@@ -1,0 +1,71 @@
+﻿@model IEnumerable<DataObjects.OperationViewModel>
+@using DataObjects
+
+@{
+    ViewBag.Title = "Browse Products";
+}
+
+
+
+<div class="col-md-6">
+    <h2>Browse Products</h2>
+</div>
+<div class="col-md-6">
+    <br />
+    @if (Session["cart"] != null)
+    {
+        <h4>Cart: @ViewBag.CartLines $@ViewBag.CartTotal</h4>
+        @Html.ActionLink("View Cart", "Cart")
+    }
+</div>
+
+@foreach (var operation in Model)
+{
+    if (operation.Products.Count > 0)
+    {
+        <div class="col-md-10">
+            <h3>@Html.DisplayFor(o => operation.OperationName) @Html.DisplayFor(o => operation.AddressState)</h3>
+        </div>
+            
+            <table class="table">
+                <tr>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Products[0].ProductName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Products[0].ProductDescription)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Products[0].UnitPrice)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Products[0].HarvestDate)
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var product in operation.Products)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => product.ProductName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => product.ProductDescription)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => product.UnitPrice)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => product.HarvestDate)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Add to Order", "Order", new { id = product.ProductID, operationId = operation.OperationID })
+                        </td>
+                    </tr>
+                }
+            </table>
+            }
+            }
+

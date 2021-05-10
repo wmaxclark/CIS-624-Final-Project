@@ -17,5 +17,6 @@ namespace LogicLayer
         bool CreateUserRole(int userID, string role);
         bool CreateUserRole(int userID, string role, Operation operation);
         bool UpdateUserRole(string email, string role);
+        User GetUserById(int userID_Operator);
     }
 }

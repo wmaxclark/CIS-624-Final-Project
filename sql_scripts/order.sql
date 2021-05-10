@@ -82,6 +82,7 @@ AS
 		SELECT OrderID, OperationID, OrderDate
 		FROM ProductOrder
 		WHERE UserID_Customer = @UserID_Customer
+		ORDER BY OrderDate DESC
 	END
 GO
 

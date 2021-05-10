@@ -28,5 +28,6 @@ namespace DataAccessLayer
         BindingList<Order> RetrieveOrdersByCustomer(int userID);
         int CreateWeeklyShare(int userID, int operationID, decimal v1, int v2);
         List<WeeklyShare> GetWeeklyShareByCustomer(int userID);
+        Product SelectProductByProductId(int productId);
     }
 }

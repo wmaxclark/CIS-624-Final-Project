@@ -24,6 +24,18 @@ CREATE TABLE [dbo].[Product] (
 )
 GO
 
+print '' print '***  creating product test records ***'
+GO
+INSERT INTO [dbo].[Product]
+	([OperationID],[ProductName],[ProductDescription],[InputCost],[Unit], [UnitPrice],[GerminationDate],[PlantDate],[TransplantDate],[HarvestDate])
+	VALUES
+		(100000, "Test Product 1", "Test Description", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
+		(100000, "Test Product 2", "Test Description", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
+		(100000, "Test Product 3", "Test Description", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
+		(100000, "Test Product 4", "Test Description", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00"),
+		(100000, "Test Product 5", "Test Description", 10.1, "Bundle", 20, "2021-05-09 00:00:00","2021-05-16 00:00:00","2021-05-23 00:00:00","2021-05-30 00:00:00")
+GO
+
 print '' print '*** stored procedures for product ***'
 GO
 
@@ -76,6 +88,25 @@ AS
 			HarvestDate
 		FROM Product
 		WHERE OperationID = @OperationID
+		ORDER BY ProductName ASC
+	END
+GO
+
+print '' print '*** creating sp_select_product_by_productid ***'
+GO
+CREATE PROCEDURE [dbo].[sp_select_product_by_productid]
+	(
+		@ProductID					[int]
+	)
+AS
+	BEGIN
+		SELECT OperationID, ProductName, ProductDescription, InputCost,
+			Unit, UnitPrice, GerminationDate,
+			PlantDate,
+			TransplantDate,
+			HarvestDate
+		FROM Product
+		WHERE ProductID = @ProductID
 		ORDER BY ProductName ASC
 	END
 GO

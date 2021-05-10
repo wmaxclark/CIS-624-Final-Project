@@ -38,4 +38,28 @@ namespace DataObjects
             return OperationName;
         }
     }
+    public class OperationViewModel : Operation
+    {
+        public OperationViewModel(int operationID, User operatorUser, string operationName, string addressState, int? maxShares, bool active, List<Product> products, List<Order> orders, List<WeeklyShare> weeklyShares) : base(operationID, operatorUser.UserID, operationName, addressState, maxShares, active)
+        {
+            this.Operator = operatorUser;
+            this.Products = products;
+            this.Orders = orders;
+            this.WeeklyShares = weeklyShares;
+        }
+
+        public OperationViewModel() : base()
+        {
+
+        }
+        public User Operator { get; set; }
+        public List<Product> Products { get; set; }
+        public List<Order> Orders { get; set; }
+        public List<WeeklyShare> WeeklyShares { get; set; }
+
+        public override string ToString()
+        {
+            return base.ToString();
+        }
+    }
 }

@@ -1066,75 +1066,72 @@ namespace DataAccessLayer
             }
             return weeklyShares;
         }
-        //public Order RetrieveOrderByOrderID(int orderID)
-        //{
-        //    Order result;
-        //    // Retrieve a connection from factory
-        //    var conn = DBConnection.GetDBConnection();
 
-        //    // Retrieve a command
-        //    var cmd = new SqlCommand("sp_create_productorder", conn);
+        public Product SelectProductByProductId(int productId)
+        {
+            Product result = new Product();
+            // Retrieve a connection from factory
+            var conn = DBConnection.GetDBConnection();
 
-        //    // Set command type to stored procedure
-        //    cmd.CommandType = CommandType.StoredProcedure;
+            // Retrieve a command
+            var cmd = new SqlCommand("sp_select_product_by_productid", conn);
 
-        //    // Add parameter to command
-        //    cmd.Parameters.Add("@UserID_Customer", SqlDbType.Int);
+            // Set command type to stored procedure
+            cmd.CommandType = CommandType.StoredProcedure;
 
-        //    // Add parameter to command
-        //    cmd.Parameters.Add("@OperationID", SqlDbType.Int);
+            // Add parameter to command
+            cmd.Parameters.Add("@ProductId", SqlDbType.Int);
 
-        //    // Add parameter to command
-        //    cmd.Parameters.Add("@OrderDate", SqlDbType.DateTime);
+            // Set parameter to value
+            cmd.Parameters["@ProductId"].Value = productId;
 
-        //    // Set parameter to value
-        //    cmd.Parameters["@UserID_Customer"].Value = userID;
+            // Execute command
+            try
+            {
+                // Open connection
+                conn.Open();
 
-        //    // Set parameter to value
-        //    cmd.Parameters["@OperationID"].Value = operationID;
+                // Execute command
+                var reader = cmd.ExecuteReader();
 
-        //    // Set parameter to value
-        //    cmd.Parameters["@OrderDate"].Value = now;
+                // Capture results
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        var operationID = reader.GetInt32(0);
+                        var productName = reader.GetString(1);
+                        var productDescription = reader.GetString(2);
+                        var inputCost = reader.GetDecimal(3);
+                        var unit = reader.GetString(4);
+                        var unitPrice = reader.GetDecimal(5);
+                        var germinationDate = reader.GetSqlDateTime(6);
+                        var plantDate = reader.GetSqlDateTime(7);
+                        var transplantDate = reader.GetSqlDateTime(8);
+                        var harvestDate = reader.GetSqlDateTime(9);
 
-        //    // Execute command
-        //    try
-        //    {
-        //        // Open connection
-        //        conn.Open();
-        //        // Execute command
-        //        var reader = cmd.ExecuteReader();
 
+                        // Construct new operation with captured values
+                        result = new Product(productId, operationID, productName,
+                            productDescription, unit, inputCost,
+                            unitPrice, (DateTime)germinationDate,
+                            (DateTime)plantDate,
+                            (DateTime)transplantDate,
+                            (DateTime)harvestDate);
+                    }
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
 
-        //        // Capture results
-        //        if (reader.HasRows)
-        //        {
-        //            while (reader.Read())
-        //            {
-        //                var orderID = reader.GetInt32(0);
-        //                var userID_Customer = reader.GetInt32(1);
-        //                var orderDate = reader.GetDateTime(2);
-
-        //                var orderLines = RetrieveOrderLinesByOrder(orderID);
-
-        //                var order = new Order(orderID, operationID, userID_Customer, orderDate, orderLines);
-
-        //                // Add the resulting order to the list
-        //                orderList.Add(order);
-        //            }
-        //            reader.Close();
-        //        }
-        //    }
-
-        //    catch (Exception ex)
-        //    {
-
-        //        throw ex;
-        //    }
-        //    finally
-        //    {
-        //        conn.Close();
-        //    }
-        //    return result;
-        //}
+                throw ex;
+            }
+            finally
+            {
+                conn.Close();
+            }
+            return result;
+        }
     }
 }

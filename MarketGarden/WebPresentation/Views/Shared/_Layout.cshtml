@@ -20,9 +20,19 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+
                     @if (User.IsInRole("Farmer"))
                     {
                         @Html.ActionLink("My Operation", "Index", "Operation", new { area = "" }, new { @class = "navbar-brand" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("Browse Products", "Index", "Customer", new { area = "" }, new { @class = "navbar-brand" })
+                    }
+                    @if (User.IsInRole("Customer"))
+                    {
+
+                        @Html.ActionLink("My Orders", "Orders", "Customer", new { area = "" }, new { @class = "navbar-brand" })
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")

@@ -1,0 +1,67 @@
+﻿@model DataObjects.CartViewModel
+
+@{
+    ViewBag.Title = "Cart";
+}
+
+<h2>Cart</h2>
+@if (Model.Products.Count() == 0)
+{
+    <h3>You don't have any products in your cart.</h3>
+}
+else
+{
+    using (Html.BeginForm("Order", "Customer", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+    {
+        Html.AntiForgeryToken();
+<table class="table">
+    <tr>
+
+        <th>
+            @Html.DisplayNameFor(model => model.Products[0].ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Products[0].ProductDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Products[0].UnitPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Products[0].HarvestDate)
+        </th>
+        <th></th>
+    </tr>
+
+    @for (int i = 0; i < Model.Products.Count; i++)
+    {
+        @Html.HiddenFor(p => Model.Products[i].ProductID);
+        @Html.HiddenFor(p => Model.Products[i].OperationID);
+        @Html.HiddenFor(p => Model.Products[i].ProductName);
+        @Html.HiddenFor(p => Model.Products[i].ProductDescription);
+        @Html.HiddenFor(p => Model.Products[i].InputCost);
+        @Html.HiddenFor(p => Model.Products[i].Unit);
+        @Html.HiddenFor(p => Model.Products[i].UnitPrice);
+        @Html.HiddenFor(p => Model.Products[i].GerminationDate);
+        @Html.HiddenFor(p => Model.Products[i].TransplantDate);
+        @Html.HiddenFor(p => Model.Products[i].PlantDate);
+        @Html.HiddenFor(p => Model.Products[i].HarvestDate);
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Products[i].ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Products[i].ProductDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Products[i].UnitPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => Model.Products[i].HarvestDate)
+            </td>
+
+        </tr>
+    }
+</table>
+        <input type="submit" value="Order" class="btn btn-primary" />
+    }
+}

@@ -28,7 +28,7 @@ namespace PresentationLayer
         private IUserManager _userManager = new UserManager();
         private IOperationManager _operationManager = new OperationManager();
         private User _user = null;
-        private OperationVM _operation = null;
+        private OperationViewModel _operation = null;
         private BindingList<Operation> _operationList;
         private const string newUserPassword = "newuser";
         private BindingList<Order> _orderList;

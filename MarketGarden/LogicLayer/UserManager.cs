@@ -160,6 +160,18 @@ namespace LogicLayer
             return result;
         }
 
-        
+        public User GetUserById(int userID)
+        {
+            User user = null;
+            try
+            {
+                user = userAccessor.SelectUserById(userID);
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Could not find user.", ex);
+            }
+            return user;
+        }
     }
 }

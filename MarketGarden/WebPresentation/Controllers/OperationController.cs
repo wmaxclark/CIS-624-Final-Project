@@ -44,7 +44,7 @@ namespace WebPresentation.Controllers
             try
             {
                 User farmer = _oldUserManager.GetUserByEmail(User.Identity.Name);
-                OperationVM operationVM = _operationManager.GetOperationVMByOperator(farmer);
+                OperationViewModel operationVM = _operationManager.GetOperationVMByOperator(farmer);
                 return Dashboard(operationVM);
             }
             catch (Exception)
@@ -53,13 +53,54 @@ namespace WebPresentation.Controllers
             }
         }
         
-        public ActionResult Dashboard(OperationVM operationVM)
+        public ActionResult Dashboard(OperationViewModel operationVM)
         {
             if (operationVM.OperationName == null)
             {
                 return Index();
             }
             ViewBag.Title = operationVM.OperationName;
+            try
+            {
+                operationVM.WeeklyShares = _operationManager.RefreshWeeklyShares(operationVM);
+                var totalPortion = 0;
+                var weeklyShareProfit = 0.0m;
+                foreach (WeeklyShare share in operationVM.WeeklyShares)
+                {
+                    totalPortion++;
+                    foreach (var product in operationVM.Products)
+                    {
+                        weeklyShareProfit += product.UnitPrice - product.InputCost;
+                    }
+                }
+                ViewBag.WeeklyShareSubscribers = totalPortion;
+                ViewBag.WeeklyShareProfit = weeklyShareProfit;
+
+                operationVM.Orders = _operationManager.RefreshOrderList(operationVM);
+                var totalOrders = 0;
+                var directSaleProfit = 0.0m;
+                foreach (Order order in operationVM.Orders)
+                {
+                    totalOrders++;
+                    foreach (var line in order.Lines)
+                    {
+                        foreach (var product in operationVM.Products)
+                        {
+                            if (line.ProductID == product.ProductID)
+                            {
+                                directSaleProfit += line.PriceCharged - product.InputCost;
+                            }
+                        }
+
+                    }
+                }
+                ViewBag.DirecSaleOrders = totalOrders;
+                ViewBag.DirectSaleProfit = directSaleProfit;
+            }
+            catch (Exception)
+            {
+            }
+            
             return View("Dashboard", operationVM);
         }
 

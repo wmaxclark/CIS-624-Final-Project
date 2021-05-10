@@ -20,7 +20,7 @@ GO
 INSERT INTO [dbo].[UserRole]
 	([OperationID],[UserID],[RoleName])
 	VALUES
-		(100000, 100002, 'Farmer')
+		(100000, 100000, 'Farmer')
 GO
 
 print '' print '*** stored procedures for userrole ***'

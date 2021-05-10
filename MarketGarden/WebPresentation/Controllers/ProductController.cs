@@ -148,7 +148,7 @@ namespace WebPresentation.Controllers
             }
             catch (Exception)
             {
-                return RedirectToAction("Dashboard", "Operation");
+                return RedirectToAction("Index", "Operation");
             }
         }
 
@@ -172,7 +172,7 @@ namespace WebPresentation.Controllers
                 ViewBag.Success = false;
                 return View(target);
             }
-            return RedirectToAction("Index", "Operation", null);
+            return RedirectToAction("Index", "Operation");
         }
     }
 }

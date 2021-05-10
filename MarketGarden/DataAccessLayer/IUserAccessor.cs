@@ -18,5 +18,6 @@ namespace DataAccessLayer
         int CreateUserAccount(string email, string firstName, string lastName, string passwordHash);
         int CreateUserRole(int userID, int operationID, string role);
         int CreateUserRole(int userID, string role);
+        User SelectUserById(int userID);
     }
 }

@@ -12,7 +12,7 @@ CREATE TABLE [dbo].[FarmOperation] (
 	[OperationID]		[int]		IDENTITY(100000, 1) NOT NULL,
 	[UserID_Operator]	[int]		NOT NULL,
 	[AddressState]		[char](2)		NOT NULL,
-	[MaxShares]		[int]		NULL,
+	[MaxShares]			[int]		NULL,
 	[Active]			[bit]		NOT NULL DEFAULT 1
 	CONSTRAINT [pk_farmOperation_operationID] PRIMARY KEY([OperationID] ASC),
 	CONSTRAINT [fk_farmOperation_AddressState] FOREIGN KEY([AddressState])
@@ -25,7 +25,7 @@ GO
 INSERT INTO [dbo].[FarmOperation]
 	([OperationName],[UserID_Operator],[AddressState],[Active])
 	VALUES
-		('Tebows Farm', 100002, "IA", 1)
+		('Test Farm', 100000, "IA", 1)
 GO
 
 print '' print '*** stored procedures for farmoperation ***'

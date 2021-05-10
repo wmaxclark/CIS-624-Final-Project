@@ -61,14 +61,14 @@ namespace LogicLayer
             }
             return operations;
         }
-        public OperationVM GetOperationVMByOperator(User user)
+        public OperationViewModel GetOperationVMByOperator(User user)
         {
-            OperationVM operationVM;
+            OperationViewModel operationVM;
 
             try
             {
                 Operation operation = _operationAccessor.RetrieveOperationByOperator(user);
-                operationVM = new OperationVM(operation.OperationID, user, operation.OperationName,
+                operationVM = new OperationViewModel(operation.OperationID, user, operation.OperationName,
                     operation.AddressState, operation.MaxShares, operation.Active,
                     _operationAccessor.RetrieveProductsByOperation(operation.OperationID),
                     _operationAccessor.RetrieveOrdersByOperation(operation.OperationID),
@@ -163,7 +163,7 @@ namespace LogicLayer
             }
             return products;
         }
-        public List<Product> RefreshProductList(OperationVM operation)
+        public List<Product> RefreshProductList(OperationViewModel operation)
         {
             List<Product> products = new List<Product>();
             try
@@ -205,7 +205,7 @@ namespace LogicLayer
             }
             return states;
         }
-        public List<WeeklyShare> RefreshWeeklyShares(OperationVM operation)
+        public List<WeeklyShare> RefreshWeeklyShares(OperationViewModel operation)
         {
             List<WeeklyShare> weeklyShares = new List<WeeklyShare>();
             try
@@ -219,7 +219,7 @@ namespace LogicLayer
             }
             return weeklyShares;
         }
-        public List<Order> RefreshOrderList(OperationVM operation)
+        public List<Order> RefreshOrderList(OperationViewModel operation)
         {
             List<Order> orders = new List<Order>();
             try
@@ -238,7 +238,7 @@ namespace LogicLayer
             bool result = false;
             try
             {
-                result = (1 == _operationAccessor.CreateOrder(user.UserID, operationID, now, productList));
+                result = (0 != _operationAccessor.CreateOrder(user.UserID, operationID, now, productList));
             }
             catch (Exception ex)
             {
@@ -295,6 +295,38 @@ namespace LogicLayer
             }
             return isSubscribed;
         }
-        
+
+        public OperationViewModel GetOperationViewModelByOperation(Operation operation)
+        {
+            OperationViewModel operationVM;
+            IUserManager userManager = new UserManager();
+            try
+            {
+                User farmer = userManager.GetUserById(operation.UserID_Operator);
+                operationVM = new OperationViewModel(operation.OperationID, farmer, operation.OperationName,
+                    operation.AddressState, operation.MaxShares, operation.Active,
+                    _operationAccessor.RetrieveProductsByOperation(operation.OperationID),
+                    _operationAccessor.RetrieveOrdersByOperation(operation.OperationID),
+                    _operationAccessor.RetrieveWeeklySharesByOperation(operation.OperationID));
+            }
+            catch (Exception ex)
+            {
+                throw new ApplicationException("Operation not available", ex);
+            }
+            return operationVM;
+        }
+
+        public Product GetProductByProductID(int productId)
+        {
+            try
+            {
+                return _operationAccessor.SelectProductByProductId(productId);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
     }
 }

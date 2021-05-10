@@ -1,45 +1,55 @@
-﻿@model DataObjects.OperationVM
+﻿@model DataObjects.OperationViewModel
 
-<h2>@Model.OperationName</h2>
-<h2>Products</h2>
-<p>
-    @Html.ActionLink("Create New", "Create", "Product", Model.OperationID, null)
-</p>
+<div class="col-md-6">
+    <h2>@Model.OperationName</h2>
+    <h4>Products</h4>
+</div>
+<div class="col-md-6">
+    <br />
+    <h4>Weekly Subscribers: @ViewBag.WeeklyShareSubscribers</h4>
+    <h4>Weekly Subscription Profit: $@ViewBag.WeeklyShareProfit</h4>
+    <h4>Direct Sale Orders: @ViewBag.DirecSaleOrders</h4>
+    <h4>Direct Sale Profit: $@ViewBag.DirectSaleProfit</h4>
+    <hr />
+    @{var totalProfit = ViewBag.DirectSaleProfit + ViewBag.WeeklyShareProfit;}
+    <h4>Total Profit: $@totalProfit</h4>
+</div>
+
 @if (Model.Products.Count > 0)
 {
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(p => p.Products[0].ProductName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(p => p.Products[0].ProductDescription)
-            </th>
-            <th>
-                @Html.DisplayNameFor(p => p.Products[0].Unit)
-            </th>
-            <th>
-                @Html.DisplayNameFor(p => p.Products[0].InputCost)
-            </th>
-            <th>
-                @Html.DisplayNameFor(p => p.Products[0].UnitPrice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(p => p.Products[0].GerminationDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(p => p.Products[0].PlantDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(p => p.Products[0].TransplantDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(p => p.Products[0].HarvestDate)
-            </th>
-            <th></th>
-        </tr>
-        @foreach (var product in Model.Products.OrderBy(o => o.ProductName + (o.GerminationDate.Ticks * -1)))
-        {
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(p => p.Products[0].ProductName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(p => p.Products[0].ProductDescription)
+        </th>
+        <th>
+            @Html.DisplayNameFor(p => p.Products[0].Unit)
+        </th>
+        <th>
+            @Html.DisplayNameFor(p => p.Products[0].InputCost)
+        </th>
+        <th>
+            @Html.DisplayNameFor(p => p.Products[0].UnitPrice)
+        </th>
+        <th>
+            @Html.DisplayNameFor(p => p.Products[0].GerminationDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(p => p.Products[0].PlantDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(p => p.Products[0].TransplantDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(p => p.Products[0].HarvestDate)
+        </th>
+        <th></th>
+    </tr>
+    @foreach (var product in Model.Products.OrderBy(o => o.ProductName + (o.GerminationDate.Ticks * -1)))
+    {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => product.ProductName)
@@ -73,6 +83,10 @@
                 @Html.ActionLink("Clone", "Clone", "Product", new { id = product.ProductID }, null)
             </td>
         </tr>
-        }
-    </table>
+    }
+    
+</table>
+<p>
+    @Html.ActionLink("Create New", "Create", "Product", Model.OperationID, null)
+</p>
 }

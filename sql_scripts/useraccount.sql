@@ -24,7 +24,7 @@ GO
 INSERT INTO [dbo].[UserAccount]
 		([Email], [FirstName], [LastName])
 	VALUES
-		('mark@company.com', 'Mark', 'Marcus')
+		('test@test.com', 'Test', 'Test')
 		, ('randy@company.com', 'Randy', 'Savage')
 		, ('tim@company.com', 'Tim', 'Tebow')
 		, ('burna@company.com', 'Burna', 'Boy')
@@ -99,5 +99,19 @@ AS
 		SELECT UserID, Email, FirstName, LastName, Active
 		FROM UserAccount
 		WHERE Email = @Email
+	END
+GO
+
+print '' print '*** creating sp_select_user_by_id ***'
+GO
+CREATE PROCEDURE [dbo].[sp_select_user_by_id]
+	(
+		@UserID				[nvarchar](100)
+	)
+AS
+	BEGIN
+		SELECT FirstName, LastName, Email, Active
+		FROM UserAccount
+		WHERE UserID = @UserID
 	END
 GO

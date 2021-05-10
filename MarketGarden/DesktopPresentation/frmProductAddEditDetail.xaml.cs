@@ -22,7 +22,7 @@ namespace PresentationLayer
     public partial class frmProductAddEditDetail : Window
     {
         private IOperationManager _operationManager;
-        private OperationVM _operation;
+        private OperationViewModel _operation;
         private Product _selectedProduct;
         private User _user;
         private bool _addProduct = false;
@@ -34,7 +34,7 @@ namespace PresentationLayer
             InitializeComponent();
         }
 
-        public frmProductAddEditDetail(User user, OperationVM operation, Product selectedProduct) // A product has been selected from the product list
+        public frmProductAddEditDetail(User user, OperationViewModel operation, Product selectedProduct) // A product has been selected from the product list
         {
             this._user = user;
             this._operation = operation;
@@ -43,7 +43,7 @@ namespace PresentationLayer
             InitializeComponent();
         }
 
-        public frmProductAddEditDetail(User user, OperationVM operation) // A new product is being created
+        public frmProductAddEditDetail(User user, OperationViewModel operation) // A new product is being created
         {
             this._user = user;
             this._operation = operation;
